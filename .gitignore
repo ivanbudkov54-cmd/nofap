@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Xcode — пользовательское состояние, у каждого своё
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Сборка
+build/
+DerivedData/
+
+# Подписи и профили — никогда не в репозиторий
+*.mobileprovision
+*.p12
+*.cer

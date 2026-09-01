@@ -2,23 +2,23 @@
 //  ContentView.swift
 //  NoFap
 //
-//  Created by Иван Будков on 24.08.2026.
-//
 
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
 
-#Preview {
-    ContentView()
+    @Environment(BlockingManager.self) private var blocking
+
+    @AppStorage("onboardingDone") private var onboardingDone = false
+
+    var body: some View {
+        Group {
+            if onboardingDone {
+                RootView()
+            } else {
+                OnboardingView { onboardingDone = true }
+            }
+        }
+        .task { blocking.refresh() }
+    }
 }
