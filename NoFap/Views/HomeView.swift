@@ -201,14 +201,14 @@ struct HomeView: View {
     @ViewBuilder
     private var actions: some View {
         if streak.hasCheckedInToday {
-            Text("Сегодня уже отмечено")
+            Text("Сегодня ты держишься")
                 .font(.system(size: 14))
                 .foregroundStyle(Palette.ash)
                 .frame(height: 56)
                 .padding(.top, 6)
         } else {
             VStack(spacing: 14) {
-                Button("Я СВОБОДЕН") { streak.checkIn(clean: true) }
+                Button("Я ДЕРЖУСЬ") { streak.checkIn(clean: true) }
                     .buttonStyle(GoldButton())
 
                 Button("Сообщить о срыве") { showRelapse = true }

@@ -232,6 +232,7 @@ private struct MonthSpan: View {
 
     @State private var showGoalEditor = false
     @State private var goalDraft = 21
+    @State private var showPartner = false
 
     private var monthDate: Date { Date() }
 
@@ -335,6 +336,19 @@ private struct MonthSpan: View {
                             }
                         }
                         .position(x: w * 0.70, y: w * (515.0 / 493.0) * 0.354)
+
+                        // Напарник — отдельный ребёнок ZStack со своим
+                        // .position(). У соседей по стеку позиции независимы,
+                        // поэтому цифра выше не сдвигается. Оборачивать стек
+                        // или давать ему padding нельзя — это сместит систему
+                        // координат и уедет всё.
+                        Button {
+                            showPartner = true
+                        } label: {
+                            PartnerBadge(diameter: w * 0.19)
+                        }
+                        .buttonStyle(.plain)
+                        .position(x: w * 0.175, y: w * (515.0 / 493.0) * 0.84)
                     }
                 }
                 .aspectRatio(493.0 / 515.0, contentMode: .fit)
@@ -347,6 +361,12 @@ private struct MonthSpan: View {
                 .font(Face.display(14))
                 .foregroundStyle(Palette.ash)
                 .multilineTextAlignment(.center)
+        }
+        // Лист, а не NavigationLink: экран напарника — отдельная вкладка,
+        // и пушить его копию внутрь стека «Прогресс» значило бы держать
+        // два источника правды.
+        .sheet(isPresented: $showPartner) {
+            NavigationStack { PartnerView() }
         }
         .sheet(isPresented: $showGoalEditor) {
             VStack(spacing: 24) {

@@ -10,6 +10,7 @@ struct NoFapApp: App {
 
     @State private var blocking = BlockingManager()
     @State private var streak = StreakManager()
+    @State private var partner = PartnerManager()
 
     init() {
         Face.register()
@@ -20,6 +21,7 @@ struct NoFapApp: App {
             ContentView()
                 .environment(blocking)
                 .environment(streak)
+                .environment(partner)
                 .preferredColorScheme(.dark)
         }
     }

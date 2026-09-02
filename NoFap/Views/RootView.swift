@@ -36,8 +36,10 @@ struct RootView: View {
             }
             .tabItem { Label("Знания", systemImage: "text.book.closed.fill") }
 
-            Soon(title: "Сообщество", note: "Анонимные истории тех, кто идёт тем же путём.")
-                .tabItem { Label("Сообщество", systemImage: "person.2.fill") }
+            NavigationStack {
+                PartnerView()
+            }
+            .tabItem { Label("Напарник", systemImage: "person.2.fill") }
 
             Soon(title: "Профиль", note: "Настройки защиты, напоминания и удаление данных.")
                 .tabItem { Label("Профиль", systemImage: "person.fill") }

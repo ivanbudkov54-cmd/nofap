@@ -41,13 +41,10 @@ final class StreakManager {
     private(set) var totalCleanDays: Int
     private(set) var lastCheckinDate: Date?
 
-    private static let dayKeyFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
-        f.calendar = Calendar(identifier: .gregorian)
-        f.timeZone = .current
-        return f
-    }()
+    /// Растёт при любой записи. Нужен, чтобы наблюдатели (синхронизация с
+    /// напарником) реагировали на изменения, не перечисляя их по одному.
+    /// Сам StreakManager по-прежнему ничего не знает ни о сети, ни о напарнике.
+    private(set) var revision = 0
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -70,8 +67,8 @@ final class StreakManager {
     func setGoal(_ days: Int) {
         guard days > 0 else { return }
         personalGoalDays = days
-        defaults.set(days, forKey: Key.goal)
         justReachedGoal = false
+        persist()
     }
 
     /// Отмечался ли уже сегодня — чтобы не засчитывать день дважды.
@@ -92,7 +89,7 @@ final class StreakManager {
 
     /// nil — за этот день ещё не отмечались.
     func status(on date: Date) -> Bool? {
-        history[Self.dayKeyFormatter.string(from: date)]
+        history[DayKey.string(from: date)]
     }
 
     @discardableResult
@@ -112,7 +109,7 @@ final class StreakManager {
 
         bestStreak = max(bestStreak, currentStreak)
         lastCheckinDate = date
-        history[Self.dayKeyFormatter.string(from: date)] = clean
+        history[DayKey.string(from: date)] = clean
 
         // Флаг встаёт только в момент перехода через порог, а не каждый раз,
         // когда currentStreak уже выше цели — иначе поздравление лезло бы
@@ -130,13 +127,19 @@ final class StreakManager {
         justReachedGoal = false
     }
 
+    /// Единственный путь записи — чтобы `revision` невозможно было забыть
+    /// нарастить. Раньше `setGoal` писал ключ цели в обход этого метода;
+    /// тогда изменение цели не долетало бы до напарника и «из N дней»
+    /// у него протухало.
     private func persist() {
         defaults.set(currentStreak, forKey: Key.currentStreak)
         defaults.set(bestStreak, forKey: Key.bestStreak)
         defaults.set(totalCleanDays, forKey: Key.totalClean)
         defaults.set(lastCheckinDate, forKey: Key.lastCheckin)
+        defaults.set(personalGoalDays, forKey: Key.goal)
         if let data = try? JSONEncoder().encode(history) {
             defaults.set(data, forKey: Key.history)
         }
+        revision += 1
     }
 }
