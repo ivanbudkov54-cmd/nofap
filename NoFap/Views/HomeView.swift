@@ -9,6 +9,7 @@ struct HomeView: View {
 
     @Environment(BlockingManager.self) private var blocking
     @Environment(StreakManager.self) private var streak
+    @Environment(PartnerManager.self) private var partner
 
     @State private var showRelapse = false
     @State private var showGoalReached = false
@@ -34,7 +35,11 @@ struct HomeView: View {
         ) {
             Button("Отметить срыв", role: .destructive) { streak.checkIn(clean: false) }
         } message: {
-            Text("Счётчик обнулится, рекорд останется. Отметка нужна только тебе — она никуда не отправляется.")
+            // Текст зависит от того, есть ли напарник: обещать «никуда не
+            // отправляется», когда счёт видит другой человек, — враньё.
+            Text(partner.isPaired
+                 ? "Счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину."
+                 : "Счётчик обнулится, рекорд останется. Отметка нужна только тебе — она никуда не отправляется.")
         }
         .onChange(of: streak.justReachedGoal) { _, reached in
             if reached {
