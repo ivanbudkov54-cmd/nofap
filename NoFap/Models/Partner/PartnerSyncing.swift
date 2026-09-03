@@ -46,6 +46,13 @@ protocol PartnerSyncing: AnyObject {
     /// Разорвать связь. Обязана ротировать мой идентификатор: иначе бывший
     /// напарник навсегда сохраняет возможность читать мой профиль.
     func unpair() async throws
+
+    // MARK: - Переписка
+
+    /// Вся переписка, старые сообщения первыми.
+    func fetchMessages() async throws -> [PartnerMessage]
+
+    func send(_ text: String, kind: PartnerMessage.Kind) async throws -> PartnerMessage
 }
 
 enum PartnerBackend: String {

@@ -179,6 +179,18 @@ struct PartnerView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
+            NavigationLink {
+                PartnerChatView()
+            } label: {
+                Label("Написать", systemImage: "bubble.left.and.bubble.right.fill")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Color(hex: 0x1A1405))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 56)
+                    .background(Capsule().fill(.goldFill))
+                    .shadow(color: Palette.gold.opacity(0.28), radius: 14, y: 4)
+            }
+
             Button("Разорвать связь") { showUnpairConfirm = true }
                 .buttonStyle(StoneButton())
         }

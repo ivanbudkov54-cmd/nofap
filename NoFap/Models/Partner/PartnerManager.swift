@@ -28,9 +28,13 @@ final class PartnerManager {
     /// что человек вписал сам.
     private(set) var nickname: String
 
+    private(set) var messages: [PartnerMessage] = []
+    private(set) var isSending = false
+
     private let sync: any PartnerSyncing
     private let defaults: UserDefaults
     private var pollTask: Task<Void, Never>?
+    private var chatTask: Task<Void, Never>?
 
     /// Последнее успешно отправленное состояние — чтобы не слать одно и то же.
     private var lastPushed: OwnSnapshot?
@@ -126,9 +130,60 @@ final class PartnerManager {
 
     func unpair() async {
         stopPolling()
+        stopWatchingChat()
         try? await sync.unpair()
         lastPushed = nil
+        messages = []
         state = .solo
+    }
+
+    // MARK: - Переписка
+
+    func loadMessages() async {
+        guard isPaired else { return }
+        messages = (try? await sync.fetchMessages()) ?? messages
+    }
+
+    /// Пока экран чата открыт, подтягиваем ответы. Без пушей это
+    /// единственный способ увидеть сообщение, не выходя и не возвращаясь.
+    func startWatchingChat() {
+        stopWatchingChat()
+        chatTask = Task { [weak self] in
+            while !Task.isCancelled {
+                await self?.loadMessages()
+                try? await Task.sleep(for: .seconds(2))
+            }
+        }
+    }
+
+    func stopWatchingChat() {
+        chatTask?.cancel()
+        chatTask = nil
+    }
+
+    @discardableResult
+    func send(_ raw: String, kind: PartnerMessage.Kind = .text) async -> Bool {
+        let text = String(raw.trimmingCharacters(in: .whitespacesAndNewlines)
+            .prefix(ChatPresets.maxLength))
+        guard !text.isEmpty, isPaired, !isSending else { return false }
+
+        isSending = true
+        defer { isSending = false }
+
+        do {
+            let sent = try await sync.send(text, kind: kind)
+            // Показываем сразу, не дожидаясь следующего опроса.
+            if !messages.contains(where: { $0.id == sent.id }) {
+                messages.append(sent)
+            }
+            return true
+        } catch let error as PartnerSyncError {
+            state = error == .partnerGone ? .solo : .failed(error.message)
+            return false
+        } catch {
+            state = .failed(PartnerSyncError.network.message)
+            return false
+        }
     }
 
     // MARK: - Публикация своего состояния

@@ -42,6 +42,7 @@ final class LocalFakePartnerSync: PartnerSyncing {
         static let inviteCreated = "fake.inviteCreatedAt"
         static let partner = "fake.partner"
         static let published = "fake.publishedSnapshot"
+        static let messages = "fake.messages"
     }
 
     private var flakyCounter = 0
@@ -134,9 +135,73 @@ final class LocalFakePartnerSync: PartnerSyncing {
         try await simulateCall()
         clearPartner()
         clearInvite()
+        // Переписка уходит вместе со связью: держать чужие сообщения после
+        // разрыва — то же самое, что не отзывать доступ.
+        defaults.removeObject(forKey: Key.messages)
         // Ротация идентификатора — в настоящем CloudKit это и есть отзыв
         // доступа, поэтому заглушка ведёт себя так же.
         defaults.set(UUID().uuidString, forKey: Key.ownID)
+    }
+
+    // MARK: - Переписка
+
+    func fetchMessages() async throws -> [PartnerMessage] {
+        try await simulateCall()
+        return storedMessages
+    }
+
+    func send(_ text: String, kind: PartnerMessage.Kind) async throws -> PartnerMessage {
+        try await simulateCall()
+        guard storedPartner != nil else { throw PartnerSyncError.partnerGone }
+
+        let message = PartnerMessage.mine(text, kind: kind)
+        var all = storedMessages
+        all.append(message)
+        store(messages: all)
+
+        // Заглушка отвечает сама — иначе в одном симуляторе чат остаётся
+        // односторонним, и проверить его невозможно. На сигнал тяги ответ
+        // приходит быстрее: именно этот момент фича и должна закрывать.
+        scheduleReply(to: kind)
+
+        return message
+    }
+
+    private func scheduleReply(to kind: PartnerMessage.Kind) {
+        let delay: Duration = kind == .sos ? .seconds(3) : .seconds(7)
+        let text = kind == .sos
+            ? ChatPresets.support.randomElement() ?? "Я рядом"
+            : Self.smallTalk.randomElement() ?? "Понял тебя"
+
+        Task { [weak self] in
+            try? await Task.sleep(for: delay)
+            guard let self else { return }
+            var all = self.storedMessages
+            all.append(PartnerMessage(id: UUID().uuidString,
+                                      kind: kind == .sos ? .support : .text,
+                                      text: text,
+                                      isMine: false,
+                                      sentAt: Date()))
+            self.store(messages: all)
+        }
+    }
+
+    private static let smallTalk = [
+        "Понял тебя",
+        "Как ты сегодня?",
+        "Молодец, что написал",
+        "Я тоже держусь"
+    ]
+
+    private var storedMessages: [PartnerMessage] {
+        guard let data = defaults.data(forKey: Key.messages) else { return [] }
+        return (try? JSONDecoder().decode([PartnerMessage].self, from: data)) ?? []
+    }
+
+    private func store(messages: [PartnerMessage]) {
+        if let data = try? JSONEncoder().encode(messages) {
+            defaults.set(data, forKey: Key.messages)
+        }
     }
 
     // MARK: - Внутреннее
@@ -202,8 +267,8 @@ final class LocalFakePartnerSync: PartnerSyncing {
     }
 
     func debugReset() {
-        [Key.ownID, Key.inviteCode, Key.inviteExpires,
-         Key.inviteCreated, Key.partner, Key.published, "fake.mirrorsMe"]
+        [Key.ownID, Key.inviteCode, Key.inviteExpires, Key.inviteCreated,
+         Key.partner, Key.published, Key.messages, "fake.mirrorsMe"]
             .forEach { defaults.removeObject(forKey: $0) }
     }
     #endif
