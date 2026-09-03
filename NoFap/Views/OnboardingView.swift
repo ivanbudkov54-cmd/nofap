@@ -12,6 +12,7 @@ struct OnboardingView: View {
 
     @Environment(BlockingManager.self) private var blocking
     @Environment(StreakManager.self) private var streak
+    @Environment(\.openURL) private var openURL
 
     let onFinish: () -> Void
 
@@ -19,15 +20,12 @@ struct OnboardingView: View {
     @State private var isRequesting = false
     @State private var goalDays = 21
 
-    private let slides: [(mark: String, title: String, body: String)] = [
-        ("I",
-         "Решение принимается один раз",
+    private let slides: [(title: String, body: String)] = [
+        ("Решение принимается один раз",
          "Приложение блокирует материалы для взрослых во всех браузерах этого iPhone. Не нужно каждый вечер побеждать себя заново — достаточно решить сейчас."),
-        ("II",
-         "Не сила воли, а устройство",
+        ("Не сила воли, а устройство",
          "Фильтр работает на уровне системы, через встроенное Экранное время. Он действует и в Safari, и в других браузерах, и его не обходит приватная вкладка."),
-        ("III",
-         "Ничего не уходит без спроса",
+        ("Ничего не уходит без спроса",
          "Ни аккаунта, ни истории посещений. Счётчик и календарь живут только на этом телефоне. Захочешь позвать напарника — он увидит лишь счёт дней и отметился ли ты сегодня. Ни календаря, ни срывов, ни имени.")
     ]
 
@@ -62,27 +60,15 @@ struct OnboardingView: View {
         }
     }
 
-    private func thesis(_ slide: (mark: String, title: String, body: String)) -> some View {
+    private func thesis(_ slide: (title: String, body: String)) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Spacer()
-
-            // Римская цифра — номер тезиса, а не украшение: слайдов ровно три.
-            Text(slide.mark)
-                .font(Face.display(15, .medium))
-                .tracking(3)
-                .foregroundStyle(.goldFill)
-
-            Rectangle()
-                .fill(Palette.gold.opacity(0.4))
-                .frame(width: 26, height: 1)
-                .padding(.top, 12)
 
             Text(slide.title)
                 .font(Face.display(34, .medium))
                 .foregroundStyle(.marbleFill)
                 .lineSpacing(4)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, 22)
 
             Text(slide.body)
                 .font(.system(size: 16))
@@ -124,12 +110,24 @@ struct OnboardingView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 16)
 
+            // Отказ — единственный случай, когда нужны Настройки: сам запрос
+            // разрешения iOS показывает прямо здесь, поверх приложения.
             if case .denied = blocking.state {
-                Text("Доступ не выдан. Его можно открыть в Настройках → Экранное время.")
-                    .font(.system(size: 13))
-                    .foregroundStyle(Palette.gold)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 18)
+                VStack(spacing: 12) {
+                    Text("Доступ не выдан. Включить его можно в настройках приложения.")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Palette.gold)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Button("Открыть настройки") {
+                        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                        openURL(url)
+                    }
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.goldFill)
+                }
+                .padding(.top, 18)
             }
 
             Spacer()
@@ -150,13 +148,14 @@ struct OnboardingView: View {
         .padding(.bottom, 8)
     }
 
-    /// Засечки вместо точек — тот же язык, что у дуги стрика.
+    /// Привычные точки, как в системных экранах iOS: тонкие засечки на
+    /// тёмном фоне почти не читались.
     private var progress: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 9) {
             ForEach(0...(slides.count + 1), id: \.self) { i in
-                Capsule()
+                Circle()
                     .fill(i == page ? AnyShapeStyle(.goldFill) : AnyShapeStyle(Palette.vein))
-                    .frame(width: i == page ? 18 : 6, height: 2)
+                    .frame(width: 8, height: 8)
                     .animation(.snappy, value: page)
             }
         }

@@ -71,9 +71,18 @@ struct Eyebrow: View {
 
 /// Мраморная заливка: сверху блик, снизу тень — как на полированном камне.
 extension ShapeStyle where Self == LinearGradient {
+    /// Блик по камню, а не затухание. Раньше градиент доходил до `ash` —
+    /// цвета второстепенного текста, и на заголовке в три строки последняя
+    /// строка теряла акцент, будто она менее важна. Теперь основная масса
+    /// букв держит полную яркость, и лишь у самого низа появляется намёк
+    /// на полутон.
     static var marbleFill: LinearGradient {
         LinearGradient(
-            colors: [Palette.marbleHigh, Palette.marble, Palette.ash],
+            stops: [
+                .init(color: Palette.marbleHigh, location: 0.0),
+                .init(color: Palette.marbleHigh, location: 0.75),
+                .init(color: Palette.marble, location: 1.0)
+            ],
             startPoint: .top,
             endPoint: .bottom
         )
