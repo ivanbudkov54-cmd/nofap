@@ -231,8 +231,8 @@ private struct MonthSpan: View {
     let calendar: Calendar
 
     @State private var showGoalEditor = false
-    @State private var goalDraft = 21
     @State private var showPartner = false
+    @State private var goalDraft = 21
 
     private var monthDate: Date { Date() }
 
@@ -336,25 +336,19 @@ private struct MonthSpan: View {
                             }
                         }
                         .position(x: w * 0.70, y: w * (515.0 / 493.0) * 0.354)
-
-                        // Напарник — отдельный ребёнок ZStack со своим
-                        // .position(). У соседей по стеку позиции независимы,
-                        // поэтому цифра выше не сдвигается. Оборачивать стек
-                        // или давать ему padding нельзя — это сместит систему
-                        // координат и уедет всё.
-                        Button {
-                            showPartner = true
-                        } label: {
-                            PartnerBadge(diameter: w * 0.19)
-                        }
-                        .buttonStyle(.plain)
-                        .position(x: w * 0.175, y: w * (515.0 / 493.0) * 0.84)
                     }
                 }
                 .aspectRatio(493.0 / 515.0, contentMode: .fit)
             }
             .clipShape(.rect(cornerRadius: 18))
             .cardSurface()
+            // Бейдж — поверх границы этой карточки, не всего экрана: он
+            // рисуется после .clipShape, поэтому не обрезается скруглением.
+            .overlay(alignment: .bottomLeading) {
+                PartnerBadge(width: 130)
+                    .contentShape(.rect)
+                    .onTapGesture { showPartner = true }
+            }
 
             // Подпись — снаружи карточки, не часть композиции с фото.
             Text("Каждый день воздержания делает тебя сильнее.")

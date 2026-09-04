@@ -2,9 +2,9 @@
 //  PartnerBadge.swift
 //  NoFap
 //
-//  Напарник в углу карточки прогресса: тот же валун, только маленький.
-//  Переиспользуем ассет SisyphusPhoto, а не заводим второй — иначе они
-//  разойдутся при следующей правке картинки.
+//  Напарник в углу карточки прогресса: та же картинка целиком, что и на
+//  главном камне, просто в уменьшенном масштабе — не кроп текстуры,
+//  а полный рисунок с числом внутри валуна, как на большой карточке.
 //
 
 import SwiftUI
@@ -13,20 +13,22 @@ struct PartnerBadge: View {
 
     @Environment(PartnerManager.self) private var partner
 
-    let diameter: CGFloat
+    let width: CGFloat
 
-    /// На карточке прогресса число нужно, а на экране напарника оно уже
-    /// нарисовано крупно рядом — иначе двоится.
+    /// На карточке прогресса число нужно внутри валуна, а на экране
+    /// напарника число уже показано отдельно крупно — там оно не нужно.
     var showsCount: Bool = true
 
-    /// Доли, по которым валун найден на фото: границы валуна в исходнике
-    /// 493×515 — x 197…468, y 68…297. Отсюда и центр, и ширина.
+    /// Те же доли, что и у основной цифры в ProgressTabView — валун
+    /// находится в одном и том же месте на любом масштабе одной картинки.
     private enum Boulder {
-        static let centerX: CGFloat = 0.674
-        static let centerY: CGFloat = 0.354
-        static let widthShare: CGFloat = 0.55
         static let photoRatio: CGFloat = 515.0 / 493.0
+        static let centerX: CGFloat = 0.70
+        static let centerYRatio: CGFloat = 0.354   // доля от высоты, как в ProgressTabView
+        static let numberScale: CGFloat = 0.14
     }
+
+    private var height: CGFloat { width * Boulder.photoRatio }
 
     var body: some View {
         if let profile = partner.partner {
@@ -39,69 +41,46 @@ struct PartnerBadge: View {
     // MARK: - Есть напарник
 
     private func paired(_ profile: PartnerProfile) -> some View {
-        VStack(spacing: 5) {
-            ZStack {
-                boulderCrop
-                    .clipShape(.circle)
-
-                Circle()
-                    .strokeBorder(ringColor(for: profile), lineWidth: 1.8)
-            }
-            .frame(width: diameter, height: diameter)
+        ZStack {
+            Image("SisyphusPhoto")
+                .resizable()
+                .scaledToFit()
+                .frame(width: width, height: height)
+                .clipShape(.rect(cornerRadius: width * 0.09))
 
             if showsCount {
+                // Только сам стрик — подпись цели на таком масштабе всё равно
+                // не читалась, только шумела рядом с числом.
                 Text("\(profile.currentStreak)")
-                    .font(Face.display(diameter * 0.30, .semibold))
+                    .font(Face.display(width * Boulder.numberScale, .semibold))
                     .foregroundStyle(profile.isStale ? AnyShapeStyle(Palette.ash) : AnyShapeStyle(.goldFill))
                     .shadow(color: .black.opacity(0.8), radius: 2, y: 1)
                     .contentTransition(.numericText())
+                    .position(x: width * Boulder.centerX, y: height * Boulder.centerYRatio)
             }
         }
-    }
-
-    /// Кроп по валуну: увеличиваем фото так, чтобы валун занял весь кружок,
-    /// и сдвигаем его центр в центр кадра.
-    private var boulderCrop: some View {
-        let side = diameter / Boulder.widthShare
-        let height = side * Boulder.photoRatio
-
-        return Image("SisyphusPhoto")
-            .resizable()
-            .scaledToFill()
-            .frame(width: side, height: height)
-            .offset(x: -(Boulder.centerX - 0.5) * side,
-                    y: -(Boulder.centerY - 0.5) * height)
-            .frame(width: diameter, height: diameter)
-    }
-
-    /// Золото — награда, а не украшение: кольцо загорается, только если
-    /// напарник отметился сегодня.
-    private func ringColor(for profile: PartnerProfile) -> Color {
-        if profile.isStale { return Palette.ash.opacity(0.5) }
-        return profile.isHoldingToday ? Palette.gold : Palette.vein
+        .frame(width: width, height: height)
     }
 
     // MARK: - Напарника нет
 
-    /// Тихая заглушка: она должна приглашать, но не спорить со стриком,
-    /// поэтому без золота и без свечения.
+    /// Тихая заглушка того же формата, что и картинка: приглашает, но не
+    /// спорит со стриком — без золота и без свечения.
     private var empty: some View {
-        VStack(spacing: 5) {
-            Circle()
-                .strokeBorder(Palette.ash.opacity(0.5),
-                              style: StrokeStyle(lineWidth: 1.4, dash: [3, 3]))
-                .frame(width: diameter, height: diameter)
-                .overlay {
+        RoundedRectangle(cornerRadius: width * 0.09)
+            .strokeBorder(Palette.ash.opacity(0.5),
+                          style: StrokeStyle(lineWidth: 1.2, dash: [3, 3]))
+            .frame(width: width, height: height)
+            .overlay {
+                VStack(spacing: 4) {
                     Image(systemName: "person.badge.plus")
-                        .font(.system(size: diameter * 0.32, weight: .light))
-                        .foregroundStyle(Palette.ash)
+                        .font(.system(size: width * 0.24, weight: .light))
+                    if showsCount {
+                        Text("напарник")
+                            .font(.system(size: width * 0.11))
+                    }
                 }
-
-            if showsCount {
-                Text("напарник")
-                    .font(.system(size: diameter * 0.15))
-                    .foregroundStyle(Palette.ash)
+                .foregroundStyle(Palette.ash)
             }
-        }
     }
 }

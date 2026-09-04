@@ -154,7 +154,7 @@ struct PartnerView: View {
                     .font(Face.display(26, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
 
-                PartnerBadge(diameter: 120, showsCount: false)
+                PartnerBadge(width: 150, showsCount: false)
 
                 Text("\(profile.currentStreak)")
                     .font(Face.display(52, .semibold))
