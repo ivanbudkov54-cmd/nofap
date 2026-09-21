@@ -1,0 +1,32 @@
+//
+//  NoFapApp.swift
+//  NoFap
+//
+
+import SwiftUI
+
+@main
+struct NoFapApp: App {
+
+    @State private var blocking = BlockingManager()
+    @State private var streak = StreakManager()
+    @State private var partner = PartnerManager()
+    @State private var journal = JournalManager()
+    @State private var checkIns = CheckInManager()
+
+    init() {
+        Face.register()
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environment(blocking)
+                .environment(streak)
+                .environment(partner)
+                .environment(journal)
+                .environment(checkIns)
+                .preferredColorScheme(.light)
+        }
+    }
+}
