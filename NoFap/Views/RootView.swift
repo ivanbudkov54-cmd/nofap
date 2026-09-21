@@ -49,8 +49,8 @@ struct RootView: View {
 }
 
 private struct Soon: View {
-    let title: String
-    let note: String
+    let title: LocalizedStringResource
+    let note: LocalizedStringResource
 
     var body: some View {
         ZStack {

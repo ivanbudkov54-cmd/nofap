@@ -11,6 +11,9 @@ struct NoFapApp: App {
     @State private var blocking = BlockingManager()
     @State private var streak = StreakManager()
     @State private var partner = PartnerManager()
+    @State private var survey = SurveyManager()
+    @State private var reasons = ReasonsStore()
+    @State private var reminder = ReminderManager()
 
     init() {
         Face.register()
@@ -22,6 +25,9 @@ struct NoFapApp: App {
                 .environment(blocking)
                 .environment(streak)
                 .environment(partner)
+                .environment(survey)
+                .environment(reasons)
+                .environment(reminder)
                 .preferredColorScheme(.dark)
         }
     }

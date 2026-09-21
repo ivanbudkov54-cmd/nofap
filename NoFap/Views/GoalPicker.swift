@@ -66,7 +66,7 @@ struct GoalPicker: View {
                         }
                     }
 
-                Text("дней")
+                Text(verbatim: selected.dayWord)
                     .font(.system(size: 15))
                     .foregroundStyle(Palette.ash)
             }

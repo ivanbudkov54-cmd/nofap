@@ -10,10 +10,12 @@
 import Foundation
 import FamilyControls
 import ManagedSettings
+import os
 
 @Observable
-@MainActor
 final class BlockingManager {
+
+    private static let log = Logger(subsystem: "Albert.lvan.NoFap", category: "blocking")
 
     enum State {
         case unknown          // ещё не спрашивали разрешение
@@ -23,7 +25,6 @@ final class BlockingManager {
     }
 
     private let store = ManagedSettingsStore()
-    private let center = AuthorizationCenter.shared
 
     private(set) var state: State = .unknown
 
@@ -35,7 +36,7 @@ final class BlockingManager {
     /// Проверяет статус при запуске: если разрешение уже выдано, просто
     /// переустанавливает фильтр — настройки могли сброситься после обновления iOS.
     func refresh() {
-        switch center.authorizationStatus {
+        switch AuthorizationCenter.shared.authorizationStatus {
         case .denied:
             state = .denied
         case .notDetermined:
@@ -49,11 +50,26 @@ final class BlockingManager {
     /// Запрашивает разрешение и сразу включает блокировку.
     func enableProtection() async {
         do {
-            try await center.requestAuthorization(for: .individual)
+            try await Self.requestAuthorization()
             applyFilter()
         } catch {
-            state = .denied
+            // Раньше любая ошибка означала «пользователь отказал», и человека
+            // отправляли в Настройки снимать запрет, которого он не ставил.
+            // Отказ — это то, что подтверждает система, а не любой сбой.
+            if AuthorizationCenter.shared.authorizationStatus == .denied {
+                state = .denied
+            } else {
+                Self.log.error("Не удалось включить защиту: \(error.localizedDescription, privacy: .public)")
+                state = .failed(String(localized: "Не удалось включить защиту. Попробуй ещё раз."))
+            }
         }
+    }
+
+    /// `AuthorizationCenter` не Sendable, поэтому синглтон берётся уже внутри
+    /// неизолированного контекста — иначе он уезжал бы с главного актора
+    /// наружу, и это была бы гонка данных.
+    private nonisolated static func requestAuthorization() async throws {
+        try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
     }
 
     private func applyFilter() {

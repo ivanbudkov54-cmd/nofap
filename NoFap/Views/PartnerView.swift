@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import Combine
 
 struct PartnerView: View {
 
@@ -17,9 +16,6 @@ struct PartnerView: View {
     @State private var codeDraft = ""
     @State private var nicknameDraft = ""
     @State private var showUnpairConfirm = false
-    @State private var now = Date()
-
-    private let tick = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ScrollView {
@@ -37,7 +33,6 @@ struct PartnerView: View {
             .frame(maxWidth: .infinity)
         }
         .background(Palette.obsidian.ignoresSafeArea())
-        .onReceive(tick) { now = $0 }
         .task {
             nicknameDraft = partner.nickname
             if case .unknown = partner.state { await partner.refresh() }
@@ -73,14 +68,13 @@ struct PartnerView: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 Eyebrow(text: "что увидит напарник")
-                bullet("сколько дней ты держишься")
-                bullet("отметился ли ты сегодня")
+                bullet("сколько дней ты держишься", symbol: "eye")
+                bullet("отметился ли ты сегодня", symbol: "eye")
 
                 Eyebrow(text: "чего не увидит")
                     .padding(.top, 8)
-                bullet("календарь и даты")
-                bullet("историю срывов")
-                bullet("твоё настоящее имя")
+                bullet("календарь и даты", symbol: "eye.slash")
+                bullet("историю срывов", symbol: "eye.slash")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
@@ -119,9 +113,15 @@ struct PartnerView: View {
                 .padding(.vertical, 28)
                 .cardSurface()
 
-            Text(remaining(until: invite.expiresAt))
-                .font(.system(size: 14))
-                .foregroundStyle(Palette.ash)
+            // Системный таймер вместо своего `Timer.publish`: тот тикал раз в
+            // секунду и перерисовывал весь экран во всех состояниях, включая
+            // те, где никакого отсчёта нет.
+            HStack(spacing: 4) {
+                Text("Истекает через")
+                Text(invite.expiresAt, style: .timer)
+            }
+            .font(.system(size: 14))
+            .foregroundStyle(Palette.ash)
 
             HStack(spacing: 10) {
                 ProgressView().tint(Palette.gold)
@@ -130,7 +130,7 @@ struct PartnerView: View {
                     .foregroundStyle(Palette.marble)
             }
 
-            ShareLink(item: "Мой код в приложении: \(invite.code)") {
+            ShareLink(item: String(localized: "Мой код в приложении: \(invite.code)")) {
                 Text("Отправить код")
                     .font(.system(size: 15, weight: .semibold))
                     .tracking(1.6)
@@ -216,7 +216,7 @@ struct PartnerView: View {
 
     // MARK: - Части
 
-    private func header(title: String, note: String) -> some View {
+    private func header(title: LocalizedStringResource, note: LocalizedStringResource) -> some View {
         VStack(spacing: 8) {
             Text(title)
                 .font(Face.display(26, .semibold))
@@ -232,12 +232,17 @@ struct PartnerView: View {
         }
     }
 
-    private func bullet(_ text: String) -> some View {
-        HStack(alignment: .top, spacing: 8) {
-            Text("—").foregroundStyle(Palette.gold)
+    /// Маркер — SF Symbol, а не набранное тире: символ ещё и несёт смысл
+    /// пункта («увидит» / «не увидит»), а не просто отбивает строку.
+    private func bullet(_ text: LocalizedStringResource, symbol: String) -> some View {
+        Label {
             Text(text)
                 .foregroundStyle(Palette.marble)
                 .fixedSize(horizontal: false, vertical: true)
+        } icon: {
+            Image(systemName: symbol)
+                .foregroundStyle(Palette.gold)
+                .imageScale(.small)
         }
         .font(.system(size: 14))
     }
@@ -258,7 +263,7 @@ struct PartnerView: View {
                         .strokeBorder(Palette.vein, lineWidth: 1)
                 }
 
-            Text("Имя увидит только напарник. Настоящее лучше не писать.")
+            Text("Имя увидит только напарник.")
                 .font(.system(size: 12))
                 .foregroundStyle(Palette.ash)
         }
@@ -268,18 +273,19 @@ struct PartnerView: View {
     /// но счёт обнулился. Формулировка нейтральная.
     private func statusLine(for profile: PartnerProfile) -> some View {
         let holding = profile.isHoldingToday
-        let text = holding
+        let text: LocalizedStringResource = holding
             ? (profile.currentStreak == 0 ? "отметился сегодня" : "держится сегодня")
             : "сегодня ещё не отмечался"
 
-        return HStack(spacing: 8) {
-            Circle()
-                .fill(holding ? Palette.gold : Palette.vein)
-                .frame(width: 7, height: 7)
+        return Label {
             Text(text)
-                .font(.system(size: 14))
                 .foregroundStyle(holding ? Palette.marble : Palette.ash)
+        } icon: {
+            Image(systemName: holding ? "checkmark.circle.fill" : "circle")
+                .foregroundStyle(holding ? Palette.gold : Palette.vein)
+                .imageScale(.small)
         }
+        .font(.system(size: 14))
     }
 
     private var codeSheet: some View {
@@ -301,8 +307,4 @@ struct PartnerView: View {
         .presentationBackground(Palette.obsidian)
     }
 
-    private func remaining(until date: Date) -> String {
-        let left = Int(max(0, date.timeIntervalSince(now)))
-        return "Истекает через \(left / 60):" + String(format: "%02d", left % 60)
-    }
 }

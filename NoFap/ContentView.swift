@@ -10,6 +10,7 @@ struct ContentView: View {
     @Environment(BlockingManager.self) private var blocking
     @Environment(StreakManager.self) private var streak
     @Environment(PartnerManager.self) private var partner
+    @Environment(ReminderManager.self) private var reminder
     @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -24,6 +25,7 @@ struct ContentView: View {
         }
         .task {
             blocking.refresh()
+            await reminder.refresh()
             await partner.refresh()
         }
         // Одна точка синхронизации на всё приложение. Дёргать push на каждом

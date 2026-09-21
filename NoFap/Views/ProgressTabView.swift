@@ -12,17 +12,26 @@ struct ProgressTabView: View {
 
     @Environment(StreakManager.self) private var streak
 
-    private enum Span: String, CaseIterable { case day = "День", week = "Неделя", month = "Месяц", year = "Год" }
+    private enum Span: String, CaseIterable {
+        case day, week, month, year
+
+        var label: LocalizedStringResource {
+            switch self {
+            case .day:   "День"
+            case .week:  "Неделя"
+            case .month: "Месяц"
+            case .year:  "Год"
+            }
+        }
+    }
 
     @State private var span: Span = .month
 
+    @Namespace private var spanNamespace
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     /// Неделя считается с понедельника независимо от региона устройства.
-    private var isoCalendar: Calendar {
-        var cal = Calendar(identifier: .gregorian)
-        cal.firstWeekday = 2
-        cal.timeZone = .current
-        return cal
-    }
+    private var isoCalendar: Calendar { DayKey.isoCalendar }
 
     var body: some View {
         ScrollView {
@@ -86,16 +95,25 @@ struct ProgressTabView: View {
         HStack(spacing: 4) {
             ForEach(Span.allCases, id: \.self) { item in
                 Button {
-                    withAnimation(.snappy(duration: 0.2)) { span = item }
+                    withAnimation(reduceMotion ? .easeOut(duration: 0.15) : .snappy(duration: 0.25)) {
+                        span = item
+                    }
                 } label: {
-                    Text(item.rawValue)
-                        .font(.system(size: 14, weight: span == item ? .semibold : .regular))
+                    Text(item.label)
+                        // Начертание не анимируется — при смене regular↔semibold
+                        // подпись прыгала. Активную выделяет плашка.
+                        .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(span == item ? Color(hex: 0x1A1405) : Palette.ash)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 9)
                         .background {
+                            // Плашка переезжает между сегментами, а не
+                            // уничтожается и создаётся заново: раньше анимация
+                            // не могла ничего сдвинуть, и она просто мигала.
                             if span == item {
-                                Capsule().fill(.goldFill)
+                                Capsule()
+                                    .fill(.goldFill)
+                                    .matchedGeometryEffect(id: "span", in: spanNamespace)
                             }
                         }
                 }
@@ -112,6 +130,13 @@ struct ProgressTabView: View {
 private struct DaySpan: View {
     let streak: StreakManager
 
+    /// Тернарник из строковых литералов Swift выводит как `String`, и такой
+    /// текст не попадает в каталог локализации. Явный тип это чинит.
+    private var todayStatus: LocalizedStringResource {
+        guard streak.hasCheckedInToday else { return "Ещё не отмечено" }
+        return streak.status(on: Date()) == true ? "Отмечено: чисто" : "Отмечено: был срыв"
+    }
+
     private var recent: [(key: String, clean: Bool)] {
         streak.history
             .sorted { $0.key > $1.key }
@@ -123,9 +148,7 @@ private struct DaySpan: View {
         VStack(spacing: 18) {
             VStack(spacing: 8) {
                 Eyebrow(text: "сегодня")
-                Text(streak.hasCheckedInToday
-                     ? (streak.status(on: Date()) == true ? "Отмечено: чисто" : "Отмечено: был срыв")
-                     : "Ещё не отмечено")
+                Text(todayStatus)
                     .font(Face.display(20, .medium))
                     .foregroundStyle(Palette.marbleHigh)
             }
@@ -141,7 +164,7 @@ private struct DaySpan: View {
                                 .font(.system(size: 15))
                                 .foregroundStyle(Palette.marble)
                             Spacer()
-                            Text(entry.clean ? "чисто" : "срыв")
+                            Text(entry.clean ? LocalizedStringResource("чисто") : LocalizedStringResource("срыв"))
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundStyle(entry.clean ? .goldFill : LinearGradient(colors: [Palette.ash], startPoint: .top, endPoint: .bottom))
                         }
@@ -158,16 +181,32 @@ private struct DaySpan: View {
         }
     }
 
-    private static func label(for key: String) -> String {
+    /// Форматтеры статические: раньше на каждую строку списка создавалось по
+    /// два экземпляра прямо во время отрисовки, а это одна из самых дорогих
+    /// вещей в Foundation.
+    private static let keyParser: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd"
-        guard let date = f.date(from: key) else { return key }
-        if Calendar.current.isDateInToday(date) { return "Сегодня" }
-        if Calendar.current.isDateInYesterday(date) { return "Вчера" }
-        let out = DateFormatter()
-        out.dateFormat = "d MMMM"
-        out.locale = Locale(identifier: "ru_RU")
-        return out.string(from: date)
+        f.calendar = Calendar(identifier: .gregorian)
+        f.timeZone = .autoupdatingCurrent
+        return f
+    }()
+
+    private static let dayMonth: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = .autoupdatingCurrent
+        // Шаблон, а не формат: порядок «день — месяц» или «месяц — день»
+        // выбирает сама локаль («6 сентября» против «September 6»).
+        f.setLocalizedDateFormatFromTemplate("dMMMM")
+        return f
+    }()
+
+    private static func label(for key: String) -> String {
+        guard let date = keyParser.date(from: key) else { return key }
+        let calendar = Calendar.autoupdatingCurrent
+        if calendar.isDateInToday(date) { return String(localized: "Сегодня") }
+        if calendar.isDateInYesterday(date) { return String(localized: "Вчера") }
+        return dayMonth.string(from: date)
     }
 }
 
@@ -216,11 +255,8 @@ private struct WeekSpan: View {
     }
 
     private static func weekdayLetter(_ date: Date) -> String {
-        let names = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"]
-        var cal = Calendar(identifier: .gregorian)
-        cal.firstWeekday = 2
-        let weekday = cal.component(.weekday, from: date)
-        return names[(weekday + 5) % 7]
+        let weekday = DayKey.isoCalendar.component(.weekday, from: date)
+        return DayKey.weekdaySymbolsMondayFirst[(weekday + 5) % 7].uppercased()
     }
 }
 
@@ -386,8 +422,9 @@ private struct MonthSpan: View {
             }
 
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(["ПН","ВТ","СР","ЧТ","ПТ","СБ","ВС"], id: \.self) { letter in
+                ForEach(DayKey.weekdaySymbolsMondayFirst, id: \.self) { letter in
                     Text(letter)
+                        .textCase(.uppercase)
                         .font(Face.display(10, .semibold))
                         .foregroundStyle(Palette.ash)
                 }
@@ -419,7 +456,7 @@ private struct MonthSpan: View {
         .cardSurface()
     }
 
-    private func stat(value: String, label: String) -> some View {
+    private func stat(value: String, label: LocalizedStringResource) -> some View {
         VStack(spacing: 6) {
             Text(value)
                 .font(Face.display(24, .semibold))
@@ -433,7 +470,7 @@ private struct MonthSpan: View {
     }
 
     private var divider: some View {
-        Rectangle().fill(Palette.vein).frame(width: 1, height: 38)
+        Divider().overlay(Palette.vein).frame(height: 38)
     }
 }
 
@@ -442,6 +479,14 @@ private struct MonthSpan: View {
 private struct YearSpan: View {
     let streak: StreakManager
     let calendar: Calendar
+
+    /// Один форматтер на весь экран вместо нового на каждый месяц.
+    private static let monthName: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = .autoupdatingCurrent
+        f.dateFormat = "LLLL"
+        return f
+    }()
 
     private var months: [(name: String, clean: Int, total: Int)] {
         let year = calendar.component(.year, from: Date())
@@ -459,8 +504,7 @@ private struct YearSpan: View {
                 return streak.status(on: date) == true
             }.count
 
-            let f = DateFormatter(); f.locale = Locale(identifier: "ru_RU"); f.dateFormat = "LLLL"
-            return (f.string(from: first).capitalized, clean, elapsed)
+            return (Self.monthName.string(from: first).capitalized, clean, elapsed)
         }
     }
 

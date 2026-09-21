@@ -23,7 +23,7 @@ struct PartnerChatView: View {
             input
         }
         .background(Palette.obsidian.ignoresSafeArea())
-        .navigationTitle(partner.partner?.nickname ?? "Напарник")
+        .navigationTitle(partner.partner?.nickname ?? String(localized: "Напарник"))
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await partner.loadMessages()
@@ -48,9 +48,14 @@ struct PartnerChatView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 16)
             }
-            .onChange(of: partner.messages.count) { _, _ in
-                guard let last = partner.messages.last else { return }
-                withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
+            // Лента опрашивается раз в две секунды, и безымянный withAnimation
+            // (easeInOut ~0.35с) дёргал экран под рукой у читающего. Теперь
+            // короткий easeOut — и только если человек и так внизу ленты.
+            .onChange(of: partner.messages.count) { previous, current in
+                guard current > previous, let last = partner.messages.last else { return }
+                withAnimation(.easeOut(duration: 0.25)) {
+                    proxy.scrollTo(last.id, anchor: .bottom)
+                }
             }
         }
     }

@@ -9,9 +9,12 @@
 //
 
 import Foundation
+import os
 
 @Observable
 final class StreakManager {
+
+    private static let log = Logger(subsystem: "Albert.lvan.NoFap", category: "streak")
 
     private enum Key {
         static let lastCheckin = "lastCheckinDate"
@@ -32,7 +35,11 @@ final class StreakManager {
     private(set) var justReachedGoal = false
 
     private let defaults: UserDefaults
-    private let calendar = Calendar.current
+
+    /// `autoupdatingCurrent`, а не снимок `Calendar.current` при инициализации:
+    /// менеджер живёт всё время работы приложения, и после смены часового
+    /// пояса застывший календарь начал бы спорить с ключами дней из DayKey.
+    private var calendar: Calendar { .autoupdatingCurrent }
 
     /// День → отметился ли чисто. Ключ — "yyyy-MM-dd", без времени и часового
     /// пояса, чтобы не расходиться при смене региона устройства.
@@ -75,8 +82,12 @@ final class StreakManager {
 
     /// Отмечался ли уже сегодня — чтобы не засчитывать день дважды.
     var hasCheckedInToday: Bool {
+        hasCheckedIn(asOf: Date())
+    }
+
+    private func hasCheckedIn(asOf now: Date) -> Bool {
         guard let last = lastCheckinDate else { return false }
-        return calendar.isDateInToday(last)
+        return calendar.isDate(last, inSameDayAs: now)
     }
 
     /// Дата, с которой пользователь включил защиту.
@@ -94,15 +105,28 @@ final class StreakManager {
         history[DayKey.string(from: date)]
     }
 
+    /// Все проверки считаются от `now`, а не часть от него и часть от
+    /// системного «сейчас». Раньше параметр назывался `on date:` и влиял
+    /// только на ключ в истории, а «отмечался ли сегодня» и «было ли вчера»
+    /// брались от текущего момента — передача любой другой даты молча
+    /// разъезжалась со стриком. Параметр остаётся ради тестируемости.
     @discardableResult
-    func checkIn(clean: Bool, on date: Date = Date()) -> Bool {
-        guard !hasCheckedInToday else { return false }
+    func checkIn(clean: Bool, now: Date = Date()) -> Bool {
+        guard !hasCheckedIn(asOf: now) else { return false }
 
         let before = currentStreak
 
         if clean {
-            // Стрик продолжается, только если вчера тоже отмечались.
-            let continued = lastCheckinDate.map { calendar.isDateInYesterday($0) } ?? false
+            // Стрик продолжается, только если отмечались в предыдущий день
+            // относительно `now`.
+            let continued: Bool
+            if let last = lastCheckinDate,
+               let yesterday = calendar.date(byAdding: .day, value: -1, to: now) {
+                continued = calendar.isDate(last, inSameDayAs: yesterday)
+            } else {
+                continued = false
+            }
+
             currentStreak = continued ? currentStreak + 1 : 1
             totalCleanDays += 1
         } else {
@@ -110,8 +134,8 @@ final class StreakManager {
         }
 
         bestStreak = max(bestStreak, currentStreak)
-        lastCheckinDate = date
-        history[DayKey.string(from: date)] = clean
+        lastCheckinDate = now
+        history[DayKey.string(from: now)] = clean
 
         // Флаг встаёт только в момент перехода через порог, а не каждый раз,
         // когда currentStreak уже выше цели — иначе поздравление лезло бы
@@ -139,9 +163,15 @@ final class StreakManager {
         defaults.set(totalCleanDays, forKey: Key.totalClean)
         defaults.set(lastCheckinDate, forKey: Key.lastCheckin)
         defaults.set(personalGoalDays, forKey: Key.goal)
-        if let data = try? JSONEncoder().encode(history) {
-            defaults.set(data, forKey: Key.history)
+
+        do {
+            defaults.set(try JSONEncoder().encode(history), forKey: Key.history)
+        } catch {
+            // Молчаливое `try?` здесь означало бы потерянный календарь без
+            // единого следа. Счётчики уже записаны, поэтому не прерываемся.
+            Self.log.error("Не удалось сохранить историю дней: \(error.localizedDescription, privacy: .public)")
         }
+
         revision += 1
     }
 }

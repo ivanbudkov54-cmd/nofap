@@ -65,7 +65,7 @@ struct StreakArc: View {
                 .shadow(color: Palette.gold.opacity(0.35), radius: 18)
                 .contentTransition(.numericText())
 
-            Eyebrow(text: dayWord(streak))
+            Eyebrow(verbatim: streak.dayWordInARow)
         }
     }
 
@@ -73,13 +73,4 @@ struct StreakArc: View {
         -sweep / 2 + sweep * Double(index) / Double(ticks - 1)
     }
 
-    private func dayWord(_ n: Int) -> String {
-        let mod100 = n % 100, mod10 = n % 10
-        if (11...14).contains(mod100) { return "дней подряд" }
-        return switch mod10 {
-        case 1: "день подряд"
-        case 2...4: "дня подряд"
-        default: "дней подряд"
-        }
-    }
 }

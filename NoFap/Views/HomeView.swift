@@ -33,13 +33,15 @@ struct HomeView: View {
             isPresented: $showRelapse,
             titleVisibility: .visible
         ) {
-            Button("Отметить срыв", role: .destructive) { streak.checkIn(clean: false) }
+            // Обнуление — деликатный момент, поэтому медленнее отметки: число
+            // должно осесть, а не щёлкнуть.
+            Button("Отметить срыв", role: .destructive) {
+                withAnimation(.snappy(duration: 0.4)) { _ = streak.checkIn(clean: false) }
+            }
         } message: {
             // Текст зависит от того, есть ли напарник: обещать «никуда не
             // отправляется», когда счёт видит другой человек, — враньё.
-            Text(partner.isPaired
-                 ? "Счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину."
-                 : "Счётчик обнулится, рекорд останется. Отметка нужна только тебе — она никуда не отправляется.")
+            Text(relapseNote)
         }
         .onChange(of: streak.justReachedGoal) { _, reached in
             if reached {
@@ -53,7 +55,7 @@ struct HomeView: View {
                     .font(Face.display(26, .semibold))
                     .foregroundStyle(.goldFill)
 
-                Text("Ты продержался \(streak.personalGoalDays) \(dayWord(streak.personalGoalDays)) — именно столько сам себе и поставил. Поставь себе новую цель.")
+                Text("Ты продержался \(streak.personalGoalDays.daysCount) — именно столько сам себе и поставил. Поставь себе новую цель.")
                     .font(.system(size: 15))
                     .foregroundStyle(Palette.ash)
                     .multilineTextAlignment(.center)
@@ -74,6 +76,18 @@ struct HomeView: View {
         }
     }
 
+    /// Тернарник из строковых литералов Swift выводит как `String`, и такой
+    /// текст не попадает в каталог локализации. Явный тип это чинит.
+    private var relapseNote: LocalizedStringResource {
+        partner.isPaired
+            ? "Счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину."
+            : "Счётчик обнулится, рекорд останется. Отметка нужна только тебе — она никуда не отправляется."
+    }
+
+    private var greetingNote: LocalizedStringResource {
+        blocking.isActive ? "Защита стоит. Ты здесь, чтобы стать лучше." : "Ты здесь, чтобы стать лучше."
+    }
+
     // MARK: - Шапка
 
     private var greeting: some View {
@@ -83,9 +97,7 @@ struct HomeView: View {
                     .font(Face.display(24, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
 
-                Text(blocking.isActive
-                     ? "Защита стоит. Ты здесь, чтобы стать лучше."
-                     : "Ты здесь, чтобы стать лучше.")
+                Text(greetingNote)
                     .font(.system(size: 14))
                     .foregroundStyle(Palette.ash)
             }
@@ -108,10 +120,31 @@ struct HomeView: View {
 
     private var summitCard: some View {
         ZStack {
-            Summit()
+            // Фото подогнано впритык под рамку карточки — без запаса сверху
+            // и снизу сдвинуть его нельзя, обнажится пустой край. `offset`
+            // именно это и делал — отодвигал картинку, оставляя пустоту.
+            // Зум так не может: он только растит картинку за рамку, а якорь
+            // решает, куда она растёт. Якорь снизу — растёт вверх, и гора
+            // с фигурой поднимаются к центру карточки. Значение подобрано
+            // под этот кадр: фигура должна стоять между словом под числом
+            // и нижней строкой, не наезжая ни на одно.
+            Image("MountainSummit")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .scaleEffect(1.25, anchor: .bottom)
+                .clipped()
+                // Тёмная плёнка сверху — тот же приём, что и у векторного
+                // фона: числу и подписям нужен контраст поверх сцены.
+                .overlay {
+                    LinearGradient(
+                        colors: [Palette.obsidian.opacity(0.35), Palette.obsidian.opacity(0.55)],
+                        startPoint: .top, endPoint: .bottom
+                    )
+                }
 
             VStack(spacing: 0) {
-                Eyebrow(text: "твой стрик")
+                Eyebrow(text: "твой стрик", color: Palette.marble)
                     .padding(.top, 20)
 
                 Text("\(streak.currentStreak)")
@@ -120,11 +153,11 @@ struct HomeView: View {
                     .shadow(color: Palette.gold.opacity(0.45), radius: 16)
                     .contentTransition(.numericText())
 
-                Eyebrow(text: dayWord(streak.currentStreak), color: Palette.marble)
+                Eyebrow(verbatim: streak.currentStreak.dayWord, color: Palette.marble)
 
                 Spacer()
 
-                Text("Лучший стрик: \(streak.bestStreak) \(dayWord(streak.bestStreak)) · Цель: \(streak.personalGoalDays) \(dayWord(streak.personalGoalDays))")
+                Text("Лучший стрик: \(streak.bestStreak.daysCount) · Цель: \(streak.personalGoalDays.daysCount)")
                     .font(.system(size: 13))
                     .foregroundStyle(Palette.marble.opacity(0.8))
                     .padding(.bottom, 16)
@@ -154,7 +187,7 @@ struct HomeView: View {
         .padding(.vertical, 4)
     }
 
-    private func freedom(_ title: String, asset: String) -> some View {
+    private func freedom(_ title: LocalizedStringResource, asset: String) -> some View {
         VStack(spacing: 14) {
             ZStack {
                 // Свечение под знаком — тот же источник света, что и на вершине.
@@ -163,10 +196,6 @@ struct HomeView: View {
                     .frame(width: 96, height: 96)
                     .blur(radius: 14)
 
-                Circle()
-                    .strokeBorder(Palette.gold.opacity(0.7), lineWidth: 1.8)
-                    .frame(width: 92, height: 92)
-
                 Image(asset)
                     .renderingMode(.template)
                     .resizable()
@@ -174,11 +203,27 @@ struct HomeView: View {
                     .frame(width: 46, height: 46)
                     .foregroundStyle(.goldFill)
 
-                // Перечёркивание — состояние, а не часть иконки.
-                Capsule()
-                    .fill(.goldFill)
-                    .frame(width: 92, height: 2)
-                    .rotationEffect(.degrees(-45))
+                // Перечёркивание — состояние, а не часть иконки. Чёрная
+                // подложка чуть шире полосы — это обводка снаружи: золото
+                // остаётся целиком, а линия отделяется от золотых штрихов
+                // самой иконки (у IconPorn один штрих X идёт под тем же углом).
+                ZStack {
+                    Capsule()
+                        .fill(.black)
+                        .frame(width: 92, height: 4)
+                    Capsule()
+                        .fill(.goldFill)
+                        .frame(width: 92, height: 2)
+                }
+                .rotationEffect(.degrees(-45))
+
+                // Кольцо — последним, поверх полосы: тогда чёрная обводка
+                // полосы уходит под кольцо, а её золото перетекает в золото
+                // кольца. Иначе обводка резала кольцо в местах стыка, и
+                // полоса выглядела положенной сверху, а не частью знака.
+                Circle()
+                    .strokeBorder(Palette.gold.opacity(0.7), lineWidth: 1.8)
+                    .frame(width: 92, height: 92)
             }
 
             Text(title)
@@ -213,8 +258,13 @@ struct HomeView: View {
                 .padding(.top, 6)
         } else {
             VStack(spacing: 14) {
-                Button("Я ДЕРЖУСЬ") { streak.checkIn(clean: true) }
-                    .buttonStyle(GoldButton())
+                // Без транзакции `.contentTransition(.numericText())` на числе
+                // стрика не срабатывает — число просто перещёлкивалось. Это
+                // главный момент награды в приложении, он должен перекатиться.
+                Button("Я ДЕРЖУСЬ") {
+                    withAnimation(.snappy(duration: 0.25)) { _ = streak.checkIn(clean: true) }
+                }
+                .buttonStyle(GoldButton())
 
                 Button("Сообщить о срыве") { showRelapse = true }
                     .font(.system(size: 14))
@@ -224,15 +274,6 @@ struct HomeView: View {
         }
     }
 
-    private func dayWord(_ n: Int) -> String {
-        let mod100 = n % 100, mod10 = n % 10
-        if (11...14).contains(mod100) { return "дней" }
-        return switch mod10 {
-        case 1: "день"
-        case 2...4: "дня"
-        default: "дней"
-        }
-    }
 }
 
 // MARK: - Общие элементы
@@ -294,6 +335,10 @@ struct EngravedButton: ButtonStyle {
             .overlay {
                 Capsule().strokeBorder(Palette.gold.opacity(0.45), lineWidth: 1)
             }
+            // Та же реакция на нажатие, что у GoldButton: три стиля кнопок не
+            // должны вести себя по-разному.
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.snappy(duration: 0.15), value: configuration.isPressed)
     }
 }
 
@@ -310,5 +355,7 @@ struct StoneButton: ButtonStyle {
                 Capsule().strokeBorder(Palette.vein, lineWidth: 1)
             }
             .opacity(configuration.isPressed ? 0.6 : 1)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.snappy(duration: 0.15), value: configuration.isPressed)
     }
 }

@@ -17,8 +17,11 @@ enum Palette {
     static let marbleHigh = Color(hex: 0xE4E7EF)  // блик мрамора
     static let marble     = Color(hex: 0xB8BECD)  // основной текст
     static let ash        = Color(hex: 0x7A7A87)  // вторичный текст
-    static let gold       = Color(hex: 0xE5B94E)
-    static let goldLight  = Color(hex: 0xF7D98C)
+    // Тон и насыщенность взяты из свечения на фото «Твой стрик» (#F5BE4E) —
+    // раньше goldLight терял насыщенность и уходил в бледно-жёлтый, поэтому
+    // общий золотой на экране читался холоднее и менее оранжевым, чем на фото.
+    static let gold       = Color(hex: 0xF0BC4F)
+    static let goldLight  = Color(hex: 0xF7CF7C)
 }
 
 enum Face {
@@ -57,12 +60,29 @@ enum Face {
 }
 
 /// Надпись-надзаголовок: прописные, разрежённые, как на музейной табличке.
+///
+/// Два инициализатора по образцу `Text(_:)` / `Text(verbatim:)`: литерал
+/// уходит в каталог локализации как ключ, а уже переведённая строка
+/// (например, склонённое слово) выводится как есть.
 struct Eyebrow: View {
-    let text: String
-    var color: Color = Palette.ash
+    private let content: Text
+    private let color: Color
+
+    init(text: LocalizedStringResource, color: Color = Palette.ash) {
+        content = Text(text)
+        self.color = color
+    }
+
+    init(verbatim: String, color: Color = Palette.ash) {
+        content = Text(verbatim: verbatim)
+        self.color = color
+    }
 
     var body: some View {
-        Text(text.uppercased())
+        // `.textCase` вместо `.uppercased()`: прописные считаются по правилам
+        // текущего языка, а не по правилам строки в коде.
+        content
+            .textCase(.uppercase)
             .font(Face.display(11, .semibold))
             .tracking(2.4)
             .foregroundStyle(color)

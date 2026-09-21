@@ -62,7 +62,7 @@ final class PartnerManager {
     /// Предлагаем выдуманное имя вместо пустого поля — это заметно снижает
     /// шанс, что человек впишет настоящее.
     private static func suggestNickname() -> String {
-        "Сизиф-\(Int.random(in: 100...999))"
+        String(localized: "Сизиф-\(Int.random(in: 100...999))")
     }
 
     func setNickname(_ value: String) {

@@ -102,21 +102,21 @@ enum PartnerSyncError: Error, Equatable, Sendable {
     var message: String {
         switch self {
         case .iCloudUnavailable:
-            "Нужен вход в iCloud — без него напарник не работает."
+            String(localized: "Нужен вход в iCloud — без него напарник не работает.")
         case .network:
-            "Нет связи. Попробуй ещё раз."
+            String(localized: "Нет связи. Попробуй ещё раз.")
         case .codeNotFound:
-            "Такого кода нет. Проверь буквы."
+            String(localized: "Такого кода нет. Проверь буквы.")
         case .codeExpired:
-            "Код истёк. Попроси новый."
+            String(localized: "Код истёк. Попроси новый.")
         case .codeAlreadyUsed:
-            "Этот код уже использовали."
+            String(localized: "Этот код уже использовали.")
         case .codeIsMine:
-            "Это твой собственный код."
+            String(localized: "Это твой собственный код.")
         case .alreadyPaired:
-            "У тебя уже есть напарник."
+            String(localized: "У тебя уже есть напарник.")
         case .partnerGone:
-            "Напарник разорвал связь."
+            String(localized: "Напарник разорвал связь.")
         case .other(let text):
             text
         }

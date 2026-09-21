@@ -47,7 +47,11 @@ final class LocalFakePartnerSync: PartnerSyncing {
 
     private var flakyCounter = 0
 
-    init(defaults: UserDefaults = UserDefaults(suiteName: "partner.fake") ?? .standard) {
+    /// Падать, а не подменять `.standard`: смысл отдельного suite в том, чтобы
+    /// выдуманные данные заглушки никогда не попали в настоящие настройки,
+    /// и молчаливый откат туда — ровно то, от чего этот suite защищает.
+    /// В рабочем приложении suite всегда создаётся, так что это не путь отказа.
+    init(defaults: UserDefaults = UserDefaults(suiteName: "partner.fake")!) {
         self.defaults = defaults
     }
 
@@ -170,8 +174,8 @@ final class LocalFakePartnerSync: PartnerSyncing {
     private func scheduleReply(to kind: PartnerMessage.Kind) {
         let delay: Duration = kind == .sos ? .seconds(3) : .seconds(7)
         let text = kind == .sos
-            ? ChatPresets.support.randomElement() ?? "Я рядом"
-            : Self.smallTalk.randomElement() ?? "Понял тебя"
+            ? ChatPresets.support.randomElement() ?? String(localized: "Я рядом")
+            : Self.smallTalk.randomElement() ?? String(localized: "Понял тебя")
 
         Task { [weak self] in
             try? await Task.sleep(for: delay)
@@ -187,10 +191,10 @@ final class LocalFakePartnerSync: PartnerSyncing {
     }
 
     private static let smallTalk = [
-        "Понял тебя",
-        "Как ты сегодня?",
-        "Молодец, что написал",
-        "Я тоже держусь"
+        String(localized: "Понял тебя"),
+        String(localized: "Как ты сегодня?"),
+        String(localized: "Молодец, что написал"),
+        String(localized: "Я тоже держусь")
     ]
 
     private var storedMessages: [PartnerMessage] {
@@ -218,7 +222,7 @@ final class LocalFakePartnerSync: PartnerSyncing {
 
     private static func samplePartner() -> PartnerProfile {
         PartnerProfile(id: UUID().uuidString,
-                       nickname: "Марк",
+                       nickname: String(localized: "Марк"),
                        currentStreak: 12,
                        goalDays: 30,
                        lastCheckInDay: DayKey.today(),
