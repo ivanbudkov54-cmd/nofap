@@ -14,6 +14,8 @@ struct NoFapApp: App {
     @State private var survey = SurveyManager()
     @State private var reasons = ReasonsStore()
     @State private var reminder = ReminderManager()
+    @State private var journal = JournalManager()
+    @State private var checkIns = CheckInManager()
 
     init() {
         Face.register()
@@ -28,6 +30,8 @@ struct NoFapApp: App {
                 .environment(survey)
                 .environment(reasons)
                 .environment(reminder)
+                .environment(journal)
+                .environment(checkIns)
                 .preferredColorScheme(.dark)
         }
     }

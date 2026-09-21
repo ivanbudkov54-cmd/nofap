@@ -17,6 +17,15 @@ struct ArticleDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
+                HStack(spacing: 8) {
+                    Eyebrow(verbatim: article.category.rawValue, color: Palette.gold)
+                    Text("·")
+                        .foregroundStyle(Palette.ash)
+                    Text(article.readTime)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(Palette.ash)
+                }
+
                 Text(article.title)
                     .font(Face.display(26, .semibold))
                     .foregroundStyle(Palette.marbleHigh)

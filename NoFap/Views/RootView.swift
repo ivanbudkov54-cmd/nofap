@@ -32,6 +32,11 @@ struct RootView: View {
             .tabItem { Label("Прогресс", systemImage: "chart.bar.fill") }
 
             NavigationStack {
+                DiaryView()
+            }
+            .tabItem { Label("Дневник", systemImage: "square.and.pencil") }
+
+            NavigationStack {
                 KnowledgeView()
             }
             .tabItem { Label("Знания", systemImage: "text.book.closed.fill") }
