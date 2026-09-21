@@ -2,29 +2,30 @@
 //  KnowledgeView.swift
 //  NoFap
 //
+//  «База знаний» из трёх вкладок: путь по дням стрика, симулятор тяги и
+//  статьи по категориям.
+//
 
 import SwiftUI
 
 struct KnowledgeView: View {
 
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 22) {
-                header
+    private enum Tab: String, CaseIterable, Identifiable {
+        case journey = "My Journey"
+        case simulator = "Urge Simulator"
+        case deepDive = "Deep Dive"
 
-                VStack(spacing: 14) {
-                    ForEach(ArticleLibrary.all) { article in
-                        NavigationLink {
-                            ArticleDetailView(article: article)
-                        } label: {
-                            row(article)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
-            .padding(.horizontal, 18)
-            .padding(.bottom, 24)
+        var id: String { rawValue }
+    }
+
+    @State private var selected: Tab = .journey
+    @Namespace private var tabAnimation
+
+    var body: some View {
+        VStack(spacing: 0) {
+            header
+            tabBar
+            content
         }
         .background(Palette.obsidian.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
@@ -40,28 +41,56 @@ struct KnowledgeView: View {
                 .foregroundStyle(Palette.ash)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 18)
         .padding(.top, 6)
     }
 
-    private func row(_ article: Article) -> some View {
-        HStack(spacing: 14) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(article.title)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Palette.marbleHigh)
-                    .multilineTextAlignment(.leading)
-                Text(article.sourceName)
-                    .font(.system(size: 13))
-                    .foregroundStyle(Palette.gold)
+    private var tabBar: some View {
+        HStack(spacing: 4) {
+            ForEach(Tab.allCases) { tab in
+                tabButton(tab)
             }
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(Palette.ash)
         }
-        .padding(16)
-        .cardSurface()
+        .padding(4)
+        .background(Palette.basalt, in: .capsule)
+        .overlay { Capsule().strokeBorder(Palette.vein, lineWidth: 1) }
+        .padding(.horizontal, 18)
+        .padding(.top, 16)
+        .padding(.bottom, 12)
+    }
+
+    private func tabButton(_ tab: Tab) -> some View {
+        let isSelected = selected == tab
+        return Button {
+            withAnimation(.snappy(duration: 0.25)) { selected = tab }
+        } label: {
+            Text(tab.rawValue)
+                .font(.system(size: 12, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .foregroundStyle(isSelected ? Color(hex: 0x1A1405) : Palette.ash)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 9)
+                .background {
+                    if isSelected {
+                        Capsule()
+                            .fill(.goldFill)
+                            .matchedGeometryEffect(id: "knowledgeTabHighlight", in: tabAnimation)
+                    }
+                }
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch selected {
+        case .journey:
+            MyJourneyView()
+        case .simulator:
+            UrgeSimulatorView()
+        case .deepDive:
+            DeepDiveView()
+        }
     }
 }

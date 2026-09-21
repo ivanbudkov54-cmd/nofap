@@ -10,6 +10,14 @@
 
 import Foundation
 
+enum DeepDiveCategory: String, CaseIterable, Identifiable {
+    case neuroscience = "Нейробиология"
+    case mensHealth = "Мужское здоровье"
+    case discipline = "Дисциплина"
+
+    var id: String { rawValue }
+}
+
 struct Article: Identifiable {
     let id: String
     let title: String
@@ -17,6 +25,10 @@ struct Article: Identifiable {
     let sourceName: String
     let sourceDetail: String
     let url: URL
+    let category: DeepDiveCategory
+    let icon: String
+    let readTime: String
+    let excerpt: String
 }
 
 enum ArticleLibrary {
@@ -37,7 +49,11 @@ enum ArticleLibrary {
             """),
             sourceName: String(localized: "Всемирная организация здравоохранения"),
             sourceDetail: String(localized: "МКБ-11, компульсивное сексуальное поведение, 6C72"),
-            url: URL(string: "https://icd.who.int/en")!
+            url: URL(string: "https://icd.who.int/en")!,
+            category: .mensHealth,
+            icon: "doc.text.magnifyingglass",
+            readTime: "2 мин чтения",
+            excerpt: "ВОЗ признала компульсивное сексуальное поведение официальным диагнозом в МКБ-11 — это не просто «плохая привычка»."
         ),
         Article(
             id: "voon-cambridge",
@@ -53,7 +69,11 @@ enum ArticleLibrary {
             """),
             sourceName: String(localized: "Voon et al., Кембриджский университет, 2014"),
             sourceDetail: String(localized: "PLOS ONE"),
-            url: URL(string: "https://doi.org/10.1371/journal.pone.0102419")!
+            url: URL(string: "https://doi.org/10.1371/journal.pone.0102419")!,
+            category: .neuroscience,
+            icon: "brain.head.profile",
+            readTime: "3 мин чтения",
+            excerpt: "Кембриджское исследование: зоны вознаграждения при виде триггеров включаются так же, как при зависимости от веществ."
         ),
         Article(
             id: "kuhn-maxplanck",
@@ -70,7 +90,11 @@ enum ArticleLibrary {
             """),
             sourceName: String(localized: "Kühn & Gallinat, институт Макса Планка, 2014"),
             sourceDetail: String(localized: "JAMA Psychiatry"),
-            url: URL(string: "https://jamanetwork.com/journals/jamapsychiatry/fullarticle/1874574")!
+            url: URL(string: "https://jamanetwork.com/journals/jamapsychiatry/fullarticle/1874574")!,
+            category: .neuroscience,
+            icon: "waveform.path.ecg",
+            readTime: "3 мин чтения",
+            excerpt: "Чем чаще смотришь порно, тем меньше серого вещества в зоне вознаграждения — данные МРТ института Макса Планка."
         ),
         Article(
             id: "potenza-yale",
@@ -88,7 +112,11 @@ enum ArticleLibrary {
             """),
             sourceName: String(localized: "Kraus, Voon, Potenza — обзор, Йельский университет, 2016"),
             sourceDetail: String(localized: "Addiction"),
-            url: URL(string: "https://doi.org/10.1111/add.13297")!
+            url: URL(string: "https://doi.org/10.1111/add.13297")!,
+            category: .discipline,
+            icon: "figure.mind.and.body",
+            readTime: "4 мин чтения",
+            excerpt: "Компульсивное поведение закрепляется через систему вознаграждения мозга — почему «просто взять себя в руки» часто не работает."
         ),
         Article(
             id: "henry-opponent-process",
@@ -111,7 +139,11 @@ enum ArticleLibrary {
             """),
             sourceName: String(localized: "Henry et al., университет Мэсси, 2025"),
             sourceDetail: String(localized: "Archives of Sexual Behavior"),
-            url: URL(string: "https://doi.org/10.1007/s10508-025-03287-z")!
+            url: URL(string: "https://doi.org/10.1007/s10508-025-03287-z")!,
+            category: .neuroscience,
+            icon: "arrow.triangle.2.circlepath",
+            readTime: "3 мин чтения",
+            excerpt: "После короткого пика настроение падает на несколько часов — дофаминовая петля, а не нехватка силы воли."
         ),
     ]
 }
