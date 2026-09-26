@@ -11,7 +11,7 @@ import Foundation
 
 /// Состояние напарника, каким его видит эта сторона.
 struct PartnerProfile: Codable, Sendable, Equatable, Identifiable {
-    let id: String                  // UUID; в CloudKit это же recordName
+    let id: String                  // идентификатор в Firebase (uid)
     var nickname: String
     var currentStreak: Int
     var goalDays: Int

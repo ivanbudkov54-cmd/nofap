@@ -22,6 +22,10 @@ enum Palette {
     // общий золотой на экране читался холоднее и менее оранжевым, чем на фото.
     static let gold       = Color(hex: 0xF0BC4F)
     static let goldLight  = Color(hex: 0xF7CF7C)
+    // Приглушённый гранатовый, а не системный Color.red — тот же смысл
+    // «тревога», но без ядовитой ноты чистого iOS-red на фоне тёплого золота.
+    static let garnet      = Color(hex: 0xE0524A)
+    static let garnetLight = Color(hex: 0xE87A70)
 }
 
 enum Face {

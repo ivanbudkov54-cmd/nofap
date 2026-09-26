@@ -10,14 +10,28 @@ struct HomeView: View {
     @Environment(BlockingManager.self) private var blocking
     @Environment(StreakManager.self) private var streak
     @Environment(PartnerManager.self) private var partner
+    @Environment(ReasonsStore.self) private var reasons
 
     @State private var showRelapse = false
     @State private var showGoalReached = false
     @State private var newGoalDraft = 21
 
+    @State private var showSOS = false
+    @State private var sosPath: [SOSOption] = []
+
+    /// Короткий пружинный «pop» цифры стрика при каждом +1 — отдельно от
+    /// content-transition, который только перекатывает саму цифру.
+    @State private var streakPulse = false
+
+    /// Три способа переждать тягу — выбор, а не один навязанный сценарий.
+    /// .survey — общий финальный шаг для всех трёх, шагом дальше по стеку.
+    private enum SOSOption: Hashable {
+        case breathing, exercise, motivation, survey
+    }
+
     var body: some View {
         ScrollView {
-            VStack(spacing: 12) {
+            VStack(spacing: 6) {
                 greeting
                 summitCard
                 freedomSection
@@ -25,19 +39,28 @@ struct HomeView: View {
                 actions
             }
             .padding(.horizontal, 18)
-            .padding(.bottom, 20)
+            // Запас снизу небольшой: нижние 12pt зоны нажатия «Сообщить о
+            // срыве» сами работают буфером перед таб-баром.
+            .padding(.bottom, 12)
         }
         .background(Palette.obsidian.ignoresSafeArea())
-        .confirmationDialog(
-            "Отметить срыв?",
-            isPresented: $showRelapse,
-            titleVisibility: .visible
+        // .alert вместо .confirmationDialog: в iOS 26 у confirmationDialog
+        // появилась стрелка-«хвостик», указывающая на кнопку-источник — на
+        // телефоне она смотрится бессмысленно, ни на что осмысленное не
+        // указывая. alert всегда по центру экрана, без этой стрелки.
+        .alert(
+            "Сорвался?",
+            isPresented: $showRelapse
         ) {
             // Обнуление — деликатный момент, поэтому медленнее отметки: число
             // должно осесть, а не щёлкнуть.
-            Button("Отметить срыв", role: .destructive) {
+            Button("Сорвался", role: .destructive) {
+                RelapseLog.record()
                 withAnimation(.snappy(duration: 0.4)) { _ = streak.checkIn(clean: false) }
             }
+            // .alert не добавляет «Отмена» сам, в отличие от confirmationDialog —
+            // прописываем явно, иначе закрыть можно только отметив срыв.
+            Button("Отмена", role: .cancel) {}
         } message: {
             // Текст зависит от того, есть ли напарник: обещать «никуда не
             // отправляется», когда счёт видит другой человек, — враньё.
@@ -74,6 +97,341 @@ struct HomeView: View {
             .presentationDetents([.height(520)])
             .presentationBackground(Palette.obsidian)
         }
+        .sheet(isPresented: $showSOS, onDismiss: { sosPath = [] }) {
+            NavigationStack(path: $sosPath) {
+                sosMenu
+                    .navigationDestination(for: SOSOption.self) { option in
+                        switch option {
+                        case .breathing:  breathingView
+                        case .exercise:   exerciseView
+                        case .motivation: motivationView
+                        case .survey:     triggerSurvey
+                        }
+                    }
+            }
+            .presentationDetents([.height(560), .large])
+            .presentationBackground(Palette.obsidian)
+            .presentationDragIndicator(.visible)
+        }
+    }
+
+    // MARK: - SOS
+
+    /// Точка входа на случай острой тяги: три равноценных пути, а не один
+    /// навязанный совет — то, что откликнется, у всех разное.
+    private var sosMenu: some View {
+        VStack(spacing: 22) {
+            Image(systemName: "hand.raised.fill")
+                .font(.system(size: 34))
+                .foregroundStyle(Palette.garnet)
+                .padding(.top, 12)
+
+            Text("Стоп. Тяга — это волна")
+                .font(Face.display(24, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+                .multilineTextAlignment(.center)
+
+            Text("Она поднимается и всегда спадает. Выбери, что поможет продержаться следующие пару минут.")
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.ash)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+
+            VStack(spacing: 12) {
+                sosRow(icon: "wind", title: "Дыхательная практика",
+                       subtitle: "Снять напряжение за 3 круга дыхания", option: .breathing)
+                sosRow(icon: "figure.strengthtraining.traditional", title: "Физическое упражнение",
+                       subtitle: "Переключить тело прямо сейчас", option: .exercise)
+                sosRow(icon: "quote.opening", title: "Мотивация",
+                       subtitle: "Вспомнить, зачем ты это делаешь", option: .motivation)
+            }
+            .padding(.horizontal, 4)
+
+            Spacer()
+
+            Button("Закрыть") { showSOS = false }
+                .font(.system(size: 14))
+                .foregroundStyle(Palette.ash)
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 24)
+    }
+
+    private func sosRow(icon: String, title: LocalizedStringResource, subtitle: LocalizedStringResource, option: SOSOption) -> some View {
+        Button {
+            sosPath.append(option)
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: icon)
+                    .font(.system(size: 17))
+                    .foregroundStyle(Palette.garnet)
+                    .frame(width: 40, height: 40)
+                    .background(Palette.garnet.opacity(0.12), in: .circle)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(Face.display(14, .medium))
+                        .foregroundStyle(Palette.marbleHigh)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
+                    Text(subtitle)
+                        .font(.system(size: 12))
+                        .foregroundStyle(Palette.ash)
+                        .lineLimit(2)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Palette.ash)
+            }
+            .padding(14)
+            .cardSurface()
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - SOS · Дыхательная практика
+
+    @State private var breathPhase: BreathPhase = .inhale
+    @State private var breathScale: CGFloat = 0.62
+
+    private enum BreathPhase: String {
+        case inhale, hold, exhale
+
+        var label: LocalizedStringResource {
+            switch self {
+            case .inhale: "Вдох"
+            case .hold:   "Задержи"
+            case .exhale: "Выдох"
+            }
+        }
+    }
+
+    private var breathingView: some View {
+        VStack(spacing: 26) {
+            Text("Дыхательная практика")
+                .font(Face.display(22, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+                .padding(.top, 8)
+
+            Text("4 секунды вдох — 4 секунды задержка — 6 секунд выдох. Три круга снимают острую тягу.")
+                .font(.system(size: 14))
+                .foregroundStyle(Palette.ash)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+
+            ZStack {
+                Circle()
+                    .fill(Palette.garnet.opacity(0.12))
+                    .frame(width: 180, height: 180)
+
+                Circle()
+                    .strokeBorder(Palette.garnet.opacity(0.6), lineWidth: 1.6)
+                    .frame(width: 150, height: 150)
+                    .scaleEffect(breathScale)
+
+                Text(breathPhase.label)
+                    .font(Face.display(18, .medium))
+                    .foregroundStyle(Palette.marbleHigh)
+            }
+            .frame(height: 190)
+            .task { await runBreathingCycle() }
+
+            Spacer()
+
+            Button("Стало легче") { sosPath.append(.survey) }
+                .buttonStyle(GoldButton())
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 24)
+    }
+
+    /// Крутится, пока экран открыт — SwiftUI сам отменит Task при уходе с экрана.
+    private func runBreathingCycle() async {
+        while !Task.isCancelled {
+            withAnimation(.easeInOut(duration: 4)) {
+                breathPhase = .inhale
+                breathScale = 1.0
+            }
+            try? await Task.sleep(for: .seconds(4))
+            guard !Task.isCancelled else { return }
+
+            breathPhase = .hold
+            try? await Task.sleep(for: .seconds(4))
+            guard !Task.isCancelled else { return }
+
+            withAnimation(.easeInOut(duration: 6)) {
+                breathPhase = .exhale
+                breathScale = 0.62
+            }
+            try? await Task.sleep(for: .seconds(6))
+        }
+    }
+
+    // MARK: - SOS · Физическое упражнение
+
+    private var exerciseView: some View {
+        VStack(spacing: 22) {
+            Image(systemName: "figure.strengthtraining.traditional")
+                .font(.system(size: 32))
+                .foregroundStyle(Palette.garnet)
+                .padding(.top, 8)
+
+            Text("Физическое упражнение")
+                .font(Face.display(22, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+
+            Text("Тело переключает мозг быстрее, чем уговоры. Сделай один из вариантов прямо сейчас.")
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.ash)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+
+            VStack(alignment: .leading, spacing: 10) {
+                bulletTip("20 приседаний")
+                bulletTip("15 отжиманий")
+                bulletTip("Бег на месте 2 минуты")
+                bulletTip("Холодная вода на лицо или запястья")
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(16)
+            .cardSurface()
+            .padding(.horizontal, 4)
+
+            Spacer()
+
+            Button("Сделал, стало легче") { sosPath.append(.survey) }
+                .buttonStyle(GoldButton())
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 24)
+    }
+
+    // MARK: - SOS · Мотивация
+
+    /// Свои причины из WhyView — те же самые, что человек уже отметил себе.
+    /// Встроенные причины хранятся по своему заголовку (см. ReasonsStore),
+    /// поэтому нужный текст — либо сам ключ, либо текст своей причины.
+    private var selectedReasonTexts: [String] {
+        reasons.selected.map { key in
+            reasons.custom.first(where: { $0.key == key })?.text ?? key
+        }
+    }
+
+    private var motivationView: some View {
+        VStack(spacing: 22) {
+            Image(systemName: "quote.opening")
+                .font(.system(size: 32))
+                .foregroundStyle(Palette.garnet)
+                .padding(.top, 8)
+
+            Text("Вспомни, зачем")
+                .font(Face.display(22, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+
+            Text("«\(Motivations.today())»")
+                .font(Face.quote(17))
+                .foregroundStyle(Palette.marble)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 12)
+
+            if !selectedReasonTexts.isEmpty {
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(selectedReasonTexts, id: \.self) { bulletTip(verbatim: $0) }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .cardSurface()
+                .padding(.horizontal, 4)
+            }
+
+            Spacer()
+
+            Button("Держусь дальше") { sosPath.append(.survey) }
+                .buttonStyle(GoldButton())
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 24)
+    }
+
+    // MARK: - SOS · Опрос о триггере
+
+    /// Финальный шаг после любой из трёх практик: один вопрос, ответ сразу
+    /// закрывает SOS — без промежуточного «Готово», чтобы не растягивать
+    /// момент, когда тяга уже отпустила.
+    private var triggerSurvey: some View {
+        ScrollView {
+            VStack(spacing: 22) {
+                Text("Что стало триггером?")
+                    .font(Face.display(22, .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 8)
+
+                VStack(spacing: 10) {
+                    ForEach(Trigger.allCases) { trigger in
+                        triggerRow(trigger)
+                    }
+                }
+
+                Button("Пропустить") { showSOS = false }
+                    .font(.system(size: 14))
+                    .foregroundStyle(Palette.ash)
+                    .padding(.top, 4)
+            }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 24)
+        }
+    }
+
+    private func triggerRow(_ trigger: Trigger) -> some View {
+        Button {
+            TriggerLog.record(trigger)
+            showSOS = false
+        } label: {
+            HStack(spacing: 14) {
+                Text(trigger.emoji)
+                    .font(.system(size: 24))
+                    .frame(width: 40, height: 40)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(trigger.title)
+                        .font(Face.display(14, .medium))
+                        .foregroundStyle(Palette.marbleHigh)
+                    Text(trigger.subtitle)
+                        .font(.system(size: 12))
+                        .foregroundStyle(Palette.ash)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(14)
+            .cardSurface()
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func bulletTip(verbatim text: String) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            Text("—").foregroundStyle(Palette.garnet)
+            Text(verbatim: text).foregroundStyle(Palette.marble)
+        }
+        .font(.system(size: 14))
+    }
+
+    private func bulletTip(_ text: LocalizedStringResource) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            Text("—").foregroundStyle(Palette.garnet)
+            Text(text).foregroundStyle(Palette.marble)
+        }
+        .font(.system(size: 14))
     }
 
     /// Тернарник из строковых литералов Swift выводит как `String`, и такой
@@ -92,13 +450,13 @@ struct HomeView: View {
 
     private var greeting: some View {
         HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text("Привет, воин")
                     .font(Face.display(24, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
 
                 Text(greetingNote)
-                    .font(.system(size: 14))
+                    .font(.system(size: 15))
                     .foregroundStyle(Palette.ash)
             }
 
@@ -113,7 +471,6 @@ struct HomeView: View {
                         .foregroundStyle(Palette.marble)
                 }
         }
-        .padding(.top, 6)
     }
 
     // MARK: - Стрик
@@ -150,8 +507,22 @@ struct HomeView: View {
                 Text("\(streak.currentStreak)")
                     .font(Face.display(76, .semibold))
                     .foregroundStyle(.goldFill)
-                    .shadow(color: Palette.gold.opacity(0.45), radius: 16)
+                    .shadow(color: Palette.gold.opacity(streakPulse ? 1 : 0.45), radius: streakPulse ? 60 : 16)
+                    .scaleEffect(streakPulse ? 1.55 : 1)
                     .contentTransition(.numericText())
+                    .sensoryFeedback(.success, trigger: streak.currentStreak)
+                    .onChange(of: streak.currentStreak) { _, _ in
+                        // Более плавный, менее «дёрганый» перелёт: мягкая
+                        // пружина с высоким демпфированием вместо резкого
+                        // рывка, и долгий easeInOut на возврат — движение
+                        // читается как плавный вдох-выдох, а не щелчок.
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.75)) {
+                            streakPulse = true
+                        }
+                        withAnimation(.easeInOut(duration: 0.6).delay(0.25)) {
+                            streakPulse = false
+                        }
+                    }
 
                 Eyebrow(verbatim: streak.currentStreak.dayWord, color: Palette.marble)
 
@@ -174,7 +545,7 @@ struct HomeView: View {
 
     /// Без карточки: знаки стоят прямо на фоне и работают как акцент экрана.
     private var freedomSection: some View {
-        VStack(spacing: 22) {
+        VStack(spacing: 14) {
             Text("Сегодня ты свободен от:")
                 .font(Face.display(22, .medium))
                 .foregroundStyle(Palette.marbleHigh)
@@ -184,23 +555,25 @@ struct HomeView: View {
                 freedom("Порно", asset: "IconPorn")
             }
         }
-        .padding(.vertical, 4)
     }
 
     private func freedom(_ title: LocalizedStringResource, asset: String) -> some View {
-        VStack(spacing: 14) {
+        let ringSize: CGFloat = 92
+        let iconSize: CGFloat = 50
+
+        return VStack(spacing: 10) {
             ZStack {
                 // Свечение под знаком — тот же источник света, что и на вершине.
                 Circle()
                     .fill(Palette.gold.opacity(0.10))
-                    .frame(width: 96, height: 96)
+                    .frame(width: ringSize + 4, height: ringSize + 4)
                     .blur(radius: 14)
 
                 Image(asset)
                     .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 46, height: 46)
+                    .frame(width: iconSize, height: iconSize)
                     .foregroundStyle(.goldFill)
 
                 // Перечёркивание — состояние, а не часть иконки. Чёрная
@@ -210,10 +583,10 @@ struct HomeView: View {
                 ZStack {
                     Capsule()
                         .fill(.black)
-                        .frame(width: 92, height: 4)
+                        .frame(width: ringSize, height: 4)
                     Capsule()
                         .fill(.goldFill)
-                        .frame(width: 92, height: 2)
+                        .frame(width: ringSize, height: 2)
                 }
                 .rotationEffect(.degrees(-45))
 
@@ -222,8 +595,8 @@ struct HomeView: View {
                 // кольца. Иначе обводка резала кольцо в местах стыка, и
                 // полоса выглядела положенной сверху, а не частью знака.
                 Circle()
-                    .strokeBorder(Palette.gold.opacity(0.7), lineWidth: 1.8)
-                    .frame(width: 92, height: 92)
+                    .strokeBorder(.goldFill, lineWidth: 1.8)
+                    .frame(width: ringSize, height: ringSize)
             }
 
             Text(title)
@@ -242,36 +615,99 @@ struct HomeView: View {
             .multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 24)
-            .padding(.vertical, 6)
+            // Воздух вокруг цитаты: сверху — чтобы не слипалась с подписями
+            // «Дрочки/Порно», снизу — чтобы не липла к кнопке под ней.
+            .padding(.vertical, 14)
             .frame(maxWidth: .infinity)
     }
 
     // MARK: - Действия
 
-    @ViewBuilder
+    /// Три круга в ряд — та же форма, что у знаков «свободы дня» выше, чтобы
+    /// низ экрана читался как продолжение той же системы, а не как чужая
+    /// панель. «Держусь» — по центру и крупнее: это главное действие экрана,
+    /// глаз должен падать на него первым, а не бежать слева направо по ряду.
     private var actions: some View {
-        if streak.hasCheckedInToday {
-            Text("Сегодня ты держишься")
-                .font(.system(size: 14))
-                .foregroundStyle(Palette.ash)
-                .frame(height: 56)
-                .padding(.top, 6)
-        } else {
-            VStack(spacing: 14) {
+        HStack(alignment: .top, spacing: 18) {
+            // Контур вместо заливки: чёрная сердцевина, красный ободок и
+            // такая же красная рука — холоднее и тревожнее сплошного гранта,
+            // ближе к предупреждающему знаку, чем к обычной кнопке.
+            circleAction(icon: "hand.raised.fill", title: "SOS",
+                         tint: Palette.garnet, filled: false, boldOutline: true) { showSOS = true }
+
+            if streak.hasCheckedInToday {
+                circleAction(icon: "checkmark", title: "Отмечено",
+                             tint: Palette.gold, filled: false, size: 92, action: nil)
+            } else {
                 // Без транзакции `.contentTransition(.numericText())` на числе
                 // стрика не срабатывает — число просто перещёлкивалось. Это
                 // главный момент награды в приложении, он должен перекатиться.
-                Button("Я ДЕРЖУСЬ") {
+                circleAction(icon: "flame.fill", title: "Держусь",
+                             tint: Palette.gold, filled: true, size: 92, glow: true) {
                     withAnimation(.snappy(duration: 0.25)) { _ = streak.checkIn(clean: true) }
                 }
-                .buttonStyle(GoldButton())
-
-                Button("Сообщить о срыве") { showRelapse = true }
-                    .font(.system(size: 14))
-                    .foregroundStyle(Palette.ash)
             }
-            .padding(.top, 6)
+
+            circleAction(icon: "exclamationmark.triangle", title: "Срыв",
+                         tint: Palette.ash, filled: false) { showRelapse = true }
         }
+        .frame(maxWidth: .infinity)
+    }
+
+    /// `action == nil` — круг остаётся как индикатор состояния, а не кнопка.
+    /// `boldOutline` — контурный вариант без размытия заливки: чёрная
+    /// сердцевина и цвет на полную силу, а не приглушённый (как у «Срыв»).
+    /// `glow` — мягкое пятно света позади круга, тише, чем было в прошлый
+    /// раз: обозначить главное действие, а не забить светом всё вокруг.
+    private func circleAction(
+        icon: String,
+        title: LocalizedStringResource,
+        tint: Color,
+        filled: Bool,
+        boldOutline: Bool = false,
+        size: CGFloat = 84,
+        glow: Bool = false,
+        action: (() -> Void)?
+    ) -> some View {
+        return Button {
+            action?()
+        } label: {
+            VStack(spacing: 10) {
+                ZStack {
+                    if glow {
+                        Circle()
+                            .fill(tint)
+                            .frame(width: size * 1.15, height: size * 1.15)
+                            .blur(radius: 16)
+                            .opacity(0.3)
+                    }
+
+                    if filled {
+                        Circle().fill(tint.opacity(0.94))
+                            .shadow(color: tint.opacity(0.3), radius: 14, y: 4)
+                    } else if boldOutline {
+                        Circle().fill(Palette.obsidian)
+                            .overlay { Circle().strokeBorder(tint, lineWidth: 2) }
+                    } else {
+                        Circle().fill(tint.opacity(0.08))
+                            .overlay { Circle().strokeBorder(tint.opacity(0.5), lineWidth: 1.5) }
+                    }
+
+                    Image(systemName: icon)
+                        .font(.system(size: size * 0.33, weight: .medium))
+                        // На залитом круге иконка «вырезана» фоном экрана,
+                        // на пустом — светится самим цветом круга.
+                        .foregroundStyle(filled ? Color(hex: 0x1A1405) : tint)
+                }
+                .frame(width: size, height: size)
+
+                Text(title)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(filled ? Palette.marbleHigh : Palette.ash)
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(action == nil)
     }
 
 }
@@ -290,13 +726,17 @@ extension View {
 
 /// Главное действие — единственная сплошная золотая заливка в приложении.
 struct GoldButton: ButtonStyle {
+    /// Приподжатая высота для компактных экранов (см. `HomeView.compact`) —
+    /// остальные вызовы (`GoldButton()`) остаются прежнего размера.
+    var compact: Bool = false
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: 17, weight: .bold))
+            .font(.system(size: compact ? 15 : 17, weight: .bold))
             .tracking(1.4)
             .foregroundStyle(Color(hex: 0x1A1405))
             .frame(maxWidth: .infinity)
-            .frame(height: 56)
+            .frame(height: compact ? 46 : 50)
             .background(Capsule().fill(.goldFill))
             .shadow(color: Palette.gold.opacity(0.28), radius: 14, y: 4)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
@@ -337,6 +777,24 @@ struct EngravedButton: ButtonStyle {
             }
             // Та же реакция на нажатие, что у GoldButton: три стиля кнопок не
             // должны вести себя по-разному.
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.snappy(duration: 0.15), value: configuration.isPressed)
+    }
+}
+
+/// Экстренная кнопка: единственный красный элемент в приложении — острая
+/// тяга требует немедленного, а не «выученного» внимания.
+struct SOSButton: ButtonStyle {
+    var compact: Bool = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 15, weight: .bold))
+            .tracking(1.6)
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .frame(height: compact ? 44 : 50)
+            .background(Capsule().fill(Palette.garnet.opacity(configuration.isPressed ? 0.8 : 0.94)))
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
     }

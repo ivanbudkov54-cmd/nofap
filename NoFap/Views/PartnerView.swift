@@ -38,6 +38,12 @@ struct PartnerView: View {
             if case .unknown = partner.state { await partner.refresh() }
         }
         .sheet(isPresented: $enteringCode) { codeSheet }
+        .sheet(isPresented: joinPromptShown) { joinSheet }
+        .alert("У тебя уже есть напарник", isPresented: alreadyPairedShown) {
+            Button("Понятно", role: .cancel) {}
+        } message: {
+            Text("Чтобы связаться с новым, сначала разорви текущую связь.")
+        }
         .confirmationDialog("Разорвать связь?",
                             isPresented: $showUnpairConfirm,
                             titleVisibility: .visible) {
@@ -101,8 +107,8 @@ struct PartnerView: View {
 
     private func inviting(_ invite: PartnerInvite) -> some View {
         VStack(spacing: 20) {
-            header(title: "Продиктуй этот код",
-                   note: "Друг вводит его у себя. Код одноразовый и скоро истечёт.")
+            header(title: "Позови напарника",
+                   note: "Отправь приглашение — друг откроет ссылку и подтвердит. Или продиктуй код: он одноразовый и скоро истечёт.")
 
             Text(invite.grouped)
                 .font(Face.display(44, .semibold))
@@ -130,8 +136,8 @@ struct PartnerView: View {
                     .foregroundStyle(Palette.marble)
             }
 
-            ShareLink(item: String(localized: "Мой код в приложении: \(invite.code)")) {
-                Text("Отправить код")
+            ShareLink(item: inviteMessage(invite)) {
+                Text("Отправить приглашение")
                     .font(.system(size: 15, weight: .semibold))
                     .tracking(1.6)
                     .foregroundStyle(.goldFill)
@@ -286,6 +292,65 @@ struct PartnerView: View {
                 .imageScale(.small)
         }
         .font(.system(size: 14))
+    }
+
+    /// Текст нейтральный: сообщение может увидеть кто угодно через плечо
+    /// или в превью уведомления. Код продублирован для того, у кого
+    /// ссылка не открылась или кто диктует его голосом.
+    private func inviteMessage(_ invite: PartnerInvite) -> String {
+        let link = PartnerLink.url(for: invite.code).absoluteString
+        return String(localized: "Давай держаться вместе — стань моим напарником.\n\nОткрой ссылку: \(link)\nИли введи код \(invite.grouped) в разделе «Напарник».")
+    }
+
+    // MARK: - Приглашение по ссылке
+
+    private var joinPromptShown: Binding<Bool> {
+        Binding(
+            get: { partner.pendingCode != nil && !partner.isPaired },
+            set: { if !$0 { partner.pendingCode = nil } }
+        )
+    }
+
+    private var alreadyPairedShown: Binding<Bool> {
+        Binding(
+            get: { partner.pendingCode != nil && partner.isPaired },
+            set: { if !$0 { partner.pendingCode = nil } }
+        )
+    }
+
+    private var joinSheet: some View {
+        let code = partner.pendingCode ?? ""
+        let grouped = PartnerInvite(code: code, expiresAt: .distantFuture).grouped
+
+        return VStack(spacing: 20) {
+            header(title: "Тебя зовут в напарники",
+                   note: "Вы будете видеть счёт друг друга. Календарь и срывы останутся только у тебя.")
+                .padding(.top, 28)
+
+            Text(grouped)
+                .font(Face.display(32, .semibold))
+                .tracking(4)
+                .foregroundStyle(.goldFill)
+
+            nicknameField
+
+            VStack(spacing: 12) {
+                Button("Связаться") {
+                    partner.setNickname(nicknameDraft)
+                    partner.pendingCode = nil
+                    Task { await partner.redeem(code: code) }
+                }
+                .buttonStyle(GoldButton())
+
+                Button("Не сейчас") { partner.pendingCode = nil }
+                    .buttonStyle(StoneButton())
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .presentationDetents([.large])
+        .presentationBackground(Palette.obsidian)
     }
 
     private var codeSheet: some View {

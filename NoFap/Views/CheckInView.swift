@@ -42,12 +42,18 @@ struct CheckInView: View {
                 libidoSlider
                 triggerPicker
                 noteField
-                saveButton
             }
             .padding(20)
-            .padding(.bottom, 24)
+            .padding(.bottom, 12)
         }
         .background(Ink.background.ignoresSafeArea())
+        .safeAreaInset(edge: .bottom) {
+            saveButton
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
+                .padding(.bottom, 8)
+                .background(Ink.background.ignoresSafeArea(edges: .bottom))
+        }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
@@ -161,7 +167,7 @@ struct CheckInView: View {
         return Button {
             toggle(tag)
         } label: {
-            Text(tag.rawValue)
+            Text(tag.label)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(isSelected ? Color(hex: 0x0A0A0D) : Ink.textPrimary)
                 .padding(.horizontal, 14)

@@ -3,16 +3,14 @@
 //  NoFap
 //
 //  Единственное, что интерфейс знает о синхронизации. За этим протоколом
-//  сейчас стоит локальная заглушка, а позже встанет CloudKit — экраны при
-//  этом не меняются.
+//  стоит либо локальная заглушка, либо Firebase — экраны при этом не
+//  меняются.
 //
 
 import Foundation
 
 /// Протокол намеренно неизолирован: изоляцию выбирает та сторона, что его
-/// реализует. Локальной заглушке главный актор подходит, а будущему
-/// CloudKit-клиенту — нет: `@MainActor` на самом протоколе пригвоздил бы его
-/// сетевые запросы к главному актору.
+/// реализует, а `@MainActor` на самом протоколе навязал бы её всем.
 protocol PartnerSyncing: AnyObject, Sendable {
 
     /// Убедиться, что бэкенд доступен и мой профиль существует.
@@ -31,9 +29,8 @@ protocol PartnerSyncing: AnyObject, Sendable {
     /// Принял ли кто-нибудь мой код. nil — ещё нет.
     ///
     /// Отдельный метод для стороны пригласившего существует не от красоты:
-    /// в публичной базе CloudKit нельзя писать в чужую запись, поэтому
-    /// присоединившийся не может сам вписать себя в приглашение — он
-    /// оставляет свою запись, а пригласивший её забирает.
+    /// в чужой профиль писать нельзя, поэтому присоединившийся лишь
+    /// отмечается в приглашении, а связь у себя закрепляет пригласивший.
     func pollInviteAcceptance() async throws -> PartnerProfile?
 
     /// Ввести чужой код и связаться. Сторона присоединяющегося.
@@ -57,21 +54,23 @@ protocol PartnerSyncing: AnyObject, Sendable {
 
 enum PartnerBackend: String {
     case fake
-    case cloudKit
+    case firebase
 }
 
 enum PartnerSyncFactory {
 
-    /// Пока нет платного Apple Developer, CloudKit невозможно подписать, и
-    /// весь интерфейс живёт на заглушке. Когда аккаунт появится — меняется
-    /// ровно эта строка.
-    static var backend: PartnerBackend { .fake }
+    /// Firebase, а не CloudKit: работает и на Android, и не требует платного
+    /// Apple Developer. Пока ключи проекта не вписаны в FirebaseConfig,
+    /// интерфейс живёт на заглушке.
+    static var backend: PartnerBackend {
+        FirebaseConfig.isConfigured ? .firebase : .fake
+    }
 
     @MainActor
     static func make() -> any PartnerSyncing {
         switch backend {
         case .fake:     LocalFakePartnerSync()
-        case .cloudKit: LocalFakePartnerSync()   // TODO: CloudKitPartnerSync()
+        case .firebase: FirebasePartnerSync()
         }
     }
 }

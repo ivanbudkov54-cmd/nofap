@@ -46,6 +46,8 @@ struct ProgressTabView: View {
                 case .month: MonthSpan(streak: streak, calendar: isoCalendar)
                 case .year:  YearSpan(streak: streak, calendar: isoCalendar)
                 }
+
+                TriggerAnalyticsCard()
             }
             .padding(.horizontal, 18)
             .padding(.bottom, 24)

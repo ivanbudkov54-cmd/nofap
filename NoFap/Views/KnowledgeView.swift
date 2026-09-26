@@ -16,6 +16,14 @@ struct KnowledgeView: View {
         case deepDive = "Deep Dive"
 
         var id: String { rawValue }
+
+        var label: String {
+            switch self {
+            case .journey:   String(localized: "Мой путь")
+            case .simulator: String(localized: "Симулятор тяги")
+            case .deepDive:  String(localized: "Статьи")
+            }
+        }
     }
 
     @State private var selected: Tab = .journey
@@ -64,7 +72,7 @@ struct KnowledgeView: View {
         return Button {
             withAnimation(.snappy(duration: 0.25)) { selected = tab }
         } label: {
-            Text(tab.rawValue)
+            Text(tab.label)
                 .font(.system(size: 12, weight: .semibold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)

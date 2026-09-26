@@ -31,6 +31,10 @@ final class PartnerManager {
     private(set) var messages: [PartnerMessage] = []
     private(set) var isSending = false
 
+    /// Код из открытой ссылки-приглашения, ждущий подтверждения. Сразу не
+    /// связываемся: иначе любой, кто пришлёт ссылку, привязался бы молча.
+    var pendingCode: String?
+
     private let sync: any PartnerSyncing
     private let defaults: UserDefaults
     private var pollTask: Task<Void, Never>?

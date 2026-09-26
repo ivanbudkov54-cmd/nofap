@@ -20,6 +20,34 @@ enum CheckInTag: String, CaseIterable, Identifiable, Codable {
     case none = "None"
 
     var id: String { rawValue }
+
+    /// Подпись на экране — на русском, отдельно от `rawValue`, который
+    /// уже сохранён в Codable-записях пользователей и менять его нельзя.
+    var label: String {
+        switch self {
+        case .doomscrolling: String(localized: "Думскроллинг")
+        case .boredom:        String(localized: "Скука")
+        case .stress:         String(localized: "Стресс")
+        case .lateNightBed:   String(localized: "Поздно лёг в постель")
+        case .loneliness:     String(localized: "Одиночество")
+        case .randomUrge:     String(localized: "Тяга без причины")
+        case .none:           String(localized: "Не было")
+        }
+    }
+
+    /// Тот же триггер в словаре SOS-опроса — чтобы аналитика считала
+    /// «скуку» из чекина и «скуку» из SOS одним и тем же.
+    var trigger: Trigger? {
+        switch self {
+        case .doomscrolling: .doomscrolling
+        case .boredom:       .boredom
+        case .stress:        .stress
+        case .lateNightBed:  .bed
+        case .loneliness:    .loneliness
+        case .randomUrge:    .random
+        case .none:          nil
+        }
+    }
 }
 
 struct CheckInEntry: Identifiable, Codable, Equatable {

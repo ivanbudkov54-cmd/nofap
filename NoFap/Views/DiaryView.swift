@@ -244,7 +244,7 @@ struct DiaryView: View {
             if !entry.triggers.isEmpty {
                 TagFlowLayout(spacing: 6) {
                     ForEach(entry.triggers) { tag in
-                        Text(tag.rawValue)
+                        Text(tag.label)
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(Palette.marble)
                             .padding(.horizontal, 10)

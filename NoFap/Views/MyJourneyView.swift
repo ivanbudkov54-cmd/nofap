@@ -12,9 +12,26 @@ import SwiftUI
 struct MyJourneyView: View {
 
     @Environment(StreakManager.self) private var streak
+    @Environment(PremiumStore.self) private var premium
+
+    @State private var showPaywall = false
 
     private var currentDay: Int {
         min(max(streak.currentStreak, 1), JourneyLibrary.totalDays)
+    }
+
+    private enum Access: Equatable {
+        case open
+        case inDays(Int)    // откроется по мере стрика
+        case premium        // первая неделя пройдена, дальше — подписка
+    }
+
+    /// Premium проверяется первым: без подписки дни после недели заперты
+    /// независимо от стрика, и честнее сразу сказать почему.
+    private func access(_ day: JourneyDay) -> Access {
+        if day.day > PremiumStore.freeJourneyDays && !premium.isPremium { return .premium }
+        if day.day > currentDay { return .inDays(day.day - currentDay) }
+        return .open
     }
 
     var body: some View {
@@ -32,62 +49,80 @@ struct MyJourneyView: View {
             .padding(.top, 4)
             .padding(.bottom, 24)
         }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
     }
 
+    @ViewBuilder
     private var currentDayCard: some View {
         let day = JourneyLibrary.all.first { $0.day == currentDay } ?? JourneyLibrary.all[0]
-        return NavigationLink {
-            JourneyDayDetailView(day: day)
-        } label: {
-            VStack(alignment: .leading, spacing: 12) {
-                Eyebrow(text: "твой день", color: Palette.gold)
-
-                Text("День \(currentDay) из \(JourneyLibrary.totalDays)")
-                    .font(Face.display(22, .semibold))
-                    .foregroundStyle(Palette.marbleHigh)
-
-                Text(day.title)
-                    .font(.system(size: 15))
-                    .foregroundStyle(Palette.marble)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
-
-                HStack(spacing: 6) {
-                    Text("Изучить")
-                    Image(systemName: "arrow.right")
-                }
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(Color(hex: 0x1A1405))
-                .padding(.horizontal, 18)
-                .padding(.vertical, 10)
-                .background(Capsule().fill(.goldFill))
-                .padding(.top, 2)
+        if access(day) == .premium {
+            Button { showPaywall = true } label: {
+                currentDayCardContent(day, action: "Открыть с Premium", symbol: "lock.open.fill")
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(18)
-            .cardSurface()
+            .buttonStyle(.plain)
+        } else {
+            NavigationLink {
+                JourneyDayDetailView(day: day)
+            } label: {
+                currentDayCardContent(day, action: "Изучить", symbol: "arrow.right")
+            }
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
     }
 
+    private func currentDayCardContent(_ day: JourneyDay, action: LocalizedStringResource, symbol: String) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Eyebrow(text: "твой день", color: Palette.gold)
+
+            Text("День \(currentDay) из \(JourneyLibrary.totalDays)")
+                .font(Face.display(22, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+
+            Text(day.title)
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.marble)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+
+            HStack(spacing: 6) {
+                Text(action)
+                Image(systemName: symbol)
+            }
+            .font(.system(size: 14, weight: .semibold))
+            .foregroundStyle(Color(hex: 0x1A1405))
+            .padding(.horizontal, 18)
+            .padding(.vertical, 10)
+            .background(Capsule().fill(.goldFill))
+            .padding(.top, 2)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(18)
+        .cardSurface()
+    }
+
+    @ViewBuilder
     private func dayRow(_ day: JourneyDay) -> some View {
-        let isUnlocked = day.day <= currentDay
-        return Group {
-            if isUnlocked {
-                NavigationLink {
-                    JourneyDayDetailView(day: day)
-                } label: {
-                    dayRowContent(day, locked: false)
-                }
-                .buttonStyle(.plain)
-            } else {
-                dayRowContent(day, locked: true)
+        switch access(day) {
+        case .open:
+            NavigationLink {
+                JourneyDayDetailView(day: day)
+            } label: {
+                dayRowContent(day, access: .open)
             }
+            .buttonStyle(.plain)
+        case .premium:
+            Button { showPaywall = true } label: {
+                dayRowContent(day, access: .premium)
+            }
+            .buttonStyle(.plain)
+        case .inDays(let days):
+            dayRowContent(day, access: .inDays(days))
         }
     }
 
-    private func dayRowContent(_ day: JourneyDay, locked: Bool) -> some View {
-        HStack(spacing: 14) {
+    private func dayRowContent(_ day: JourneyDay, access: Access) -> some View {
+        let locked = access != .open
+        return HStack(spacing: 14) {
             ZStack {
                 Circle()
                     .fill(locked ? Palette.vein.opacity(0.5) : Palette.gold.opacity(0.15))
@@ -117,22 +152,32 @@ struct MyJourneyView: View {
 
             Spacer()
 
-            if locked {
-                Text("через \(day.day - currentDay) дн.")
+            switch access {
+            case .open:
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Palette.ash)
+            case .inDays(let days):
+                Text("через \(days) дн.")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(Palette.ash)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(Palette.vein.opacity(0.5), in: .capsule)
-            } else {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Palette.ash)
+            case .premium:
+                Text("Premium")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(Color(hex: 0x1A1405))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Capsule().fill(.goldFill))
             }
         }
         .padding(14)
         .cardSurface()
-        .opacity(locked ? 0.55 : 1)
+        // Premium-строки не гасим так сильно: они кликабельны и ведут
+        // к подписке, в отличие от дней, до которых просто не дорос стрик.
+        .opacity(access == .open ? 1 : (access == .premium ? 0.8 : 0.55))
     }
 }
 
