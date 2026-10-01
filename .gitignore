@@ -14,3 +14,7 @@ DerivedData/
 *.mobileprovision
 *.p12
 *.cer
+
+# Секреты Supabase — в репозиторий только .env.example
+.env
+.env.local

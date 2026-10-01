@@ -9,7 +9,10 @@ import SwiftUI
 
 struct DeepDiveView: View {
 
+    @Environment(Backend.self) private var backend
+    @Environment(SubscriptionManager.self) private var subscriptions
     @State private var selectedCategory: DeepDiveCategory?
+    @State private var openedArticle: Article?
 
     private var filtered: [Article] {
         guard let selectedCategory else { return ArticleLibrary.all }
@@ -17,14 +20,23 @@ struct DeepDiveView: View {
     }
 
     var body: some View {
+        let remote = backend.articles(tab: "deep_dive")
+        if remote.isEmpty {
+            localBody
+        } else {
+            RemoteArticleList(articles: remote)
+        }
+    }
+
+    private var localBody: some View {
         ScrollView {
             VStack(spacing: 16) {
                 categoryChips
 
                 VStack(spacing: 12) {
                     ForEach(filtered) { article in
-                        NavigationLink {
-                            ArticleDetailView(article: article)
+                        Button {
+                            open(article)
                         } label: {
                             row(article)
                         }
@@ -35,6 +47,18 @@ struct DeepDiveView: View {
             .padding(.horizontal, 18)
             .padding(.top, 4)
             .padding(.bottom, 24)
+        }
+        .navigationDestination(item: $openedArticle) { article in
+            ArticleDetailView(article: article)
+        }
+    }
+
+    private func open(_ article: Article) {
+        let reason = "Научные исследования и механизмы работы мозга доступны подписчикам Pro"
+        if article.category != .neuroscience {
+            openedArticle = article
+        } else {
+            subscriptions.checkProAccess(for: reason) { openedArticle = article }
         }
     }
 
@@ -101,6 +125,10 @@ struct DeepDiveView: View {
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(Palette.gold)
                 .padding(.top, 2)
+            }
+
+            if article.category == .neuroscience && !subscriptions.isPro {
+                ProLockBadge()
             }
 
             Spacer(minLength: 0)

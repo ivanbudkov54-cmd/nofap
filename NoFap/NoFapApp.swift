@@ -3,6 +3,7 @@
 //  NoFap
 //
 
+import RevenueCat
 import SwiftUI
 
 @main
@@ -16,9 +17,19 @@ struct NoFapApp: App {
     @State private var reminder = ReminderManager()
     @State private var journal = JournalManager()
     @State private var checkIns = CheckInManager()
+    @State private var backend = Backend()
+    @State private var subscriptions = SubscriptionManager()
+    @State private var router = AppRouter()
+    @State private var theme = ThemeManager()
+    @State private var challenges = ChallengeManager()
+    @State private var contrast = ContrastExperimentManager()
+    @State private var avatar = AvatarManager()
+    @State private var tour = AppTourManager()
 
     init() {
         Face.register()
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: "test_nIUVvGauDnahVCDxjhnlvmuecXy")
     }
 
     var body: some Scene {
@@ -32,7 +43,15 @@ struct NoFapApp: App {
                 .environment(reminder)
                 .environment(journal)
                 .environment(checkIns)
-                .preferredColorScheme(.dark)
+                .environment(backend)
+                .environment(subscriptions)
+                .environment(router)
+                .environment(theme)
+                .environment(challenges)
+                .environment(contrast)
+                .environment(avatar)
+                .environment(tour)
+                .preferredColorScheme(theme.theme.colorScheme)
         }
     }
 }

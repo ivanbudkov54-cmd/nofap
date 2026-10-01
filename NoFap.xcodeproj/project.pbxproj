@@ -65,6 +65,7 @@
 			);
 			name = NoFap;
 			packageProductDependencies = (
+				A1RC4E010000000000000001 /* RevenueCat */,
 			);
 			productName = NoFap;
 			productReference = 28DFBF41303CCD90000AE12A /* NoFap.app */;
@@ -96,6 +97,9 @@
 			mainGroup = 28DFBF38303CCD90000AE12A;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
+			packageReferences = (
+				A1RC4E010000000000000002 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
+			);
 			productRefGroup = 28DFBF42303CCD90000AE12A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -331,6 +335,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A1RC4E010000000000000002 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1RC4E010000000000000001 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1RC4E010000000000000002 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCat;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 28DFBF39303CCD90000AE12A /* Project object */;
 }

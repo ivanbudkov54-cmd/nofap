@@ -85,6 +85,11 @@ final class CheckInManager {
         persist()
     }
 
+    func removeAll() {
+        entries = []
+        defaults.removeObject(forKey: Key.entries)
+    }
+
     private func persist() {
         guard let data = try? JSONEncoder().encode(entries) else { return }
         defaults.set(data, forKey: Key.entries)

@@ -10,18 +10,29 @@
 import Foundation
 
 struct JournalEntry: Identifiable, Codable, Equatable {
+    static let shieldBadge = "Разбор срыва (Щит стрика)"
+    static let manifestBadge = "📌 Моя точка А: Манифест старта"
+
+    var isManifest: Bool { promptQuestion == Self.manifestBadge }
     let id: UUID
     let date: Date
     var text: String
     /// Вопрос-подсказка, на который отвечала эта запись — nil у записей
     /// без подсказки (например, старых, сохранённых до этой функции).
     var promptQuestion: String?
+    var moodScore: Int?
+    var urgeScore: Int?
+    /// nil у старых записей без этого поля — для них бейджа щита нет.
+    var isShieldReview: Bool?
 
-    init(id: UUID = UUID(), date: Date = Date(), text: String, promptQuestion: String? = nil) {
+    init(id: UUID = UUID(), date: Date = Date(), text: String, promptQuestion: String? = nil, moodScore: Int? = nil, urgeScore: Int? = nil, isShieldReview: Bool? = nil) {
         self.id = id
         self.date = date
         self.text = text
         self.promptQuestion = promptQuestion
+        self.moodScore = moodScore
+        self.urgeScore = urgeScore
+        self.isShieldReview = isShieldReview
     }
 }
 
@@ -47,16 +58,35 @@ final class JournalManager {
         }
     }
 
-    func addEntry(_ text: String, promptQuestion: String? = nil, on date: Date = Date()) {
+    func addManifest(_ text: String, on date: Date = Date()) {
+        addEntry(text, promptQuestion: JournalEntry.manifestBadge, on: date)
+    }
+
+    func addEntry(_ text: String, promptQuestion: String? = nil, moodScore: Int? = nil, urgeScore: Int? = nil, isShieldReview: Bool? = nil, on date: Date = Date()) {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        entries.insert(JournalEntry(date: date, text: trimmed, promptQuestion: promptQuestion), at: 0)
+        guard !trimmed.isEmpty || moodScore != nil || urgeScore != nil else { return }
+        entries.insert(
+            JournalEntry(date: date, text: trimmed, promptQuestion: promptQuestion, moodScore: moodScore, urgeScore: urgeScore, isShieldReview: isShieldReview),
+            at: 0
+        )
+        persist()
+    }
+
+    /// Лента после select из journal_entries. Локальный кэш заменяется
+    /// серверным списком, чтобы не копить две копии одной записи.
+    func replaceAll(_ incoming: [JournalEntry]) {
+        entries = incoming.sorted { $0.date > $1.date }
         persist()
     }
 
     func deleteEntry(_ entry: JournalEntry) {
         entries.removeAll { $0.id == entry.id }
         persist()
+    }
+
+    func removeAll() {
+        entries = []
+        defaults.removeObject(forKey: Key.entries)
     }
 
     private func persist() {

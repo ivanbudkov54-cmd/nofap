@@ -1,0 +1,83 @@
+{
+  "identifier" : "A1B2C3D4",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "STOPFAP_PRO",
+      "localizations" : [
+
+      ],
+      "name" : "Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "29.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "YEARLYPRO",
+          "introductoryOffer" : {
+            "internalID" : "YEARLYTRIAL",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P3D"
+          },
+          "localizations" : [
+            {
+              "description" : "Full restart and control for a year",
+              "displayName" : "Yearly Pro",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "stopfap_yearly_pro",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Yearly Pro",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "MONTHLYPRO",
+          "localizations" : [
+            {
+              "description" : "Full restart and control for a month",
+              "displayName" : "Monthly Pro",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "stopfap_monthly_pro",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Pro",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

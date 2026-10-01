@@ -12,12 +12,24 @@ import SwiftUI
 struct MyJourneyView: View {
 
     @Environment(StreakManager.self) private var streak
+    @Environment(Backend.self) private var backend
+    @Environment(SubscriptionManager.self) private var subscriptions
+    @State private var openedDay: JourneyDay?
 
     private var currentDay: Int {
         min(max(streak.currentStreak, 1), JourneyLibrary.totalDays)
     }
 
     var body: some View {
+        let remote = backend.articles(tab: "journey")
+        if remote.isEmpty {
+            localBody
+        } else {
+            RemoteArticleList(articles: remote)
+        }
+    }
+
+    private var localBody: some View {
         ScrollView {
             VStack(spacing: 14) {
                 currentDayCard
@@ -32,12 +44,15 @@ struct MyJourneyView: View {
             .padding(.top, 4)
             .padding(.bottom, 24)
         }
+        .navigationDestination(item: $openedDay) { day in
+            JourneyDayDetailView(day: day)
+        }
     }
 
     private var currentDayCard: some View {
         let day = JourneyLibrary.all.first { $0.day == currentDay } ?? JourneyLibrary.all[0]
-        return NavigationLink {
-            JourneyDayDetailView(day: day)
+        return Button {
+            open(day)
         } label: {
             VStack(alignment: .leading, spacing: 12) {
                 Eyebrow(text: "твой день", color: Palette.gold)
@@ -53,6 +68,9 @@ struct MyJourneyView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 HStack(spacing: 6) {
+                    if day.day > 7 && !subscriptions.isPro {
+                        ProLockBadge()
+                    }
                     Text("Изучить")
                     Image(systemName: "arrow.right")
                 }
@@ -74,10 +92,10 @@ struct MyJourneyView: View {
         let isUnlocked = day.day <= currentDay
         return Group {
             if isUnlocked {
-                NavigationLink {
-                    JourneyDayDetailView(day: day)
+                Button {
+                    open(day)
                 } label: {
-                    dayRowContent(day, locked: false)
+                    dayRowContent(day, locked: false, pro: day.day > 7 && !subscriptions.isPro)
                 }
                 .buttonStyle(.plain)
             } else {
@@ -86,7 +104,16 @@ struct MyJourneyView: View {
         }
     }
 
-    private func dayRowContent(_ day: JourneyDay, locked: Bool) -> some View {
+    private func open(_ day: JourneyDay) {
+        let reason = "Доступ ко всей программе восстановления после 7 дней открывается в Pro"
+        if day.day <= 7 {
+            openedDay = day
+        } else {
+            subscriptions.checkProAccess(for: reason) { openedDay = day }
+        }
+    }
+
+    private func dayRowContent(_ day: JourneyDay, locked: Bool, pro: Bool = false) -> some View {
         HStack(spacing: 14) {
             ZStack {
                 Circle()
@@ -125,6 +152,7 @@ struct MyJourneyView: View {
                     .padding(.vertical, 5)
                     .background(Palette.vein.opacity(0.5), in: .capsule)
             } else {
+                if pro { ProLockBadge() }
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(Palette.ash)
