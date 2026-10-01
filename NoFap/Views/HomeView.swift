@@ -13,6 +13,7 @@ struct HomeView: View {
     @Environment(ReasonsStore.self) private var reasons
 
     @State private var showRelapse = false
+    @State private var showShieldReview = false
     @State private var showGoalReached = false
     @State private var newGoalDraft = 21
 
@@ -54,7 +55,12 @@ struct HomeView: View {
         ) {
             // Обнуление — деликатный момент, поэтому медленнее отметки: число
             // должно осесть, а не щёлкнуть.
-            Button("Сорвался", role: .destructive) {
+            // Щит — раз в месяц и только до обнуления: после сброса
+            // сохранять уже нечего.
+            if canShieldToday {
+                Button("Сохранить стрик щитом") { showShieldReview = true }
+            }
+            Button(canShieldToday ? "Сбросить стрик" : "Сорвался", role: .destructive) {
                 RelapseLog.record()
                 withAnimation(.snappy(duration: 0.4)) { _ = streak.checkIn(clean: false) }
             }
@@ -66,6 +72,7 @@ struct HomeView: View {
             // отправляется», когда счёт видит другой человек, — враньё.
             Text(relapseNote)
         }
+        .sheet(isPresented: $showShieldReview) { ShieldReflectionView() }
         .onChange(of: streak.justReachedGoal) { _, reached in
             if reached {
                 newGoalDraft = streak.personalGoalDays
@@ -436,10 +443,20 @@ struct HomeView: View {
 
     /// Тернарник из строковых литералов Swift выводит как `String`, и такой
     /// текст не попадает в каталог локализации. Явный тип это чинит.
+    private var canShieldToday: Bool {
+        streak.canUseShield && streak.status(on: Date()) != false
+    }
+
     private var relapseNote: LocalizedStringResource {
-        partner.isPaired
-            ? "Счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину."
-            : "Счётчик обнулится, рекорд останется. Отметка нужна только тебе — она никуда не отправляется."
+        // Отметка уходит и в личную копию на сервере, но видна только самому
+        // человеку — обещать «никуда не отправляется» уже было бы неправдой.
+        let reset: LocalizedStringResource = partner.isPaired
+            ? "Сброс: счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину."
+            : "Сброс: счётчик обнулится, рекорд останется. Отметку видишь только ты."
+        guard canShieldToday else { return reset }
+        return partner.isPaired
+            ? "Щит сохранит стрик, если сразу честно разобрать срыв в дневнике. Он даётся раз в месяц. Без щита счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину."
+            : "Щит сохранит стрик, если сразу честно разобрать срыв в дневнике. Он даётся раз в месяц. Без щита счётчик обнулится, рекорд останется. Отметку видишь только ты."
     }
 
     private var greetingNote: LocalizedStringResource {

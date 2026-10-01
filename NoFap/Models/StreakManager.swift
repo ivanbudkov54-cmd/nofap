@@ -24,6 +24,7 @@ final class StreakManager {
         static let startDate = "protectionStartDate"
         static let history = "checkInHistory"
         static let goal = "personalGoalDays"
+        static let lastShield = "lastStreakFreezeDate"
     }
 
     /// Личный срок, который человек поставил себе сам — не календарный месяц.
@@ -50,6 +51,9 @@ final class StreakManager {
     private(set) var totalCleanDays: Int
     private(set) var lastCheckinDate: Date?
 
+    /// Когда последний раз сохраняли стрик щитом. Щит — раз в календарный месяц.
+    private(set) var lastShieldDate: Date?
+
     /// Растёт при любой записи. Нужен, чтобы наблюдатели (синхронизация с
     /// напарником) реагировали на изменения, не перечисляя их по одному.
     /// Сам StreakManager по-прежнему ничего не знает ни о сети, ни о напарнике.
@@ -61,6 +65,7 @@ final class StreakManager {
         bestStreak = defaults.integer(forKey: Key.bestStreak)
         totalCleanDays = defaults.integer(forKey: Key.totalClean)
         lastCheckinDate = defaults.object(forKey: Key.lastCheckin) as? Date
+        lastShieldDate = defaults.object(forKey: Key.lastShield) as? Date
 
         if let data = defaults.data(forKey: Key.history),
            let decoded = try? JSONDecoder().decode([String: Bool].self, from: data) {
@@ -112,7 +117,14 @@ final class StreakManager {
     /// разъезжалась со стриком. Параметр остаётся ради тестируемости.
     @discardableResult
     func checkIn(clean: Bool, now: Date = Date()) -> Bool {
-        guard !hasCheckedIn(asOf: now) else { return false }
+        // Срыв засчитывается и после утреннего «Держусь»: иначе честная
+        // отметка вечером молча терялась бы. Чистый день — только раз.
+        let todayKey = DayKey.string(from: now)
+        if !clean, history[todayKey] == true {
+            totalCleanDays = max(0, totalCleanDays - 1)
+        } else if hasCheckedIn(asOf: now) {
+            return false
+        }
 
         let before = currentStreak
 
@@ -148,6 +160,33 @@ final class StreakManager {
         return true
     }
 
+    // MARK: - Щит стрика
+
+    /// Щит в этом календарном месяце ещё не тратили.
+    var canUseShield: Bool {
+        guard let last = lastShieldDate else { return true }
+        return !calendar.isDate(last, equalTo: Date(), toGranularity: .month)
+    }
+
+    /// Срыв без обнуления — после честного разбора. День в календаре
+    /// честно отмечается срывом, но счёт не трогается, и завтрашнее
+    /// «Держусь» продолжит стрик, а не начнёт его заново.
+    @discardableResult
+    func useShield(now: Date = Date()) -> Bool {
+        guard canUseShield else { return false }
+        let todayKey = DayKey.string(from: now)
+        if history[todayKey] == true {
+            // Сегодня уже отмечался чистым — день был засчитан в стрик и
+            // остаётся в нём, но чистым его больше не назвать.
+            totalCleanDays = max(0, totalCleanDays - 1)
+        }
+        history[todayKey] = false
+        lastCheckinDate = now
+        lastShieldDate = now
+        persist()
+        return true
+    }
+
     /// HomeView вызывает после того, как поздравление показано.
     func acknowledgeGoalReached() {
         justReachedGoal = false
@@ -163,6 +202,7 @@ final class StreakManager {
         defaults.set(totalCleanDays, forKey: Key.totalClean)
         defaults.set(lastCheckinDate, forKey: Key.lastCheckin)
         defaults.set(personalGoalDays, forKey: Key.goal)
+        defaults.set(lastShieldDate, forKey: Key.lastShield)
 
         do {
             defaults.set(try JSONEncoder().encode(history), forKey: Key.history)

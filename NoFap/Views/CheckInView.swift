@@ -282,7 +282,7 @@ struct CheckInView: View {
 
 /// Простая обёртка тегов с переносом строк — HStack сам не умеет,
 /// а полноценный Layout не нужен для семи коротких слов.
-private struct FlowLayout: Layout {
+struct FlowLayout: Layout {
     var spacing: CGFloat = 8
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {

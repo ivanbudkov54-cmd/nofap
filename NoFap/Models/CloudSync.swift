@@ -57,6 +57,7 @@ final class CloudSync {
                 "best_streak": streak.bestStreak,
                 "streak_start_date": streakStart(streak).map(PostgresTime.string(from:)),
                 "last_relapse_at": lastRelapse.map(PostgresTime.string(from:)),
+                "last_streak_freeze_date": streak.lastShieldDate.map(PostgresTime.string(from:)),
                 "updated_at": now,
             ]], upsert: true)
         } catch {

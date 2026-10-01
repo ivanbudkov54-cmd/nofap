@@ -10,6 +10,10 @@
 import Foundation
 
 struct JournalEntry: Identifiable, Codable, Equatable {
+    /// Подпись записи-разбора после щита стрика. Та же строка, что у друга
+    /// в journal_entries.prompt_text, — записи узнаются на любом устройстве.
+    static let shieldBadge = "Разбор срыва (Щит стрика)"
+
     let id: UUID
     let date: Date
     var text: String
