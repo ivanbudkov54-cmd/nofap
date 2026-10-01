@@ -10,13 +10,6 @@ import SwiftUI
 
 struct RootView: View {
 
-    private enum Tab: Hashable {
-        case home, progress, diary, knowledge, partner, profile
-    }
-
-    @Environment(PartnerManager.self) private var partner
-    @State private var tab: Tab = .home
-
     init() {
         // Таб-бар остаётся тёмным даже при прокрутке контента под него.
         let appearance = UITabBarAppearance()
@@ -29,45 +22,38 @@ struct RootView: View {
     }
 
     var body: some View {
-        TabView(selection: $tab) {
+        TabView {
             HomeView()
                 .tabItem { Label("Главная", systemImage: "house.fill") }
-                .tag(Tab.home)
 
             NavigationStack {
                 ProgressTabView()
             }
             .tabItem { Label("Прогресс", systemImage: "chart.bar.fill") }
-            .tag(Tab.progress)
 
             NavigationStack {
                 DiaryView()
             }
             .tabItem { Label("Дневник", systemImage: "square.and.pencil") }
-            .tag(Tab.diary)
 
             NavigationStack {
                 KnowledgeView()
             }
             .tabItem { Label("Знания", systemImage: "text.book.closed.fill") }
-            .tag(Tab.knowledge)
 
             NavigationStack {
                 PartnerView()
             }
             .tabItem { Label("Напарник", systemImage: "person.2.fill") }
-            .tag(Tab.partner)
 
             Soon(title: "Профиль", note: "Настройки защиты, напоминания и удаление данных.")
                 .tabItem { Label("Профиль", systemImage: "person.fill") }
-                .tag(Tab.profile)
         }
         .tint(Palette.gold)
-        // initial: true — ссылку могли открыть во время онбординга, и
-        // вкладок тогда ещё не было.
-        .onChange(of: partner.pendingCode, initial: true) { _, code in
-            if code != nil { tab = .partner }
-        }
+        // Окна приглашения — поверх любой вкладки, без переключения: у
+        // TabView с меню «Ещё» привязка выбранной вкладки сбрасывает меню
+        // при каждом обновлении данных.
+        .modifier(InviteJoinSheets())
     }
 }
 

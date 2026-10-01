@@ -26,6 +26,10 @@ struct PartnerMessage: Codable, Sendable, Equatable, Identifiable {
     let isMine: Bool
 
     let sentAt: Date
+
+    /// Имя автора — только в групповом чате сквада. В переписке с
+    /// напарником собеседник один, подписывать его незачем.
+    var senderName: String? = nil
 }
 
 extension PartnerMessage {

@@ -38,7 +38,7 @@ struct HomeView: View {
                 quoteCard
                 actions
             }
-            .padding(.horizontal, 18)
+            .padding(.horizontal, 15)
             // Запас снизу небольшой: нижние 12pt зоны нажатия «Сообщить о
             // срыве» сами работают буфером перед таб-баром.
             .padding(.bottom, 12)
@@ -476,7 +476,44 @@ struct HomeView: View {
     // MARK: - Стрик
 
     private var summitCard: some View {
-        ZStack {
+        VStack(spacing: 0) {
+            Eyebrow(text: "твой стрик", color: Palette.marble)
+                .padding(.top, 20)
+
+            Text("\(streak.currentStreak)")
+                .font(Face.display(76, .semibold))
+                .foregroundStyle(.goldFill)
+                .shadow(color: Palette.gold.opacity(streakPulse ? 1 : 0.45), radius: streakPulse ? 60 : 16)
+                .scaleEffect(streakPulse ? 1.55 : 1)
+                .contentTransition(.numericText())
+                .sensoryFeedback(.success, trigger: streak.currentStreak)
+                .onChange(of: streak.currentStreak) { _, _ in
+                    // Более плавный, менее «дёрганый» перелёт: мягкая
+                    // пружина с высоким демпфированием вместо резкого
+                    // рывка, и долгий easeInOut на возврат — движение
+                    // читается как плавный вдох-выдох, а не щелчок.
+                    withAnimation(.spring(response: 0.45, dampingFraction: 0.75)) {
+                        streakPulse = true
+                    }
+                    withAnimation(.easeInOut(duration: 0.6).delay(0.25)) {
+                        streakPulse = false
+                    }
+                }
+
+            Eyebrow(verbatim: streak.currentStreak.dayWord, color: Palette.marble)
+
+            Spacer()
+
+            Text("Лучший стрик: \(streak.bestStreak.daysCount) · Цель: \(streak.personalGoalDays.daysCount)")
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.marble.opacity(0.8))
+                .padding(.bottom, 16)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 252)
+        // Фото — фоном, а не слоем ZStack: картинка с .fill в ZStack
+        // раздувала ширину карточки за поля экрана.
+        .background {
             // Фото подогнано впритык под рамку карточки — без запаса сверху
             // и снизу сдвинуть его нельзя, обнажится пустой край. `offset`
             // именно это и делал — отодвигал картинку, оставляя пустоту.
@@ -499,42 +536,7 @@ struct HomeView: View {
                         startPoint: .top, endPoint: .bottom
                     )
                 }
-
-            VStack(spacing: 0) {
-                Eyebrow(text: "твой стрик", color: Palette.marble)
-                    .padding(.top, 20)
-
-                Text("\(streak.currentStreak)")
-                    .font(Face.display(76, .semibold))
-                    .foregroundStyle(.goldFill)
-                    .shadow(color: Palette.gold.opacity(streakPulse ? 1 : 0.45), radius: streakPulse ? 60 : 16)
-                    .scaleEffect(streakPulse ? 1.55 : 1)
-                    .contentTransition(.numericText())
-                    .sensoryFeedback(.success, trigger: streak.currentStreak)
-                    .onChange(of: streak.currentStreak) { _, _ in
-                        // Более плавный, менее «дёрганый» перелёт: мягкая
-                        // пружина с высоким демпфированием вместо резкого
-                        // рывка, и долгий easeInOut на возврат — движение
-                        // читается как плавный вдох-выдох, а не щелчок.
-                        withAnimation(.spring(response: 0.45, dampingFraction: 0.75)) {
-                            streakPulse = true
-                        }
-                        withAnimation(.easeInOut(duration: 0.6).delay(0.25)) {
-                            streakPulse = false
-                        }
-                    }
-
-                Eyebrow(verbatim: streak.currentStreak.dayWord, color: Palette.marble)
-
-                Spacer()
-
-                Text("Лучший стрик: \(streak.bestStreak.daysCount) · Цель: \(streak.personalGoalDays.daysCount)")
-                    .font(.system(size: 13))
-                    .foregroundStyle(Palette.marble.opacity(0.8))
-                    .padding(.bottom, 16)
-            }
         }
-        .frame(height: 252)
         .clipShape(.rect(cornerRadius: 20))
         .overlay {
             RoundedRectangle(cornerRadius: 20).strokeBorder(Palette.vein, lineWidth: 1)

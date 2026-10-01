@@ -268,8 +268,11 @@ private struct MonthSpan: View {
     let streak: StreakManager
     let calendar: Calendar
 
+    @Environment(SquadManager.self) private var squad
+
     @State private var showGoalEditor = false
     @State private var showPartner = false
+    @State private var showSquad = false
     @State private var goalDraft = 21
 
     private var monthDate: Date { Date() }
@@ -380,12 +383,15 @@ private struct MonthSpan: View {
             }
             .clipShape(.rect(cornerRadius: 18))
             .cardSurface()
-            // Бейдж — поверх границы этой карточки, не всего экрана: он
-            // рисуется после .clipShape, поэтому не обрезается скруглением.
+            // Бейджи — поверх границы этой карточки, не всего экрана: они
+            // рисуются после .clipShape, поэтому не обрезаются скруглением.
             .overlay(alignment: .bottomLeading) {
                 PartnerBadge(width: 130)
                     .contentShape(.rect)
                     .onTapGesture { showPartner = true }
+            }
+            .overlay {
+                SquadOnImage { showPartner = true }
             }
 
             // Подпись — снаружи карточки, не часть композиции с фото.
@@ -393,12 +399,32 @@ private struct MonthSpan: View {
                 .font(Face.display(14))
                 .foregroundStyle(Palette.ash)
                 .multilineTextAlignment(.center)
+
+            // Пустых мест на картинке нет — позвать людей отсюда можно
+            // одной скромной кнопкой, пока в скваде есть свободные места.
+            if squad.freeSlots > 0 {
+                Button { showSquad = true } label: {
+                    Label("Позвать в сквад", systemImage: "plus")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(.goldFill)
+                        .padding(.horizontal, 18)
+                        .frame(height: 38)
+                        .overlay { Capsule().strokeBorder(Palette.gold.opacity(0.4), lineWidth: 1) }
+                }
+                .buttonStyle(.plain)
+                .padding(.top, -8)
+            }
         }
         // Лист, а не NavigationLink: экран напарника — отдельная вкладка,
         // и пушить его копию внутрь стека «Прогресс» значило бы держать
         // два источника правды.
         .sheet(isPresented: $showPartner) {
             NavigationStack { PartnerView() }
+        }
+        // Сразу сквад, без экрана напарника сверху — иначе до приглашения
+        // пришлось бы листать.
+        .sheet(isPresented: $showSquad) {
+            SquadSheet()
         }
         .sheet(isPresented: $showGoalEditor) {
             VStack(spacing: 24) {
@@ -579,5 +605,33 @@ private struct DayMark: View {
             }
         }
         .frame(height: 30)
+    }
+}
+
+// MARK: - Лист сквада
+
+/// Лист ровно по высоте содержимого: он поднимается снизу только насколько
+/// нужно, и кнопки оказываются в нижней половине экрана — под большим
+/// пальцем, а не у самого верха.
+private struct SquadSheet: View {
+
+    @State private var contentHeight: CGFloat = 560
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                SquadSection()
+                    .padding(.horizontal, 20)
+                    .padding(.top, 24)
+                    .padding(.bottom, 12)
+                    .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
+                        contentHeight = $0
+                    }
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .background(Palette.obsidian.ignoresSafeArea())
+        }
+        .presentationDetents([.height(contentHeight), .large])
+        .presentationDragIndicator(.visible)
     }
 }

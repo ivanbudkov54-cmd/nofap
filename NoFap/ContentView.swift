@@ -10,6 +10,7 @@ struct ContentView: View {
     @Environment(BlockingManager.self) private var blocking
     @Environment(StreakManager.self) private var streak
     @Environment(PartnerManager.self) private var partner
+    @Environment(SquadManager.self) private var squad
     @Environment(ReminderManager.self) private var reminder
     @Environment(PremiumStore.self) private var premium
     @Environment(\.scenePhase) private var scenePhase
@@ -28,6 +29,7 @@ struct ContentView: View {
             blocking.refresh()
             await reminder.refresh()
             await partner.refresh()
+            await squad.refresh()
             await premium.start()
             await adaptReminder()
         }
@@ -36,6 +38,7 @@ struct ContentView: View {
         // шанс забыть.
         .onChange(of: streak.revision) { _, _ in
             Task { await partner.push(from: streak) }
+            Task { await squad.push(from: streak, nickname: partner.nickname) }
             Task { await adaptReminder() }
         }
         // И сразу, как только появилась пара или приглашение: иначе
@@ -43,9 +46,13 @@ struct ContentView: View {
         .onChange(of: partner.state) { _, _ in
             Task { await partner.push(from: streak) }
         }
+        .onChange(of: squad.isInSquad) { _, _ in
+            Task { await squad.push(from: streak, nickname: partner.nickname) }
+        }
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
             Task { await partner.refresh() }
+            Task { await squad.refresh() }
             Task {
                 await premium.refreshEntitlements()
                 await adaptReminder()
@@ -57,8 +64,14 @@ struct ContentView: View {
         // Здесь, а не в RootView: ссылку могут открыть ещё до конца
         // онбординга — код подождёт в менеджере, пока появятся вкладки.
         .onOpenURL { url in
-            if let code = PartnerLink.code(from: url) {
-                partner.pendingCode = code
+            guard let invite = PartnerLink.invite(from: url) else { return }
+            switch invite.kind {
+            case .partner:
+                partner.pendingInviter = invite.inviter
+                partner.pendingCode = invite.code
+            case .squad:
+                squad.pendingInviter = invite.inviter
+                squad.pendingCode = invite.code
             }
         }
     }

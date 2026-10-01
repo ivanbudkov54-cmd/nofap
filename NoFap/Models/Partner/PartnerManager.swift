@@ -34,6 +34,8 @@ final class PartnerManager {
     /// Код из открытой ссылки-приглашения, ждущий подтверждения. Сразу не
     /// связываемся: иначе любой, кто пришлёт ссылку, привязался бы молча.
     var pendingCode: String?
+    /// Кто зовёт по ссылке — для подписи в окне приглашения.
+    var pendingInviter: String?
 
     private let sync: any PartnerSyncing
     private let defaults: UserDefaults

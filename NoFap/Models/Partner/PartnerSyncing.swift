@@ -3,7 +3,7 @@
 //  NoFap
 //
 //  Единственное, что интерфейс знает о синхронизации. За этим протоколом
-//  стоит либо локальная заглушка, либо Firebase — экраны при этом не
+//  стоит либо локальная заглушка, либо Supabase — экраны при этом не
 //  меняются.
 //
 
@@ -54,23 +54,23 @@ protocol PartnerSyncing: AnyObject, Sendable {
 
 enum PartnerBackend: String {
     case fake
-    case firebase
+    case supabase
 }
 
 enum PartnerSyncFactory {
 
-    /// Firebase, а не CloudKit: работает и на Android, и не требует платного
-    /// Apple Developer. Пока ключи проекта не вписаны в FirebaseConfig,
-    /// интерфейс живёт на заглушке.
+    /// Supabase: один сервер на всё приложение, работает и на Android, и не
+    /// требует платного Apple Developer. Пока ключи проекта не вписаны в
+    /// SupabaseConfig, интерфейс живёт на заглушке.
     static var backend: PartnerBackend {
-        FirebaseConfig.isConfigured ? .firebase : .fake
+        SupabaseConfig.isConfigured ? .supabase : .fake
     }
 
     @MainActor
     static func make() -> any PartnerSyncing {
         switch backend {
         case .fake:     LocalFakePartnerSync()
-        case .firebase: FirebasePartnerSync()
+        case .supabase: SupabasePartnerSync()
         }
     }
 }

@@ -11,7 +11,7 @@ import Foundation
 
 /// Состояние напарника, каким его видит эта сторона.
 struct PartnerProfile: Codable, Sendable, Equatable, Identifiable {
-    let id: String                  // идентификатор в Firebase (uid)
+    let id: String                  // идентификатор пользователя в Supabase
     var nickname: String
     var currentStreak: Int
     var goalDays: Int
@@ -95,6 +95,8 @@ enum PartnerSyncError: Error, Equatable, Sendable {
     case codeIsMine
     case alreadyPaired
     case partnerGone
+    case squadFull
+    case alreadyInSquad
     case other(String)
 
     /// Текст для человека живёт рядом с ошибкой, а не во вьюхе: так
@@ -117,6 +119,10 @@ enum PartnerSyncError: Error, Equatable, Sendable {
             String(localized: "У тебя уже есть напарник.")
         case .partnerGone:
             String(localized: "Напарник разорвал связь.")
+        case .squadFull:
+            String(localized: "В скваде уже 4 человека — свободных мест нет.")
+        case .alreadyInSquad:
+            String(localized: "Ты уже в другом скваде. Чтобы войти в этот, сначала выйди из своего.")
         case .other(let text):
             text
         }
