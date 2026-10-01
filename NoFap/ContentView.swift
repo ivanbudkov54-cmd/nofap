@@ -13,6 +13,8 @@ struct ContentView: View {
     @Environment(SquadManager.self) private var squad
     @Environment(ReminderManager.self) private var reminder
     @Environment(PremiumStore.self) private var premium
+    @Environment(JournalManager.self) private var journal
+    @Environment(CloudSync.self) private var cloud
     @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -32,6 +34,8 @@ struct ContentView: View {
             await squad.refresh()
             await premium.start()
             await adaptReminder()
+            await cloud.push(streak: streak)
+            await cloud.syncJournal(journal)
         }
         // Одна точка синхронизации на всё приложение. Дёргать push на каждом
         // вызове checkIn нельзя: мест вызова уже несколько, и каждое новое —
@@ -40,6 +44,10 @@ struct ContentView: View {
             Task { await partner.push(from: streak) }
             Task { await squad.push(from: streak, nickname: partner.nickname) }
             Task { await adaptReminder() }
+            Task { await cloud.push(streak: streak) }
+        }
+        .onChange(of: journal.revision) { _, _ in
+            Task { await cloud.syncJournal(journal) }
         }
         // И сразу, как только появилась пара или приглашение: иначе
         // напарник видел бы нули до первой отметки.
@@ -53,6 +61,7 @@ struct ContentView: View {
             guard phase == .active else { return }
             Task { await partner.refresh() }
             Task { await squad.refresh() }
+            Task { await cloud.syncJournal(journal) }
             Task {
                 await premium.refreshEntitlements()
                 await adaptReminder()

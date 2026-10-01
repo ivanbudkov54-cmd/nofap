@@ -3,8 +3,8 @@
 //  NoFap
 //
 //  Личный дневник: свободные заметки о дне, без структуры и оценок.
-//  Хранится локально в UserDefaults — тот же принцип, что и у остальных
-//  данных приложения: ничего не покидает устройство.
+//  Хранится локально в UserDefaults; если сервер подключён, CloudSync
+//  копирует записи в journal_entries — видны они только самому человеку.
 //
 
 import Foundation
@@ -37,6 +37,9 @@ final class JournalManager {
     /// Новые записи — сверху, как в любом дневнике.
     private(set) var entries: [JournalEntry]
 
+    /// Растёт при любом изменении — сигнал для CloudSync.
+    private(set) var revision = 0
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         if let data = defaults.data(forKey: Key.entries),
@@ -59,7 +62,19 @@ final class JournalManager {
         persist()
     }
 
+    /// Итог сверки с сервером: записи с других устройств (или сохранённые до
+    /// переустановки) добавляются, удалённые там — убираются.
+    func applyRemote(added: [JournalEntry], removed: Set<UUID>) {
+        guard !added.isEmpty || !removed.isEmpty else { return }
+        let known = Set(entries.map(\.id))
+        entries.removeAll { removed.contains($0.id) }
+        entries += added.filter { !known.contains($0.id) }
+        entries.sort { $0.date > $1.date }
+        persist()
+    }
+
     private func persist() {
+        revision += 1
         guard let data = try? JSONEncoder().encode(entries) else { return }
         defaults.set(data, forKey: Key.entries)
     }

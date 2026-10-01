@@ -3,7 +3,7 @@
 //  NoFap
 //
 //  Напарник на Supabase. Всё, что меняет данные, — функции из
-//  supabase/schema.sql; приложение только читает таблицы, и только то,
+//  supabase/02_partner_squad.sql; приложение только читает таблицы, и только то,
 //  что разрешают политики: свой профиль, профиль взаимного напарника,
 //  свои приглашения и свою переписку.
 //
@@ -104,7 +104,7 @@ final class SupabasePartnerSync: PartnerSyncing {
                 filters.append(("sent_at", "gte.\(PostgresTime.string(from: messagesSince))"))
             }
 
-            let rows: [MessageRow] = try await db.select("messages", filters)
+            let rows: [MessageRow] = try await db.select("partner_messages", filters)
             let known = Set(messageCache.map(\.id))
             for row in rows where !known.contains(row.id) {
                 if let message = row.message(me: me) { messageCache.append(message) }
@@ -136,7 +136,7 @@ final class SupabasePartnerSync: PartnerSyncing {
     /// подчищаю свою сторону и сообщаю о разрыве.
     private func currentPartner() async throws -> PartnerProfile? {
         guard let partner = try await partnerID(refresh: true) else { return nil }
-        let rows: [SupabaseProfileRow] = try await db.select("profiles", [("id", "eq.\(partner)")])
+        let rows: [SupabaseProfileRow] = try await db.select("partner_profiles", [("id", "eq.\(partner)")])
         guard let row = rows.first else {
             try await db.call("unpair")
             knownPartnerID = nil
@@ -149,7 +149,7 @@ final class SupabasePartnerSync: PartnerSyncing {
     private func partnerID(refresh: Bool = false) async throws -> String? {
         if !refresh, let knownPartnerID { return knownPartnerID }
         let me = try await session.userID()
-        let rows: [SupabaseProfileRow] = try await db.select("profiles", [("id", "eq.\(me)")])
+        let rows: [SupabaseProfileRow] = try await db.select("partner_profiles", [("id", "eq.\(me)")])
         knownPartnerID = rows.first?.partnerId
         return knownPartnerID
     }

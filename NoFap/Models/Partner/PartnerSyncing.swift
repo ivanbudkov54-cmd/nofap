@@ -60,10 +60,10 @@ enum PartnerBackend: String {
 enum PartnerSyncFactory {
 
     /// Supabase: один сервер на всё приложение, работает и на Android, и не
-    /// требует платного Apple Developer. Пока ключи проекта не вписаны в
-    /// SupabaseConfig, интерфейс живёт на заглушке.
+    /// требует платного Apple Developer. Пока ключей нет или на сервере не
+    /// запущен 02_partner_squad.sql, интерфейс живёт на заглушке.
     static var backend: PartnerBackend {
-        SupabaseConfig.isConfigured ? .supabase : .fake
+        SupabaseConfig.isConfigured && SupabaseConfig.partnerTablesReady ? .supabase : .fake
     }
 
     @MainActor

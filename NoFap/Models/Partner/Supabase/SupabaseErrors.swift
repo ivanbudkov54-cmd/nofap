@@ -29,7 +29,7 @@ func supabaseCall<T>(_ body: () async throws -> T) async throws -> T {
 
 extension PartnerSyncError {
 
-    /// Коды — те, что поднимают функции в supabase/schema.sql.
+    /// Коды — те, что поднимают функции в supabase/02_partner_squad.sql.
     init(supabaseCode code: String) {
         self = switch code {
         case "code_not_found":                 .codeNotFound

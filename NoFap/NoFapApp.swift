@@ -18,6 +18,7 @@ struct NoFapApp: App {
     @State private var journal = JournalManager()
     @State private var checkIns = CheckInManager()
     @State private var premium = PremiumStore()
+    @State private var cloud = CloudSync()
 
     init() {
         Face.register()
@@ -36,6 +37,7 @@ struct NoFapApp: App {
                 .environment(journal)
                 .environment(checkIns)
                 .environment(premium)
+                .environment(cloud)
                 .preferredColorScheme(.dark)
         }
     }

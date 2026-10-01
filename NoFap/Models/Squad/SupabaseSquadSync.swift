@@ -3,7 +3,7 @@
 //  NoFap
 //
 //  Сквад на Supabase. Как и у напарника: всё, что меняет данные, — функции
-//  из supabase/schema.sql, а таблицы приложение только читает, и политики
+//  из supabase/02_partner_squad.sql, а таблицы приложение только читает, и политики
 //  отдают лишь свой сквад.
 //
 
@@ -40,7 +40,7 @@ final class SupabaseSquadSync: SquadSyncing {
             var profiles: [PartnerProfile] = []
             if !others.isEmpty {
                 let rows: [SupabaseProfileRow] = try await db.select(
-                    "profiles", [("id", "in.(\(others.joined(separator: ",")))")])
+                    "partner_profiles", [("id", "in.(\(others.joined(separator: ",")))")])
                 // Порядок — по времени вступления, а не как отдала база.
                 profiles = others.compactMap { id in rows.first { $0.id == id }?.profile }
             }

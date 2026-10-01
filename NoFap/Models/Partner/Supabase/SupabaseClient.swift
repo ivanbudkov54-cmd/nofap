@@ -2,9 +2,10 @@
 //  SupabaseClient.swift
 //  NoFap
 //
-//  Тонкий клиент PostgREST — REST-слоя Supabase над Postgres. Два вида
-//  запросов: вызвать функцию (всё, что меняет данные) и прочитать таблицу
-//  (только то, что разрешают политики RLS).
+//  Тонкий клиент PostgREST — REST-слоя Supabase над Postgres. Напарник и
+//  сквад меняют данные только функциями, а читают таблицы. Личные данные
+//  (стрик, дневник, срывы из 01_core.sql) пишутся в таблицы напрямую —
+//  политики RLS пускают человека только к своим строкам.
 //
 
 import Foundation
@@ -25,7 +26,7 @@ final class SupabaseClient {
         self.session = session
     }
 
-    /// Вызов функции из supabase/schema.sql, результат — одна строка.
+    /// Вызов функции из supabase/02_partner_squad.sql, результат — одна строка.
     func call<Result: Decodable>(_ function: String, _ args: [String: Any?] = [:]) async throws -> Result {
         let data = try await send("POST", "rpc/\(function)", json: args)
         return try Self.decoder.decode(Result.self, from: data)
@@ -37,9 +38,23 @@ final class SupabaseClient {
     }
 
     /// Чтение таблицы с фильтрами PostgREST (`id=eq.…`, `order=…`).
-    func select<Row: Decodable>(_ table: String, _ filters: [(String, String)]) async throws -> [Row] {
-        let data = try await send("GET", table, query: [("select", "*")] + filters)
+    func select<Row: Decodable>(_ table: String, _ filters: [(String, String)],
+                                columns: String = "*") async throws -> [Row] {
+        let data = try await send("GET", table, query: [("select", columns)] + filters)
         return try Self.decoder.decode([Row].self, from: data)
+    }
+
+    /// Вставка строк. `upsert` — при совпадении ключа строка обновляется.
+    func insert(_ table: String, _ rows: [[String: Any?]], upsert: Bool = false) async throws {
+        guard !rows.isEmpty else { return }
+        _ = try await send("POST", table,
+                           body: rows.map { $0.mapValues { $0 ?? NSNull() } },
+                           prefer: upsert ? "resolution=merge-duplicates,return=minimal" : "return=minimal")
+    }
+
+    /// Удаление строк по фильтрам — только тех, что разрешает RLS.
+    func delete(_ table: String, _ filters: [(String, String)]) async throws {
+        _ = try await send("DELETE", table, query: filters)
     }
 
     // MARK: - Внутреннее
@@ -48,6 +63,8 @@ final class SupabaseClient {
                       _ path: String,
                       query: [(String, String)] = [],
                       json: [String: Any?]? = nil,
+                      body: Any? = nil,
+                      prefer: String? = nil,
                       isRetry: Bool = false) async throws -> Data {
         var components = URLComponents(string: "\(SupabaseConfig.url)/rest/v1/\(path)")!
         if !query.isEmpty {
@@ -62,10 +79,11 @@ final class SupabaseClient {
         request.httpMethod = method
         request.setValue(SupabaseConfig.anonKey, forHTTPHeaderField: "apikey")
         request.setValue("Bearer \(try await session.token())", forHTTPHeaderField: "Authorization")
-        if let json {
+        if let payload = body ?? json.map({ $0.mapValues { $0 ?? NSNull() } }) {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try JSONSerialization.data(withJSONObject: json.mapValues { $0 ?? NSNull() })
+            request.httpBody = try JSONSerialization.data(withJSONObject: payload)
         }
+        if let prefer { request.setValue(prefer, forHTTPHeaderField: "Prefer") }
 
         let (data, response) = try await URLSession.shared.data(for: request)
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
@@ -73,7 +91,8 @@ final class SupabaseClient {
         // Токен отозвали раньше срока — один раз берём новый и повторяем.
         if status == 401, !isRetry {
             session.invalidate()
-            return try await send(method, path, query: query, json: json, isRetry: true)
+            return try await send(method, path, query: query, json: json,
+                                  body: body, prefer: prefer, isRetry: true)
         }
 
         switch status {
