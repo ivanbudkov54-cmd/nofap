@@ -187,6 +187,20 @@ final class StreakManager {
         return true
     }
 
+    /// Полный локальный сброс после удаления аккаунта. Цель остаётся —
+    /// это настройка, а не история.
+    func resetAll() {
+        currentStreak = 0
+        bestStreak = 0
+        totalCleanDays = 0
+        lastCheckinDate = nil
+        lastShieldDate = nil
+        history = [:]
+        justReachedGoal = false
+        defaults.removeObject(forKey: Key.startDate)
+        persist()
+    }
+
     /// HomeView вызывает после того, как поздравление показано.
     func acknowledgeGoalReached() {
         justReachedGoal = false

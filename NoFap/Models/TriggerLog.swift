@@ -71,6 +71,10 @@ enum TriggerLog {
         defaults.set(data, forKey: key)
     }
 
+    static func removeAll(defaults: UserDefaults = .standard) {
+        defaults.removeObject(forKey: key)
+    }
+
     static func entries(defaults: UserDefaults = .standard) -> [TriggerEntry] {
         load(defaults: defaults)
     }

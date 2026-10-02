@@ -21,6 +21,10 @@ enum RelapseLog {
         defaults.set(all.map(\.timeIntervalSince1970), forKey: key)
     }
 
+    static func removeAll(defaults: UserDefaults = .standard) {
+        defaults.removeObject(forKey: key)
+    }
+
     static func dates(defaults: UserDefaults = .standard) -> [Date] {
         (defaults.array(forKey: key) as? [Double] ?? []).map(Date.init(timeIntervalSince1970:))
     }

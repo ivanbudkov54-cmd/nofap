@@ -11,9 +11,11 @@ struct HomeView: View {
     @Environment(StreakManager.self) private var streak
     @Environment(PartnerManager.self) private var partner
     @Environment(ReasonsStore.self) private var reasons
+    @Environment(AvatarManager.self) private var avatar
 
     @State private var showRelapse = false
     @State private var showShieldReview = false
+    @State private var showSettings = false
     @State private var showGoalReached = false
     @State private var newGoalDraft = 21
 
@@ -35,6 +37,7 @@ struct HomeView: View {
             VStack(spacing: 6) {
                 greeting
                 summitCard
+                    .tourTarget(.homeTimer)
                 freedomSection
                 quoteCard
                 actions
@@ -62,7 +65,9 @@ struct HomeView: View {
             }
             Button(canShieldToday ? "Сбросить стрик" : "Сорвался", role: .destructive) {
                 RelapseLog.record()
-                withAnimation(.snappy(duration: 0.4)) { _ = streak.checkIn(clean: false) }
+                withAnimation(.snappy(duration: 0.4)) {
+                    if streak.checkIn(clean: false) { avatar.applyRelapse() }
+                }
             }
             // .alert не добавляет «Отмена» сам, в отличие от confirmationDialog —
             // прописываем явно, иначе закрыть можно только отметив срыв.
@@ -73,6 +78,9 @@ struct HomeView: View {
             Text(relapseNote)
         }
         .sheet(isPresented: $showShieldReview) { ShieldReflectionView() }
+        .sheet(isPresented: $showSettings) {
+            NavigationStack { SettingsView() }
+        }
         .onChange(of: streak.justReachedGoal) { _, reached in
             if reached {
                 newGoalDraft = streak.personalGoalDays
@@ -479,14 +487,21 @@ struct HomeView: View {
 
             Spacer()
 
-            Circle()
-                .strokeBorder(Palette.vein, lineWidth: 1)
-                .frame(width: 36, height: 36)
-                .overlay {
-                    Image(systemName: "person")
-                        .font(.system(size: 14))
-                        .foregroundStyle(Palette.marble)
-                }
+            Button { showSettings = true } label: {
+                Circle()
+                    .strokeBorder(Palette.vein, lineWidth: 1)
+                    .frame(width: 36, height: 36)
+                    .overlay {
+                        Image(systemName: "person")
+                            .font(.system(size: 14))
+                            .foregroundStyle(Palette.marble)
+                    }
+                    // Зона нажатия больше самого кружка — 44pt по HIG.
+                    .frame(width: 44, height: 44)
+                    .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Настройки")
         }
     }
 
@@ -653,6 +668,7 @@ struct HomeView: View {
             // ближе к предупреждающему знаку, чем к обычной кнопке.
             circleAction(icon: "hand.raised.fill", title: "SOS",
                          tint: Palette.garnet, filled: false, boldOutline: true) { showSOS = true }
+                .tourTarget(.homeSOS)
 
             if streak.hasCheckedInToday {
                 circleAction(icon: "checkmark", title: "Отмечено",
@@ -663,7 +679,9 @@ struct HomeView: View {
                 // главный момент награды в приложении, он должен перекатиться.
                 circleAction(icon: "flame.fill", title: "Держусь",
                              tint: Palette.gold, filled: true, size: 92, glow: true) {
-                    withAnimation(.snappy(duration: 0.25)) { _ = streak.checkIn(clean: true) }
+                    withAnimation(.snappy(duration: 0.25)) {
+                        if streak.checkIn(clean: true) { avatar.addPowerForStreak() }
+                    }
                 }
             }
 

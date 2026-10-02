@@ -19,6 +19,12 @@ struct NoFapApp: App {
     @State private var checkIns = CheckInManager()
     @State private var premium = PremiumStore()
     @State private var cloud = CloudSync()
+    @State private var router = AppRouter()
+    @State private var theme = ThemeManager()
+    @State private var challenges = ChallengeManager()
+    @State private var contrast = ContrastExperimentManager()
+    @State private var avatar = AvatarManager()
+    @State private var tour = AppTourManager()
 
     init() {
         Face.register()
@@ -38,7 +44,13 @@ struct NoFapApp: App {
                 .environment(checkIns)
                 .environment(premium)
                 .environment(cloud)
-                .preferredColorScheme(.dark)
+                .environment(router)
+                .environment(theme)
+                .environment(challenges)
+                .environment(contrast)
+                .environment(avatar)
+                .environment(tour)
+                .preferredColorScheme(theme.theme.colorScheme)
         }
     }
 }

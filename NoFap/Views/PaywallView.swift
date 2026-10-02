@@ -10,11 +10,30 @@
 import SwiftUI
 import StoreKit
 
+/// Замок на закрытом Premium-контенте.
+struct ProLockBadge: View {
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "lock.fill")
+            Text("Premium")
+        }
+        .font(.system(size: 11, weight: .bold))
+        .foregroundStyle(Color(hex: 0x1A1405))
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Capsule().fill(.goldFill))
+        .accessibilityLabel("Доступно в Premium")
+    }
+}
+
 struct PaywallView: View {
 
     @Environment(PremiumStore.self) private var store
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+
+    /// Почему открылся пейвол — если его вызвал закрытый экран.
+    var contextReason: String? = nil
 
     @State private var selectedID = PremiumStore.ProductID.yearly
     @State private var notice: Notice?
@@ -94,6 +113,17 @@ struct PaywallView: View {
                 .foregroundStyle(Palette.ash)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
+
+            if let contextReason, !contextReason.isEmpty {
+                Label(contextReason, systemImage: "lock.fill")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .background(Palette.basalt, in: .rect(cornerRadius: 12))
+                    .padding(.top, 4)
+            }
         }
     }
 

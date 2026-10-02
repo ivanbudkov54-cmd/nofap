@@ -18,13 +18,17 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("onboardingDone") private var onboardingDone = false
+    /// Опрос друга после нашего онбординга: стартовая точка, «Точка А» в дневнике.
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some View {
         Group {
-            if onboardingDone {
-                RootView()
-            } else {
+            if !onboardingDone {
                 OnboardingView { onboardingDone = true }
+            } else if !hasCompletedOnboarding {
+                OnboardingQuizView { hasCompletedOnboarding = true }
+            } else {
+                RootView()
             }
         }
         .task {
@@ -36,6 +40,13 @@ struct ContentView: View {
             await adaptReminder()
             await cloud.push(streak: streak)
             await cloud.syncJournal(journal)
+            await cloud.refreshArticles()
+        }
+        .alert(cloud.notice ?? "", isPresented: Binding(
+            get: { cloud.notice != nil },
+            set: { if !$0 { cloud.notice = nil } }
+        )) {
+            Button("Хорошо", role: .cancel) {}
         }
         // Одна точка синхронизации на всё приложение. Дёргать push на каждом
         // вызове checkIn нельзя: мест вызова уже несколько, и каждое новое —

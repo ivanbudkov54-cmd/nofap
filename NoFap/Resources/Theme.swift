@@ -9,14 +9,77 @@
 
 import SwiftUI
 import CoreText
+import UIKit
+
+enum AppTheme: String, CaseIterable, Identifiable {
+    case system = "system"
+    case light = "light"
+    case dark = "dark"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .system: "Как в системе"
+        case .light: "Светлая"
+        case .dark: "Тёмная"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .system: "circle.lefthalf.filled"
+        case .light: "sun.max.fill"
+        case .dark: "moon.fill"
+        }
+    }
+
+    /// nil означает «следовать системе».
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+}
+
+@MainActor
+@Observable
+final class ThemeManager {
+    private static let key = "app_theme"
+
+    var theme: AppTheme {
+        didSet { UserDefaults.standard.set(theme.rawValue, forKey: Self.key) }
+    }
+
+    init() {
+        // По умолчанию тёмная: «золото в мраморе» рисовалось под неё, а
+        // светлую человек выбирает сам в настройках.
+        let raw = UserDefaults.standard.string(forKey: Self.key) ?? AppTheme.dark.rawValue
+        theme = AppTheme(rawValue: raw) ?? .dark
+    }
+}
 
 enum Palette {
-    static let obsidian   = Color(hex: 0x0A0A0D)  // фон
-    static let basalt     = Color(hex: 0x141418)  // карточки
-    static let vein       = Color(hex: 0x2C2C34)  // прожилки, границы
-    static let marbleHigh = Color(hex: 0xE4E7EF)  // блик мрамора
-    static let marble     = Color(hex: 0xB8BECD)  // основной текст
-    static let ash        = Color(hex: 0x7A7A87)  // вторичный текст
+    /// Фон, карточки, границы и текст меняются вместе со схемой,
+    /// золото остаётся наградой в обеих темах.
+    static let obsidian   = Color(uiColor: dynamic(dark: 0x0A0A0D, light: 0xFFFFFF))
+    static let basalt     = Color(uiColor: dynamic(dark: 0x141418, light: 0xF4F4F7))
+    static let vein       = Color(uiColor: dynamic(dark: 0x2C2C34, light: 0xDDDFE5))
+    static let marbleHigh = Color(uiColor: dynamic(dark: 0xE4E7EF, light: 0x1C1C22))
+    static let marble     = Color(uiColor: dynamic(dark: 0xB8BECD, light: 0x3D3D45))
+    static let ash        = Color(uiColor: dynamic(dark: 0x7A7A87, light: 0x6B6B78))
+    static let tabBar     = dynamic(dark: 0x0A0A0D, light: 0xFFFFFF)
+
+    /// UIKit вызывает этот блок с фонового потока отрисовки.
+    /// При изоляции MainActor по умолчанию такой вызов обрывает приложение.
+    nonisolated private static func dynamic(dark: UInt32, light: UInt32) -> UIColor {
+        UIColor { traits in
+            let hex = traits.userInterfaceStyle == .dark ? dark : light
+            return UIColor(hex: hex)
+        }
+    }
     // Тон и насыщенность взяты из свечения на фото «Твой стрик» (#F5BE4E) —
     // раньше goldLight терял насыщенность и уходил в бледно-жёлтый, поэтому
     // общий золотой на экране читался холоднее и менее оранжевым, чем на фото.
@@ -128,6 +191,17 @@ extension Color {
             red: Double((hex >> 16) & 0xFF) / 255,
             green: Double((hex >> 8) & 0xFF) / 255,
             blue: Double(hex & 0xFF) / 255
+        )
+    }
+}
+
+extension UIColor {
+    nonisolated convenience init(hex: UInt32) {
+        self.init(
+            red: CGFloat((hex >> 16) & 0xFF) / 255,
+            green: CGFloat((hex >> 8) & 0xFF) / 255,
+            blue: CGFloat(hex & 0xFF) / 255,
+            alpha: 1
         )
     }
 }

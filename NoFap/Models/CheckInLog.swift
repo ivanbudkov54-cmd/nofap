@@ -56,14 +56,15 @@ struct CheckInEntry: Identifiable, Codable, Equatable {
     /// Точный ISO-таймштамп, зафиксированный в момент сохранения — отдельно
     /// от `date`, чтобы формат не зависел от того, как Codable сериализует Date.
     let isoTimestamp: String
-    var energyLevel: Int
-    var libidoLevel: Int
+    /// nil — отметка без Premium: уровни не заполнялись, триггеры есть.
+    var energyLevel: Int?
+    var libidoLevel: Int?
     var triggers: [CheckInTag]
     var note: String
 
     private static let isoFormatter = ISO8601DateFormatter()
 
-    init(id: UUID = UUID(), date: Date = Date(), energyLevel: Int, libidoLevel: Int, triggers: [CheckInTag], note: String) {
+    init(id: UUID = UUID(), date: Date = Date(), energyLevel: Int?, libidoLevel: Int?, triggers: [CheckInTag], note: String) {
         self.id = id
         self.date = date
         self.isoTimestamp = Self.isoFormatter.string(from: date)
@@ -96,7 +97,7 @@ final class CheckInManager {
         }
     }
 
-    func addEntry(energyLevel: Int, libidoLevel: Int, triggers: [CheckInTag], note: String, on date: Date = Date()) {
+    func addEntry(energyLevel: Int?, libidoLevel: Int?, triggers: [CheckInTag], note: String, on date: Date = Date()) {
         let entry = CheckInEntry(
             date: date,
             energyLevel: energyLevel,
@@ -111,6 +112,11 @@ final class CheckInManager {
     func deleteEntry(_ entry: CheckInEntry) {
         entries.removeAll { $0.id == entry.id }
         persist()
+    }
+
+    func removeAll() {
+        entries = []
+        defaults.removeObject(forKey: Key.entries)
     }
 
     private func persist() {

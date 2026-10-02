@@ -18,7 +18,7 @@ enum DeepDiveCategory: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-struct Article: Identifiable {
+struct Article: Identifiable, Hashable {
     let id: String
     let title: String
     let summary: String

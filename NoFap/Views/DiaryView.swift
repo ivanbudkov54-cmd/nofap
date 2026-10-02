@@ -14,6 +14,8 @@ struct DiaryView: View {
 
     @Environment(JournalManager.self) private var journal
     @Environment(CheckInManager.self) private var checkIns
+    @Environment(CloudSync.self) private var backend
+    @Environment(AppRouter.self) private var router
 
     @State private var showEditor = false
     @State private var showCheckIn = false
@@ -45,17 +47,30 @@ struct DiaryView: View {
             case .checkIn(let e): e.date
             }
         }
+
+        var isPinned: Bool {
+            if case .note(let entry) = self { return entry.isManifest }
+            return false
+        }
     }
 
     private var feed: [FeedItem] {
         (journal.entries.map(FeedItem.note) + checkIns.entries.map(FeedItem.checkIn))
-            .sorted { $0.date > $1.date }
+            .sorted { lhs, rhs in
+                if lhs.isPinned != rhs.isPinned { return lhs.isPinned }
+                return lhs.date > rhs.date
+            }
     }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 22) {
-                header
+                if journal.entries.contains(where: \.isManifest) {
+                    header
+                } else {
+                    header
+                        .tourTarget(.journal)
+                }
                 checkInEntry
 
                 if feed.isEmpty {
@@ -64,7 +79,13 @@ struct DiaryView: View {
                     VStack(spacing: 14) {
                         ForEach(feed) { item in
                             switch item {
-                            case .note(let entry):    noteCard(entry)
+                            case .note(let entry):
+                                if entry.isManifest {
+                                    noteCard(entry)
+                                        .tourTarget(.journal)
+                                } else {
+                                    noteCard(entry)
+                                }
                             case .checkIn(let entry): checkInCard(entry)
                             }
                         }
@@ -89,9 +110,25 @@ struct DiaryView: View {
             }
         }
         .sheet(isPresented: $showEditor) { editor }
+        .onAppear { openShieldNoteIfNeeded() }
+        .onChange(of: router.openRelapseReview) { _, open in
+            if open { openShieldNoteIfNeeded() }
+        }
         .fullScreenCover(isPresented: $showCheckIn) {
             NavigationStack { CheckInView() }
                 .preferredColorScheme(.dark)
+        }
+    }
+
+    /// Щит стрика открывает обычную заметку, но с фиксированным вопросом,
+    /// а не со случайной подсказкой дня.
+    private func openShieldNoteIfNeeded() {
+        guard router.openRelapseReview else { return }
+        router.openRelapseReview = false
+        draft = ""
+        currentPrompt = AppRouter.shieldPrompt
+        DispatchQueue.main.async {
+            showEditor = true
         }
     }
 
@@ -175,6 +212,24 @@ struct DiaryView: View {
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(Palette.gold)
 
+                if entry.isShieldReview == true {
+                    Text(JournalEntry.shieldBadge)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Capsule().fill(.goldFill))
+                }
+
+                if entry.isManifest {
+                    Text("#ТочкаА")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Capsule().fill(.goldFill))
+                }
+
                 Spacer()
 
                 Button {
@@ -187,7 +242,12 @@ struct DiaryView: View {
                 .buttonStyle(.plain)
             }
 
-            if let prompt = entry.promptQuestion {
+            if entry.isManifest, let prompt = entry.promptQuestion {
+                Text(prompt)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .fixedSize(horizontal: false, vertical: true)
+            } else if let prompt = entry.promptQuestion {
                 HStack(alignment: .top, spacing: 6) {
                     Image(systemName: "quote.opening")
                         .font(.system(size: 10))
@@ -200,10 +260,25 @@ struct DiaryView: View {
                 }
             }
 
-            Text(entry.text)
-                .font(.system(size: 15))
-                .foregroundStyle(Palette.marble)
-                .fixedSize(horizontal: false, vertical: true)
+            if entry.moodScore != nil || entry.urgeScore != nil {
+                HStack(spacing: 16) {
+                    if let mood = entry.moodScore {
+                        Text("Энергия \(mood)")
+                    }
+                    if let urge = entry.urgeScore {
+                        Text("Тяга \(urge)")
+                    }
+                }
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(Palette.gold)
+            }
+
+            if !entry.text.isEmpty {
+                Text(entry.text)
+                    .font(.system(size: 15))
+                    .foregroundStyle(Palette.marble)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
@@ -236,9 +311,11 @@ struct DiaryView: View {
                 .buttonStyle(.plain)
             }
 
-            HStack(spacing: 20) {
-                levelBadge(title: "Энергия", value: entry.energyLevel)
-                levelBadge(title: "Тяга", value: entry.libidoLevel)
+            if let energy = entry.energyLevel, let libido = entry.libidoLevel {
+                HStack(spacing: 20) {
+                    levelBadge(title: "Энергия", value: energy)
+                    levelBadge(title: "Тяга", value: libido)
+                }
             }
 
             if !entry.triggers.isEmpty {
@@ -289,7 +366,16 @@ struct DiaryView: View {
                 .foregroundStyle(Palette.marbleHigh)
                 .padding(.top, 24)
 
-            promptCard
+            if currentPrompt.isEmpty {
+                Button("Вернуть вопрос дня") {
+                    currentPrompt = DailyPrompts.next()
+                }
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Palette.gold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                promptCard
+            }
 
             ZStack(alignment: .topLeading) {
                 if draft.isEmpty {
@@ -314,12 +400,25 @@ struct DiaryView: View {
                 RoundedRectangle(cornerRadius: 14).strokeBorder(Palette.vein, lineWidth: 1)
             }
 
-            Button("Сохранить") {
-                journal.addEntry(draft, promptQuestion: currentPrompt)
+            Button {
+                let text = draft
+                let prompt = currentPrompt.isEmpty ? nil : currentPrompt
+                journal.addEntry(text, promptQuestion: prompt)
+                draft = ""
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 showEditor = false
+                Task {
+                    await backend.saveJournal(mood: nil, urge: nil, prompt: prompt, note: text, into: journal)
+                }
+            } label: {
+                if backend.isSavingJournal {
+                    ProgressView()
+                } else {
+                    Text("Сохранить")
+                }
             }
             .buttonStyle(GoldButton())
-            .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(backend.isSavingJournal || draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             .opacity(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1)
 
             Spacer()
@@ -354,6 +453,17 @@ struct DiaryView: View {
                         .foregroundStyle(Palette.gold)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Сменить вопрос")
+
+                Button {
+                    currentPrompt = ""
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color(hex: 0x8C8C97))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Убрать вопрос")
             }
 
             Text(currentPrompt)

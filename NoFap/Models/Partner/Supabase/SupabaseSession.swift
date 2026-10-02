@@ -55,6 +55,17 @@ final class SupabaseSession {
         return try await task.value
     }
 
+    /// После удаления аккаунта: следующий запрос заведёт нового анонимного
+    /// пользователя, старый идентификатор больше нигде не используется.
+    func signOut() {
+        pending = nil
+        accessToken = nil
+        expiresAt = .distantPast
+        uid = nil
+        Keychain.write(Key.uid, nil)
+        Keychain.write(Key.refreshToken, nil)
+    }
+
     /// Сервер ответил 401 — токен отозван раньше срока.
     func invalidate() {
         accessToken = nil

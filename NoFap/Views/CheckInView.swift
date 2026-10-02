@@ -25,6 +25,9 @@ private enum Ink {
 struct CheckInView: View {
 
     @Environment(CheckInManager.self) private var checkIns
+    @Environment(JournalManager.self) private var journal
+    @Environment(CloudSync.self) private var backend
+    @Environment(PremiumStore.self) private var subscriptions
     @Environment(\.dismiss) private var dismiss
 
     @State private var energy: Double = 5
@@ -92,25 +95,55 @@ struct CheckInView: View {
     // MARK: - Ползунки
 
     private var energySlider: some View {
-        sliderCard(
-            title: "Уровень энергии",
-            value: energy,
-            tint: Ink.accent
-        ) {
-            Slider(value: $energy, in: 1...10, step: 1)
-                .tint(Ink.accent)
-        }
+        lockedSlider(
+            sliderCard(
+                title: "Уровень энергии",
+                value: energy,
+                tint: Ink.accent
+            ) {
+                Slider(value: $energy, in: 1...10, step: 1)
+                    .tint(Ink.accent)
+                    .disabled(!subscriptions.isPro)
+            }
+        )
     }
 
     private var libidoSlider: some View {
-        sliderCard(
-            title: "Уровень либидо / тяги",
-            value: libido,
-            tint: Ink.urge
-        ) {
-            Slider(value: $libido, in: 1...10, step: 1)
-                .tint(Ink.urge)
-        }
+        lockedSlider(
+            sliderCard(
+                title: "Уровень либидо / тяги",
+                value: libido,
+                tint: Ink.urge
+            ) {
+                Slider(value: $libido, in: 1...10, step: 1)
+                    .tint(Ink.urge)
+                    .disabled(!subscriptions.isPro)
+            }
+        )
+    }
+
+    private func lockedSlider<Content: View>(_ content: Content) -> some View {
+        content
+            .overlay {
+                if !subscriptions.isPro {
+                    Button {
+                        subscriptions.checkProAccess(for: "Отслеживание уровня энергии и физического тонуса входит в Premium") {}
+                    } label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(.ultraThinMaterial)
+                            VStack(spacing: 8) {
+                                Image(systemName: "lock.fill")
+                                    .foregroundStyle(Palette.gold)
+                                Text("Доступно в Premium")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(Ink.textPrimary)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
     }
 
     private func sliderCard(
@@ -257,16 +290,16 @@ struct CheckInView: View {
         // после закрытия лоадера, чтобы отметка совпадала с реальным
         // моментом чекина, а не с его отображением.
         let date = Date()
-        let energyValue = Int(energy)
-        let libidoValue = Int(libido)
+        let energyValue = subscriptions.isPro ? Int(energy) : nil
+        let libidoValue = subscriptions.isPro ? Int(libido) : nil
         let tags = Array(selectedTags)
         let noteText = note
 
         Task {
             isSaving = true
-            // Короткая пауза — как если бы запись синхронизировалась;
-            // на самом деле пишем сразу локально, без сети и без базы.
-            try? await Task.sleep(for: .seconds(0.6))
+            journal.addEntry(noteText, moodScore: energyValue, urgeScore: libidoValue, on: date)
+            // Отметка пишется всегда: триггеры дня нужны аналитике и без
+            // Premium, уровни — только с ним.
             checkIns.addEntry(
                 energyLevel: energyValue,
                 libidoLevel: libidoValue,
@@ -274,8 +307,17 @@ struct CheckInView: View {
                 note: noteText,
                 on: date
             )
+            await backend.saveJournal(
+                mood: energyValue,
+                urge: libidoValue,
+                prompt: nil,
+                note: noteText,
+                into: journal
+            )
             isSaving = false
-            showSaved = true
+            if backend.notice == nil {
+                showSaved = true
+            }
         }
     }
 }

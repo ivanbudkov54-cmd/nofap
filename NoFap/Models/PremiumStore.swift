@@ -31,6 +31,23 @@ final class PremiumStore {
     static let freeJourneyDays = 7
 
     private(set) var isPremium = false
+
+    /// Пейвол по требованию экрана: `checkProAccess` поднимает флаг, RootView
+    /// показывает PaywallView. Причина — короткая строка над тарифами.
+    var shouldShowPaywall = false
+    var paywallContextReason = ""
+
+    /// Экраны друга называют Premium «Pro» — одно и то же.
+    var isPro: Bool { isPremium }
+
+    func checkProAccess(for reason: String, onGranted: () -> Void) {
+        if isPremium {
+            onGranted()
+        } else {
+            paywallContextReason = reason
+            shouldShowPaywall = true
+        }
+    }
     private(set) var products: [Product] = []
     private(set) var loadState: LoadState = .idle
     private(set) var isTrialEligible = false

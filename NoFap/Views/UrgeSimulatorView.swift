@@ -12,15 +12,30 @@ import SwiftUI
 
 struct UrgeSimulatorView: View {
 
+    @Environment(CloudSync.self) private var backend
+    @Environment(PremiumStore.self) private var subscriptions
+    @State private var opened: UrgeScenario?
+
     var body: some View {
+        let remote = backend.articles(tab: "urge_simulator")
+        if remote.isEmpty {
+            localBody
+        } else {
+            RemoteArticleList(articles: remote, proReason: "Разблокируй готовые сценарии предотвращения срывов")
+        }
+    }
+
+    private var localBody: some View {
         ScrollView {
             VStack(spacing: 14) {
                 header
 
                 VStack(spacing: 12) {
                     ForEach(UrgeSimulatorLibrary.all) { scenario in
-                        NavigationLink {
-                            UrgeScenarioPlayerView(scenario: scenario)
+                        Button {
+                            subscriptions.checkProAccess(for: "Разблокируй готовые сценарии предотвращения срывов") {
+                                opened = scenario
+                            }
                         } label: {
                             scenarioRow(scenario)
                         }
@@ -31,6 +46,9 @@ struct UrgeSimulatorView: View {
             .padding(.horizontal, 18)
             .padding(.top, 4)
             .padding(.bottom, 24)
+        }
+        .navigationDestination(item: $opened) { scenario in
+            UrgeScenarioPlayerView(scenario: scenario)
         }
     }
 
@@ -65,6 +83,9 @@ struct UrgeSimulatorView: View {
                     .lineLimit(2)
             }
 
+            if !subscriptions.isPro {
+                ProLockBadge()
+            }
             Spacer()
 
             Image(systemName: "chevron.right")

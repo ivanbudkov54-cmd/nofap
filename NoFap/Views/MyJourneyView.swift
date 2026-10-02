@@ -13,6 +13,7 @@ struct MyJourneyView: View {
 
     @Environment(StreakManager.self) private var streak
     @Environment(PremiumStore.self) private var premium
+    @Environment(CloudSync.self) private var cloud
 
     @State private var showPaywall = false
 
@@ -34,7 +35,18 @@ struct MyJourneyView: View {
         return .open
     }
 
+    /// Если на сервере есть статьи для этой вкладки — показываем их,
+    /// иначе встроенную программу по дням.
     var body: some View {
+        let remote = cloud.articles(tab: "journey")
+        if remote.isEmpty {
+            localBody
+        } else {
+            RemoteArticleList(articles: remote)
+        }
+    }
+
+    private var localBody: some View {
         ScrollView {
             VStack(spacing: 14) {
                 currentDayCard

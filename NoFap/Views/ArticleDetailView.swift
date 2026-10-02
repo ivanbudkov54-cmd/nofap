@@ -38,6 +38,8 @@ struct ArticleDetailView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 sourceCard
+
+                ArticleStudiedBar(articleID: article.id)
             }
             .padding(20)
         }

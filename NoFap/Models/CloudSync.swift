@@ -13,6 +13,16 @@
 import Foundation
 import os
 
+/// Статья из knowledge_articles — их публикует друг прямо в Supabase.
+struct KnowledgeArticle: Codable, Identifiable, Equatable, Hashable {
+    let id: UUID
+    let tabType: String
+    let title: String
+    let description: String?
+    let content: String?
+    let orderIndex: Int
+}
+
 @MainActor
 @Observable
 final class CloudSync {
@@ -28,12 +38,49 @@ final class CloudSync {
         static let syncedJournal = "cloud.syncedJournalIDs"
         /// Последний срыв, уже отправленный в relapses.
         static let relapsesUploadedUntil = "cloud.relapsesUploadedUntil"
+        /// Статьи с сервера — чтобы вкладки не пустели без сети.
+        static let articles = "knowledgeArticlesCache"
     }
 
     private var isSyncingJournal = false
 
+    /// Статьи для вкладок «Мой путь», «Симулятор тяги», «Глубже».
+    private(set) var articles: [KnowledgeArticle] = []
+    /// Пока идёт сохранение заметки — экран дневника показывает спиннер.
+    private(set) var isSavingJournal = false
+    /// Сообщение для пользователя после неудачного действия. Тихая фоновая
+    /// синхронизация его не трогает: без сети всё и так лежит на телефоне.
+    var notice: String?
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+        if let data = defaults.data(forKey: Key.articles),
+           let cached = try? JSONDecoder().decode([KnowledgeArticle].self, from: data) {
+            articles = cached
+        }
+    }
+
+    // MARK: - Статьи
+
+    func articles(tab: String) -> [KnowledgeArticle] {
+        articles.filter { $0.tabType == tab }.sorted { $0.orderIndex < $1.orderIndex }
+    }
+
+    /// Статьи читаются и без входа — политика открыта для роли anon, но
+    /// общий клиент всё равно ходит с токеном, так проще.
+    func refreshArticles() async {
+        guard SupabaseConfig.isConfigured else { return }
+        do {
+            let remote: [KnowledgeArticle] = try await db.select(
+                "knowledge_articles", [("order", "order_index.asc")],
+                columns: "id,tab_type,title,description,content,order_index")
+            articles = remote
+            if let data = try? JSONEncoder().encode(remote) {
+                defaults.set(data, forKey: Key.articles)
+            }
+        } catch {
+            Self.log.error("articles refresh failed: \(String(describing: error), privacy: .public)")
+        }
     }
 
     // MARK: - Стрик и срывы
@@ -88,9 +135,20 @@ final class CloudSync {
 
     private struct JournalRow: Decodable {
         let id: UUID
+        let moodScore: Int?
+        let urgeScore: Int?
         let promptText: String?
         let reflectionNote: String?
         let createdAt: Date
+    }
+
+    /// Вызов экранов друга после `journal.addEntry`: запись уже на телефоне,
+    /// здесь только досылаем её, не дожидаясь следующего изменения.
+    func saveJournal(mood: Int?, urge: Int?, prompt: String?, note: String,
+                     into journal: JournalManager) async {
+        isSavingJournal = true
+        defer { isSavingJournal = false }
+        await syncJournal(journal)
     }
 
     /// Сверка в обе стороны: новое отсюда — на сервер, удалённое здесь —
@@ -104,7 +162,7 @@ final class CloudSync {
             let me = try await SupabaseSession.shared.userID()
             let rows: [JournalRow] = try await db.select(
                 "journal_entries", [],
-                columns: "id,prompt_text,reflection_note,created_at")
+                columns: "id,mood_score,urge_score,prompt_text,reflection_note,created_at")
 
             let remote = Set(rows.map(\.id))
             let local = Set(journal.entries.map(\.id))
@@ -127,6 +185,8 @@ final class CloudSync {
                     "user_id": me,
                     "reflection_note": $0.text,
                     "prompt_text": $0.promptQuestion,
+                    "mood_score": $0.moodScore,
+                    "urge_score": $0.urgeScore,
                     "created_at": PostgresTime.string(from: $0.date),
                 ]
             })
@@ -134,7 +194,9 @@ final class CloudSync {
             journal.applyRemote(
                 added: rows.filter { newThere.contains($0.id) }.map {
                     JournalEntry(id: $0.id, date: $0.createdAt,
-                                 text: $0.reflectionNote ?? "", promptQuestion: $0.promptText)
+                                 text: $0.reflectionNote ?? "", promptQuestion: $0.promptText,
+                                 moodScore: $0.moodScore, urgeScore: $0.urgeScore,
+                                 isShieldReview: $0.promptText == JournalEntry.shieldBadge)
                 },
                 removed: deletedThere)
 
@@ -143,5 +205,33 @@ final class CloudSync {
         } catch {
             Self.log.error("journal sync failed: \(String(describing: error), privacy: .public)")
         }
+    }
+
+    // MARK: - Удаление аккаунта
+
+    enum DeletionError: LocalizedError {
+        case notConfigured
+        var errorDescription: String? { String(localized: "Сервер не подключён — на нём нечего удалять.") }
+    }
+
+    /// Apple 5.1.1: удаление из приложения. Сервер стирает пользователя
+    /// целиком (каскадом — профиль, дневник, срывы, напарника и сквад),
+    /// потом чистится телефон. Если сервер не ответил, телефон не трогаем —
+    /// повтор дойдёт до того же аккаунта.
+    func deleteAccount(streak: StreakManager, journal: JournalManager,
+                       checkIns: CheckInManager) async throws {
+        guard SupabaseConfig.isConfigured else { throw DeletionError.notConfigured }
+        try await db.call("delete_own_account")
+        SupabaseSession.shared.signOut()
+
+        streak.resetAll()
+        journal.removeAll()
+        checkIns.removeAll()
+        RelapseLog.removeAll()
+        TriggerLog.removeAll()
+        for key in [Key.syncedJournal, Key.relapsesUploadedUntil] {
+            defaults.removeObject(forKey: key)
+        }
+        notice = nil
     }
 }

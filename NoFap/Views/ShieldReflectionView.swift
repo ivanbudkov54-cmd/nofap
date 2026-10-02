@@ -126,7 +126,8 @@ struct ShieldReflectionView: View {
         if !place.isEmpty { lines.append(String(localized: "Когда и где: \(place)")) }
         if !plan.isEmpty { lines.append(String(localized: "В следующий раз: \(plan)")) }
 
-        journal.addEntry(lines.joined(separator: "\n"), promptQuestion: JournalEntry.shieldBadge)
+        journal.addEntry(lines.joined(separator: "\n"), promptQuestion: JournalEntry.shieldBadge,
+                         isShieldReview: true)
         // Срыв всё равно был — для «часов тяги» и сервера он настоящий.
         RelapseLog.record()
         dismiss()
