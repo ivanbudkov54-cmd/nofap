@@ -55,10 +55,12 @@ struct RootView: View {
             }
             .tabItem { Label("Челленджи", systemImage: "flag.fill") }
 
+            // Аватар — кинцуги-голем. AvatarView друга остаётся в проекте,
+            // пока голем не заменит его окончательно.
             NavigationStack {
-                AvatarView()
+                GolemScreen()
             }
-            .tabItem { Label("Аватар", systemImage: "figure.strengthtraining.traditional") }
+            .tabItem { Label("Голем", systemImage: "figure.strengthtraining.traditional") }
 
             NavigationStack {
                 PartnerView()
