@@ -671,8 +671,8 @@ struct HomeView: View {
                 .tourTarget(.homeSOS)
 
             if streak.hasCheckedInToday {
-                circleAction(icon: "checkmark", title: "Отмечено",
-                             tint: Palette.gold, filled: false, size: 92, action: nil)
+                // Вместо галочки — сколько осталось до новой отметки.
+                NextCheckInCountdown(size: 92)
             } else {
                 // Без транзакции `.contentTransition(.numericText())` на числе
                 // стрика не срабатывает — число просто перещёлкивалось. Это
@@ -852,5 +852,62 @@ struct StoneButton: ButtonStyle {
             .opacity(configuration.isPressed ? 0.6 : 1)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
+    }
+}
+
+// MARK: - До новой отметки
+
+/// Круг «Отмечено» с обратным отсчётом до полуночи: тогда «Держусь» снова
+/// станет доступно. Тот же вид, что у контурных кнопок рядом.
+private struct NextCheckInCountdown: View {
+
+    let size: CGFloat
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let remaining = Self.untilMidnight(from: context.date)
+
+            VStack(spacing: 10) {
+                ZStack {
+                    Circle().fill(Palette.gold.opacity(0.08))
+                        .overlay { Circle().strokeBorder(Palette.gold.opacity(0.5), lineWidth: 1.5) }
+
+                    VStack(spacing: 2) {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: size * 0.16, weight: .semibold))
+                        Text(Self.clock(remaining))
+                            .font(.system(size: size * 0.19, weight: .semibold).monospacedDigit())
+                            .contentTransition(.numericText(countsDown: true))
+                    }
+                    .foregroundStyle(Palette.gold)
+                }
+                .frame(width: size, height: size)
+
+                Text("до нового дня")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Palette.ash)
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("Сегодня отмечено. Следующая отметка через \(Self.spoken(remaining))"))
+        }
+    }
+
+    private static func untilMidnight(from now: Date) -> TimeInterval {
+        let calendar = Calendar.autoupdatingCurrent
+        let next = calendar.nextDate(after: now, matching: DateComponents(hour: 0, minute: 0),
+                                     matchingPolicy: .nextTime) ?? now
+        return max(0, next.timeIntervalSince(now))
+    }
+
+    private static func clock(_ interval: TimeInterval) -> String {
+        let total = Int(interval)
+        return String(format: "%d:%02d:%02d", total / 3600, total / 60 % 60, total % 60)
+    }
+
+    private static func spoken(_ interval: TimeInterval) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = interval >= 3600 ? [.hour, .minute] : [.minute]
+        formatter.unitsStyle = .full
+        return formatter.string(from: interval) ?? ""
     }
 }

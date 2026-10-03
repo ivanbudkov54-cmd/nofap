@@ -47,7 +47,12 @@ struct ProgressTabView: View {
                 case .year:  YearSpan(streak: streak, calendar: isoCalendar)
                 }
 
-                TriggerAnalyticsCard()
+                // Только в «Месяце»: за день или неделю закономерностей ещё
+                // не видно, а одна и та же карточка под каждым периодом
+                // превращалась в навязчивую рекламу подписки.
+                if span == .month {
+                    TriggerAnalyticsCard()
+                }
             }
             .padding(.horizontal, 18)
             .padding(.bottom, 24)
