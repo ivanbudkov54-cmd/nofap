@@ -30,6 +30,8 @@ struct HomeView: View {
     /// .survey — общий финальный шаг для всех трёх, шагом дальше по стеку.
     private enum SOSOption: Hashable {
         case breathing, exercise, motivation, survey
+        /// Сигнал напарнику уже ушёл — открыт чат, чтобы видеть ответ.
+        case partner
     }
 
     var body: some View {
@@ -121,10 +123,12 @@ struct HomeView: View {
                         case .exercise:   exerciseView
                         case .motivation: motivationView
                         case .survey:     triggerSurvey
+                        case .partner:    PartnerChatView()
                         }
                     }
             }
-            .presentationDetents([.height(560), .large])
+            // С напарником в меню четыре пути — окну нужно чуть больше места.
+            .presentationDetents([.height(partner.isPaired ? 650 : 560), .large])
             .presentationBackground(Palette.obsidian)
             .presentationDragIndicator(.visible)
         }
@@ -160,6 +164,15 @@ struct HomeView: View {
                        subtitle: "Переключить тело прямо сейчас", option: .exercise)
                 sosRow(icon: "quote.opening", title: "Мотивация",
                        subtitle: "Вспомнить, зачем ты это делаешь", option: .motivation)
+                // Тот же сигнал «Мне сейчас трудно», что и в чате, — но
+                // одним нажатием отсюда: до кнопки в чате в момент тяги
+                // никто не дойдёт. Бесплатно, как всё для момента тяги.
+                if partner.isPaired {
+                    sosRow(icon: "person.wave.2.fill", title: "Сигнал напарнику",
+                           subtitle: "«\(ChatPresets.sos)» одним нажатием", option: .partner) {
+                        Task { _ = await partner.send(ChatPresets.sos, kind: .sos) }
+                    }
+                }
             }
             .padding(.horizontal, 4)
 
@@ -173,8 +186,10 @@ struct HomeView: View {
         .padding(.bottom, 24)
     }
 
-    private func sosRow(icon: String, title: LocalizedStringResource, subtitle: LocalizedStringResource, option: SOSOption) -> some View {
+    private func sosRow(icon: String, title: LocalizedStringResource, subtitle: LocalizedStringResource,
+                        option: SOSOption, onSelect: (() -> Void)? = nil) -> some View {
         Button {
+            onSelect?()
             sosPath.append(option)
         } label: {
             HStack(spacing: 14) {
