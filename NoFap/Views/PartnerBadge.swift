@@ -67,20 +67,51 @@ struct PartnerBadge: View {
     /// Тихая заглушка того же формата, что и картинка: приглашает, но не
     /// спорит со стриком — без золота и без свечения.
     private var empty: some View {
-        RoundedRectangle(cornerRadius: width * 0.09)
-            .strokeBorder(Palette.ash.opacity(0.5),
-                          style: StrokeStyle(lineWidth: 1.2, dash: [3, 3]))
+        EmptyPartnerSlot(width: width, height: height, showsLabel: showsCount)
+    }
+}
+
+/// Пустое место напарника на картинке — золотое и мягко «дышит», чтобы его
+/// замечали: серый пунктир на тёмной горе терялся.
+private struct EmptyPartnerSlot: View {
+    let width: CGFloat
+    let height: CGFloat
+    let showsLabel: Bool
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var glow = false
+
+    var body: some View {
+        let corner = width * 0.09
+
+        RoundedRectangle(cornerRadius: corner)
+            .fill(Palette.obsidian.opacity(0.55))
+            .overlay {
+                RoundedRectangle(cornerRadius: corner)
+                    .strokeBorder(Palette.gold.opacity(glow ? 0.95 : 0.6),
+                                  style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
+            }
+            .shadow(color: Palette.gold.opacity(glow ? 0.45 : 0.15), radius: glow ? 14 : 6)
             .frame(width: width, height: height)
             .overlay {
-                VStack(spacing: 4) {
+                VStack(spacing: 6) {
                     Image(systemName: "person.badge.plus")
-                        .font(.system(size: width * 0.24, weight: .light))
-                    if showsCount {
-                        Text("напарник")
-                            .font(.system(size: width * 0.11))
+                        .font(.system(size: width * 0.24, weight: .regular))
+                    if showsLabel {
+                        Text("позвать\nнапарника")
+                            .font(.system(size: width * 0.1, weight: .semibold))
+                            .multilineTextAlignment(.center)
                     }
                 }
-                .foregroundStyle(Palette.ash)
+                .foregroundStyle(.goldFill)
             }
+            .onAppear {
+                guard !reduceMotion else { return }
+                withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) {
+                    glow = true
+                }
+            }
+            .accessibilityLabel("Позвать напарника")
+            .accessibilityAddTraits(.isButton)
     }
 }

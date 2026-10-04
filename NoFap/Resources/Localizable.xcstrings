@@ -965,6 +965,7 @@
       }
     },
     "Дрочки" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1273,6 +1274,7 @@
       }
     },
     "Каждый день воздержания делает тебя сильнее." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1439,6 +1441,7 @@
       }
     },
     "Лучший стрик: %@ · Цель: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2320,6 +2323,7 @@
 
     },
     "Порно" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2573,6 +2577,7 @@
 
     },
     "свобода в этом месяце" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2679,6 +2684,7 @@
       }
     },
     "Сегодня ты свободен от:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2975,6 +2981,7 @@
       }
     },
     "твой стрик" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3128,6 +3135,9 @@
       }
     },
     "Ты перестанешь видеть участников и общий чат. Вернуться можно только по новому приглашению." : {
+
+    },
+    "Ты поставил себе %@ — дойди до них. Новую цель можно выбрать, когда возьмёшь эту." : {
 
     },
     "ты пришёл за" : {
@@ -3419,6 +3429,9 @@
           }
         }
       }
+    },
+    "Цель уже идёт" : {
+
     },
     "Чат сквада" : {
 

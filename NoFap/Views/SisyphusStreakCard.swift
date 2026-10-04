@@ -122,6 +122,8 @@ struct SisyphusStreakCard: View {
                         .overlay { Capsule().strokeBorder(Palette.gold.opacity(0.4), lineWidth: 1) }
                 }
                 .buttonStyle(.plain)
+                // Посередине между картинкой и цитатой под ней.
+                .padding(.top, 11)
             }
         }
         // Лист, а не NavigationLink: экран напарника — отдельная вкладка,
