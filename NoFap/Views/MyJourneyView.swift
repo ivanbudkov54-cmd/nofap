@@ -199,19 +199,31 @@ struct JourneyDayDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Eyebrow(verbatim: "день \(day.day)", color: Palette.gold)
+            VStack(alignment: .leading, spacing: 16) {
+                Eyebrow(verbatim: day.phase, color: Palette.gold)
+
+                HStack(spacing: 8) {
+                    Text("День \(day.day)")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(Palette.ash)
+                    Text(day.badge)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Palette.gold)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Palette.gold.opacity(0.12), in: .capsule)
+                }
 
                 Text(day.title)
                     .font(Face.display(26, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
                     .fixedSize(horizontal: false, vertical: true)
+                    .padding(.bottom, 4)
 
-                Text(day.content)
-                    .font(.system(size: 16))
-                    .foregroundStyle(Palette.marble)
-                    .lineSpacing(6)
-                    .fixedSize(horizontal: false, vertical: true)
+                section("Что происходит", symbol: "brain.head.profile", text: day.insight)
+                section("Что можешь заметить", symbol: "eye", text: day.feel)
+                section("Ловушка дня", symbol: "exclamationmark.shield", text: day.trap)
+                section("Действие на сегодня", symbol: "checkmark.seal", text: day.action, highlighted: true)
 
                 // Статья дня — +20 XP аватару, один раз.
                 ArticleStudiedBar(articleID: "journey_day_\(day.day)", isScience: false)
@@ -221,5 +233,28 @@ struct JourneyDayDetailView: View {
         }
         .background(Palette.obsidian.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    /// Все блоки в одной золото-мраморной гамме; действие выделено — это
+    /// то, ради чего человек открыл день.
+    private func section(_ title: LocalizedStringResource, symbol: String, text: String,
+                         highlighted: Bool = false) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(title, systemImage: symbol)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(highlighted ? Palette.gold : Palette.marble)
+            Text(text)
+                .font(.system(size: 16))
+                .foregroundStyle(Palette.marbleHigh.opacity(0.92))
+                .lineSpacing(5)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(highlighted ? Palette.gold.opacity(0.08) : Palette.basalt, in: .rect(cornerRadius: 16))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(highlighted ? Palette.gold.opacity(0.4) : Palette.vein, lineWidth: 1)
+        }
     }
 }
