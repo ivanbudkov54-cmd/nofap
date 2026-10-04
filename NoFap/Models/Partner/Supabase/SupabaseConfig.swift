@@ -26,5 +26,5 @@ enum SupabaseConfig {
     /// Запущен ли на сервере supabase/02_partner_squad.sql. Пока нет —
     /// напарник и сквад живут на заглушке, а стрик и дневник (01_core.sql)
     /// уже синхронизируются. После запуска SQL поставить true.
-    static let partnerTablesReady = false
+    static let partnerTablesReady = true
 }
