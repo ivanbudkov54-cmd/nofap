@@ -207,6 +207,20 @@ final class CloudSync {
         }
     }
 
+    // MARK: - Опыт аватара
+
+    /// profiles.total_xp из supabase/03_avatar_xp.sql. Пока колонки нет,
+    /// запрос молча не проходит — опыт остаётся на телефоне.
+    func pushXP(_ total: Int) async {
+        guard SupabaseConfig.isConfigured else { return }
+        do {
+            let me = try await SupabaseSession.shared.userID()
+            try await db.insert("profiles", [["id": me, "total_xp": total]], upsert: true)
+        } catch {
+            Self.log.error("xp push failed: \(String(describing: error), privacy: .public)")
+        }
+    }
+
     // MARK: - Удаление аккаунта
 
     enum DeletionError: LocalizedError {

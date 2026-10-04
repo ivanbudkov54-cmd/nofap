@@ -15,6 +15,7 @@ struct ContentView: View {
     @Environment(PremiumStore.self) private var premium
     @Environment(JournalManager.self) private var journal
     @Environment(CloudSync.self) private var cloud
+    @Environment(AvatarProgressManager.self) private var xp
     @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -41,6 +42,9 @@ struct ContentView: View {
             await cloud.push(streak: streak)
             await cloud.syncJournal(journal)
             await cloud.refreshArticles()
+            // Опыт — копия на сервере; менеджер о сети не знает.
+            xp.onTotalChanged = { total in Task { await cloud.pushXP(total) } }
+            await cloud.pushXP(xp.totalXP)
         }
         .alert(cloud.notice ?? "", isPresented: Binding(
             get: { cloud.notice != nil },

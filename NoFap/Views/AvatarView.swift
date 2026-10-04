@@ -401,13 +401,17 @@ struct AvatarEvolutionView: View {
 
 struct ArticleStudiedBar: View {
     let articleID: String
+    /// Научная статья даёт больше опыта: 30 XP вместо 20.
+    var isScience = false
 
     @Environment(AvatarManager.self) private var avatar
+    @Environment(AvatarProgressManager.self) private var xp
 
     var body: some View {
-        let studied = avatar.hasReadArticle(id: articleID)
+        let studied = xp.hasRead(articleID: articleID) || avatar.hasReadArticle(id: articleID)
         Button {
             avatar.addPowerForArticle(id: articleID)
+            xp.rewardArticleRead(articleID: articleID, isScience: isScience)
         } label: {
             Text(studied ? "Уже изучена" : "Статья изучена")
                 .font(.system(size: 16, weight: .semibold))

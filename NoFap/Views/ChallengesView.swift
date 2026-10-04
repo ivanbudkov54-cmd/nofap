@@ -9,6 +9,7 @@ struct ChallengesView: View {
 
     @Environment(ChallengeManager.self) private var challenges
     @Environment(AvatarManager.self) private var avatar
+    @Environment(AvatarProgressManager.self) private var xp
     @State private var confirmComplete = false
 
     @Environment(AppTourManager.self) private var tour
@@ -47,8 +48,13 @@ struct ChallengesView: View {
             titleVisibility: .visible
         ) {
             Button("Выполнил вызов") {
+                // Сложный или социальный вызов ценится выше — берём его
+                // до завершения: потом `current` уже следующий.
+                let item = challenges.current
+                let isHard = item.difficulty == .hard || item.category == "Социальная смелость"
                 challenges.completeCurrentChallenge()
                 avatar.addPowerForChallenge()
+                xp.rewardChallengeCompleted(isHard: isHard)
             }
             Button("Отмена", role: .cancel) {}
         }

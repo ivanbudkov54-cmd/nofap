@@ -39,7 +39,7 @@ struct ArticleDetailView: View {
 
                 sourceCard
 
-                ArticleStudiedBar(articleID: article.id)
+                ArticleStudiedBar(articleID: article.id, isScience: article.category == .neuroscience)
             }
             .padding(20)
         }

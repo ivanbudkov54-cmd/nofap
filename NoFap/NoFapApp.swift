@@ -25,6 +25,7 @@ struct NoFapApp: App {
     @State private var contrast = ContrastExperimentManager()
     @State private var avatar = AvatarManager()
     @State private var tour = AppTourManager()
+    @State private var xp = AvatarProgressManager()
 
     init() {
         Face.register()
@@ -50,6 +51,7 @@ struct NoFapApp: App {
                 .environment(contrast)
                 .environment(avatar)
                 .environment(tour)
+                .environment(xp)
                 .preferredColorScheme(theme.theme.colorScheme)
         }
     }

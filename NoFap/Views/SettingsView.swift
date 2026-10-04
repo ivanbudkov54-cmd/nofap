@@ -14,6 +14,7 @@ struct SettingsView: View {
     @Environment(CloudSync.self) private var backend
     @Environment(StreakManager.self) private var streak
     @Environment(AvatarManager.self) private var avatar
+    @Environment(AvatarProgressManager.self) private var xp
     @Environment(JournalManager.self) private var journal
     @Environment(CheckInManager.self) private var checkIns
     @Environment(\.openURL) private var openURL
@@ -178,6 +179,7 @@ private struct LegalWebView: UIViewRepresentable {
         do {
             try await backend.deleteAccount(streak: streak, journal: journal, checkIns: checkIns)
             avatar.resetAll()
+            xp.resetAll()
             onboardingDone = false
             hasCompletedOnboarding = false
             hasCompletedAppTour = false

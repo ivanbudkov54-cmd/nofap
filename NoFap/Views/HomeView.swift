@@ -12,6 +12,7 @@ struct HomeView: View {
     @Environment(PartnerManager.self) private var partner
     @Environment(ReasonsStore.self) private var reasons
     @Environment(AvatarManager.self) private var avatar
+    @Environment(AvatarProgressManager.self) private var xp
 
     @State private var showRelapse = false
     @State private var showShieldReview = false
@@ -560,7 +561,10 @@ struct HomeView: View {
                 circleAction(icon: "flame.fill", title: "Держусь",
                              tint: Palette.gold, filled: true, size: 92, glow: true) {
                     withAnimation(.snappy(duration: 0.25)) {
-                        if streak.checkIn(clean: true) { avatar.addPowerForStreak() }
+                        if streak.checkIn(clean: true) {
+                            avatar.addPowerForStreak()
+                            xp.rewardStreakDay(streak.currentStreak)
+                        }
                     }
                 }
             }

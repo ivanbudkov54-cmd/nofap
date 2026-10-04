@@ -81,6 +81,7 @@ private struct RootOverlays: ViewModifier {
     @Environment(PremiumStore.self) private var premium
     @Environment(AppTourManager.self) private var tour
     @Environment(AppRouter.self) private var router
+    @Environment(AvatarProgressManager.self) private var xp
     @Environment(\.colorScheme) private var colorScheme
 
     @State private var toastVisible = false
@@ -92,6 +93,11 @@ private struct RootOverlays: ViewModifier {
             .task { tour.startTourIfNeeded() }
             .sheet(isPresented: Bindable(premium).shouldShowPaywall) {
                 PaywallView(contextReason: premium.paywallContextReason)
+            }
+            // Новый ранг празднуется там, где его заработали: за статьёй,
+            // челленджем или «Держусь», а не при следующем заходе в аватар.
+            .fullScreenCover(isPresented: Bindable(xp).showLevelUp) {
+                SpartanLevelUpView(rank: xp.unlockedRank) { xp.showLevelUp = false }
             }
             .overlay {
                 if tour.isTourActive {

@@ -212,6 +212,10 @@ struct JourneyDayDetailView: View {
                     .foregroundStyle(Palette.marble)
                     .lineSpacing(6)
                     .fixedSize(horizontal: false, vertical: true)
+
+                // Статья дня — +20 XP аватару, один раз.
+                ArticleStudiedBar(articleID: "journey_day_\(day.day)", isScience: false)
+                    .padding(.top, 8)
             }
             .padding(20)
         }
