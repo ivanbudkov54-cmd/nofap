@@ -36,9 +36,9 @@ struct RootView: View {
                 .tabItem { Label("Главная", systemImage: "house.fill") }
 
             NavigationStack {
-                ProgressTabView()
+                ChallengesView()
             }
-            .tabItem { Label("Прогресс", systemImage: "chart.bar.fill") }
+            .tabItem { Label("Челленджи", systemImage: "flag.fill") }
 
             NavigationStack {
                 DiaryView()
@@ -50,10 +50,11 @@ struct RootView: View {
             }
             .tabItem { Label("Знания", systemImage: "text.book.closed.fill") }
 
+            // Временно в «Ещё»: место прогресса на виду заняли челленджи.
             NavigationStack {
-                ChallengesView()
+                ProgressTabView()
             }
-            .tabItem { Label("Челленджи", systemImage: "flag.fill") }
+            .tabItem { Label("Прогресс", systemImage: "chart.bar.fill") }
 
             // Аватар — кинцуги-голем. AvatarView друга остаётся в проекте,
             // пока голем не заменит его окончательно.
