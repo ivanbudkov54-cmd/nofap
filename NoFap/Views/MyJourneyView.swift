@@ -200,9 +200,7 @@ struct JourneyDayDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text(day.phase)
-                    .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(Palette.gold)
+                Eyebrow(verbatim: day.phase, color: Palette.gold)
 
                 Text("День \(day.day)")
                     .font(.system(size: 13, weight: .semibold))
