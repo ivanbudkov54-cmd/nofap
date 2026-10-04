@@ -22,10 +22,6 @@ struct HomeView: View {
     @State private var showSOS = false
     @State private var sosPath: [SOSOption] = []
 
-    /// Короткий пружинный «pop» цифры стрика при каждом +1 — отдельно от
-    /// content-transition, который только перекатывает саму цифру.
-    @State private var streakPulse = false
-
     /// Три способа переждать тягу — выбор, а не один навязанный сценарий.
     /// .survey — общий финальный шаг для всех трёх, шагом дальше по стеку.
     private enum SOSOption: Hashable {
@@ -38,9 +34,11 @@ struct HomeView: View {
         ScrollView {
             VStack(spacing: 6) {
                 greeting
-                summitCard
+                // Сизиф с валуном — и стрик, и цель, и напарник со сквадом
+                // в одной картинке. Заменил «Твой стрик» и «Свободен от».
+                SisyphusStreakCard()
                     .tourTarget(.homeTimer)
-                freedomSection
+                    .padding(.top, 8)
                 quoteCard
                 actions
             }
@@ -517,140 +515,6 @@ struct HomeView: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Настройки")
-        }
-    }
-
-    // MARK: - Стрик
-
-    private var summitCard: some View {
-        VStack(spacing: 0) {
-            Eyebrow(text: "твой стрик", color: Palette.marble)
-                .padding(.top, 20)
-
-            Text("\(streak.currentStreak)")
-                .font(Face.display(76, .semibold))
-                .foregroundStyle(.goldFill)
-                .shadow(color: Palette.gold.opacity(streakPulse ? 1 : 0.45), radius: streakPulse ? 60 : 16)
-                .scaleEffect(streakPulse ? 1.55 : 1)
-                .contentTransition(.numericText())
-                .sensoryFeedback(.success, trigger: streak.currentStreak)
-                .onChange(of: streak.currentStreak) { _, _ in
-                    // Более плавный, менее «дёрганый» перелёт: мягкая
-                    // пружина с высоким демпфированием вместо резкого
-                    // рывка, и долгий easeInOut на возврат — движение
-                    // читается как плавный вдох-выдох, а не щелчок.
-                    withAnimation(.spring(response: 0.45, dampingFraction: 0.75)) {
-                        streakPulse = true
-                    }
-                    withAnimation(.easeInOut(duration: 0.6).delay(0.25)) {
-                        streakPulse = false
-                    }
-                }
-
-            Eyebrow(verbatim: streak.currentStreak.dayWord, color: Palette.marble)
-
-            Spacer()
-
-            Text("Лучший стрик: \(streak.bestStreak.daysCount) · Цель: \(streak.personalGoalDays.daysCount)")
-                .font(.system(size: 13))
-                .foregroundStyle(Palette.marble.opacity(0.8))
-                .padding(.bottom, 16)
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 252)
-        // Фото — фоном, а не слоем ZStack: картинка с .fill в ZStack
-        // раздувала ширину карточки за поля экрана.
-        .background {
-            // Фото подогнано впритык под рамку карточки — без запаса сверху
-            // и снизу сдвинуть его нельзя, обнажится пустой край. `offset`
-            // именно это и делал — отодвигал картинку, оставляя пустоту.
-            // Зум так не может: он только растит картинку за рамку, а якорь
-            // решает, куда она растёт. Якорь снизу — растёт вверх, и гора
-            // с фигурой поднимаются к центру карточки. Значение подобрано
-            // под этот кадр: фигура должна стоять между словом под числом
-            // и нижней строкой, не наезжая ни на одно.
-            Image("MountainSummit")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .scaleEffect(1.25, anchor: .bottom)
-                .clipped()
-                // Тёмная плёнка сверху — тот же приём, что и у векторного
-                // фона: числу и подписям нужен контраст поверх сцены.
-                .overlay {
-                    LinearGradient(
-                        colors: [Palette.obsidian.opacity(0.35), Palette.obsidian.opacity(0.55)],
-                        startPoint: .top, endPoint: .bottom
-                    )
-                }
-        }
-        .clipShape(.rect(cornerRadius: 20))
-        .overlay {
-            RoundedRectangle(cornerRadius: 20).strokeBorder(Palette.vein, lineWidth: 1)
-        }
-    }
-
-    // MARK: - Свобода дня
-
-    /// Без карточки: знаки стоят прямо на фоне и работают как акцент экрана.
-    private var freedomSection: some View {
-        VStack(spacing: 14) {
-            Text("Сегодня ты свободен от:")
-                .font(Face.display(22, .medium))
-                .foregroundStyle(Palette.marbleHigh)
-
-            HStack(spacing: 52) {
-                freedom("Дрочки", asset: "IconMasturbation")
-                freedom("Порно", asset: "IconPorn")
-            }
-        }
-    }
-
-    private func freedom(_ title: LocalizedStringResource, asset: String) -> some View {
-        let ringSize: CGFloat = 92
-        let iconSize: CGFloat = 50
-
-        return VStack(spacing: 10) {
-            ZStack {
-                // Свечение под знаком — тот же источник света, что и на вершине.
-                Circle()
-                    .fill(Palette.gold.opacity(0.10))
-                    .frame(width: ringSize + 4, height: ringSize + 4)
-                    .blur(radius: 14)
-
-                Image(asset)
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: iconSize, height: iconSize)
-                    .foregroundStyle(.goldFill)
-
-                // Перечёркивание — состояние, а не часть иконки. Чёрная
-                // подложка чуть шире полосы — это обводка снаружи: золото
-                // остаётся целиком, а линия отделяется от золотых штрихов
-                // самой иконки (у IconPorn один штрих X идёт под тем же углом).
-                ZStack {
-                    Capsule()
-                        .fill(.black)
-                        .frame(width: ringSize, height: 4)
-                    Capsule()
-                        .fill(.goldFill)
-                        .frame(width: ringSize, height: 2)
-                }
-                .rotationEffect(.degrees(-45))
-
-                // Кольцо — последним, поверх полосы: тогда чёрная обводка
-                // полосы уходит под кольцо, а её золото перетекает в золото
-                // кольца. Иначе обводка резала кольцо в местах стыка, и
-                // полоса выглядела положенной сверху, а не частью знака.
-                Circle()
-                    .strokeBorder(.goldFill, lineWidth: 1.8)
-                    .frame(width: ringSize, height: ringSize)
-            }
-
-            Text(title)
-                .font(.system(size: 15, weight: .medium))
-                .foregroundStyle(Palette.marble)
         }
     }
 
