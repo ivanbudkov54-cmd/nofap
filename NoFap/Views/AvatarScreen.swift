@@ -18,6 +18,14 @@ struct AvatarScreen: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
+                // Заголовок — частью страницы, а не панели: при прокрутке
+                // он уезжает вместе с контентом, а не висит поверх него.
+                Text("Аватар")
+                    .font(Face.display(28, .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityAddTraits(.isHeader)
+
                 scene
                 xpCard
                 hall
@@ -27,7 +35,9 @@ struct AvatarScreen: View {
             .padding(.bottom, 28)
         }
         .background(Palette.obsidian.ignoresSafeArea())
-        .navigationTitle("Аватар")
+        // Без заголовка в панели (iOS 17 не умеет убирать его иначе) —
+        // остаётся только кнопка «назад».
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $detailRank) { rank in
             SpartanDetailSheet(rank: rank)
