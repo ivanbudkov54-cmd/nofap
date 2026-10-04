@@ -528,9 +528,10 @@ struct HomeView: View {
             .multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 24)
-            // Воздух вокруг цитаты: сверху — чтобы не слипалась с подписями
-            // «Дрочки/Порно», снизу — чтобы не липла к кнопке под ней.
-            .padding(.vertical, 14)
+            // Цитата ближе к картинке, а кнопки под ней остаются на месте:
+            // сверху отступ меньше, снизу — больше.
+            .padding(.top, 4)
+            .padding(.bottom, 24)
             .frame(maxWidth: .infinity)
     }
 

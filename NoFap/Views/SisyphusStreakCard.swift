@@ -123,7 +123,7 @@ struct SisyphusStreakCard: View {
                 }
                 .buttonStyle(.plain)
                 // Посередине между картинкой и цитатой под ней.
-                .padding(.top, 11)
+                .padding(.top, 6)
             }
         }
         // Лист, а не NavigationLink: экран напарника — отдельная вкладка,
