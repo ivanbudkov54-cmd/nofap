@@ -107,7 +107,8 @@ struct AvatarScreen: View {
                     ForEach(SpartanRank.allCases) { rank in
                         let open = rank <= progress.currentRank
                         Button { if open { detailRank = rank } } label: {
-                            HallCard(rank: rank, unlocked: open, isCurrent: rank == progress.currentRank)
+                            HallCard(rank: rank, unlocked: open, isCurrent: rank == progress.currentRank,
+                                     nextProgress: rank == progress.nextRank ? progress.levelProgress : nil)
                         }
                         .buttonStyle(.plain)
                         .disabled(!open)
@@ -239,27 +240,44 @@ private struct HallCard: View {
     let rank: SpartanRank
     let unlocked: Bool
     let isCurrent: Bool
+    /// Только у следующего ранга: доля пути к нему. Его фигуру видно
+    /// сквозь серую дымку — понятно, к кому идёшь. Дальние ранги — силуэты.
+    var nextProgress: Double? = nil
+
+    private var isNext: Bool { nextProgress != nil }
 
     var body: some View {
         VStack(spacing: 10) {
             ZStack {
-                SpartanFigure(rank: rank, size: 120, silhouette: !unlocked)
+                if isNext && rank.hasArtwork {
+                    SpartanFigure(rank: rank, size: 120)
+                        .grayscale(0.85)
+                        .opacity(0.4)
+                } else {
+                    SpartanFigure(rank: rank, size: 120, silhouette: !unlocked)
+                }
                 if !unlocked {
                     Image(systemName: "lock.fill")
                         .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(Palette.ash)
+                        .foregroundStyle(isNext ? Palette.marble : Palette.ash)
+                        .shadow(color: .black.opacity(0.6), radius: 4)
                 }
             }
 
             VStack(spacing: 4) {
-                Text("Ранг \(rank.rawValue)")
+                Text(isNext ? "Следующий ранг" : "Ранг \(rank.rawValue)")
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(unlocked ? Palette.gold : Palette.ash)
+                    .foregroundStyle(unlocked || isNext ? Palette.gold : Palette.ash)
                 Text(rank.title)
                     .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(unlocked ? Palette.marbleHigh : Palette.ash)
+                    .foregroundStyle(unlocked ? Palette.marbleHigh : isNext ? Palette.marble : Palette.ash)
                     .multilineTextAlignment(.center)
                     .lineLimit(2, reservesSpace: true)
+                if let nextProgress {
+                    MiniBar(value: nextProgress)
+                        .padding(.horizontal, 18)
+                        .padding(.top, 2)
+                }
                 if !unlocked {
                     Text("Откроется на \(rank.requiredXP) XP")
                         .font(.system(size: 11))
@@ -271,16 +289,32 @@ private struct HallCard: View {
         .padding(.vertical, 14)
         .background {
             RoundedRectangle(cornerRadius: 18)
-                .fill(unlocked
+                .fill(unlocked || isNext
                       ? AnyShapeStyle(Palette.basalt)
                       : AnyShapeStyle(LinearGradient(colors: [Color(hex: 0x111115), Color(hex: 0x08080A)],
                                                      startPoint: .top, endPoint: .bottom)))
         }
         .overlay {
             RoundedRectangle(cornerRadius: 18)
-                .strokeBorder(isCurrent ? Palette.gold.opacity(0.8) : Palette.vein,
-                              lineWidth: isCurrent ? 1.5 : 1)
+                .strokeBorder(isCurrent ? Palette.gold.opacity(0.8)
+                              : isNext ? Palette.gold.opacity(0.3) : Palette.vein,
+                              style: StrokeStyle(lineWidth: isCurrent ? 1.5 : 1, dash: isNext ? [4, 3] : []))
         }
+    }
+}
+
+private struct MiniBar: View {
+    let value: Double
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Color(hex: 0x24242B))
+                Capsule().fill(.goldFill)
+                    .frame(width: max(geo.size.width * min(max(value, 0), 1), value > 0 ? 4 : 0))
+            }
+        }
+        .frame(height: 4)
     }
 }
 
