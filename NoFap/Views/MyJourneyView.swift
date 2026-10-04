@@ -12,7 +12,6 @@ import SwiftUI
 struct MyJourneyView: View {
 
     @Environment(StreakManager.self) private var streak
-    @Environment(Backend.self) private var backend
     @Environment(SubscriptionManager.self) private var subscriptions
     @State private var openedDay: JourneyDay?
 
@@ -21,12 +20,7 @@ struct MyJourneyView: View {
     }
 
     var body: some View {
-        let remote = backend.articles(tab: "journey")
-        if remote.isEmpty {
-            localBody
-        } else {
-            RemoteArticleList(articles: remote)
-        }
+        localBody
     }
 
     private var localBody: some View {
@@ -171,22 +165,43 @@ struct JourneyDayDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Eyebrow(verbatim: "день \(day.day)", color: Palette.gold)
+                Text(day.phaseTitle)
+                    .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(Palette.gold)
+
+                Text("День \(day.day)")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Palette.ash)
 
                 Text(day.title)
                     .font(Face.display(26, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
                     .fixedSize(horizontal: false, vertical: true)
 
-                Text(day.content)
-                    .font(.system(size: 16))
-                    .foregroundStyle(Palette.marble)
-                    .lineSpacing(6)
-                    .fixedSize(horizontal: false, vertical: true)
+                section("Биохимия", symbol: "brain.head.profile", tint: Color(hex: 0x3DDCB0), text: day.biochemistry)
+                section("В реальности", symbol: "bolt.heart.fill", tint: Color(hex: 0xFF6B3D), text: day.realFeel)
+                section("Ловушка дня", symbol: "exclamationmark.shield.fill", tint: Color(hex: 0xF0BC4F), text: day.trapWarning)
+                section("Действие", symbol: "checkmark.seal.fill", tint: Color(hex: 0x3DDC97), text: day.tacticalAction)
             }
             .padding(20)
         }
         .background(Palette.obsidian.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func section(_ title: String, symbol: String, tint: Color, text: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(title, systemImage: symbol)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(tint)
+            Text(text)
+                .font(.system(size: 16))
+                .foregroundStyle(Palette.marble)
+                .lineSpacing(5)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .cardSurface()
     }
 }

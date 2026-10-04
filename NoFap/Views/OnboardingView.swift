@@ -187,13 +187,9 @@ struct OnboardingView: View {
     }
 
     private var goalStep: some View {
-        VStack {
-            Spacer()
-            GoalPicker(selected: $goalDays)
-            Spacer()
-            Spacer()
-        }
-        .padding(.horizontal, 28)
+        GoalPicker(selected: $goalDays)
+            .padding(.horizontal, 28)
+            .padding(.vertical, 12)
     }
 
     private var consent: some View {

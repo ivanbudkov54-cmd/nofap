@@ -68,6 +68,7 @@ final class AvatarManager {
         static let streak = "avatarStreakPower"
         static let challenges = "avatarChallengePower"
         static let articles = "avatarArticlePower"
+        static let physical = "avatarPhysicalPower"
         static let read = "avatarReadArticleIds"
     }
 
@@ -76,6 +77,7 @@ final class AvatarManager {
     private(set) var streakPower: Int
     private(set) var challengePower: Int
     private(set) var articlePower: Int
+    private(set) var physicalPower: Int
     private(set) var readArticleIds: Set<String>
     var pendingEvolution: AvatarStage?
 
@@ -91,6 +93,7 @@ final class AvatarManager {
         streakPower = defaults.integer(forKey: Key.streak)
         challengePower = defaults.integer(forKey: Key.challenges)
         articlePower = defaults.integer(forKey: Key.articles)
+        physicalPower = defaults.integer(forKey: Key.physical)
         readArticleIds = Set(defaults.stringArray(forKey: Key.read) ?? [])
     }
 
@@ -100,6 +103,15 @@ final class AvatarManager {
 
     func addPowerForChallenge() {
         grant(power: 15, energy: 15, into: \.challengePower)
+    }
+
+    /// Награда за физический сброс в момент тяги.
+    func addPowerForPhysicalReset() {
+        grant(power: 10, energy: 10, into: \.physicalPower)
+    }
+
+    func addPowerForVictory() {
+        grant(power: 50, energy: 20, into: \.physicalPower)
     }
 
     @discardableResult
@@ -130,6 +142,7 @@ final class AvatarManager {
         streakPower = 0
         challengePower = 0
         articlePower = 0
+        physicalPower = 0
         readArticleIds = []
         pendingEvolution = nil
         persist()
@@ -153,6 +166,7 @@ final class AvatarManager {
         defaults.set(streakPower, forKey: Key.streak)
         defaults.set(challengePower, forKey: Key.challenges)
         defaults.set(articlePower, forKey: Key.articles)
+        defaults.set(physicalPower, forKey: Key.physical)
         defaults.set(Array(readArticleIds), forKey: Key.read)
     }
 }

@@ -92,7 +92,7 @@ struct RemoteArticlePage: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                ArticleStudiedBar(articleID: article.id.uuidString)
+                ArticleStudiedBar(articleID: article.id.uuidString, isScience: article.tabType != "journey")
             }
             .padding(20)
         }

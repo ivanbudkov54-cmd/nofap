@@ -2658,6 +2658,4838 @@
           }
         }
       }
+    },
+    "SOS": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SOS"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SOS"
+          }
+        }
+      }
+    },
+    "До следующего «Я держусь»:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Until the next Hold Strong:"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "До следующего «Я держусь»:"
+          }
+        }
+      }
+    },
+    "День зафиксирован! Стрик в безопасности на ближайшие 48ч": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "День зафиксирован! Стрик в безопасности на ближайшие 48ч"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day locked in! Your streak is safe for the next 48h"
+          }
+        }
+      }
+    },
+    "До сгорания стрика: %lld ч.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "До сгорания стрика: %lld ч."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld h until the streak expires"
+          }
+        }
+      }
+    },
+    "Лучший стрик: %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лучший стрик: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best streak: %@"
+          }
+        }
+      }
+    },
+    "Офлайн-режим": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Офлайн-режим"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline"
+          }
+        }
+      }
+    },
+    "Еженедельный отчет": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Еженедельный отчет"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weekly report"
+          }
+        }
+      }
+    },
+    "Доступно в Pro: Аналитика триггеров и график уязвимости": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Доступно в Pro: Аналитика триггеров и график уязвимости"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available in Pro: trigger analytics and vulnerability chart"
+          }
+        }
+      }
+    },
+    "Стрик": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Стрик"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Streak"
+          }
+        }
+      }
+    },
+    "Ты отсутствовал больше двух дней. Стрик обнулился, но твой опыт и сила аватара с тобой. Начни новую серию сегодня!": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ты отсутствовал больше двух дней. Стрик обнулился, но твой опыт и сила аватара с тобой. Начни новую серию сегодня!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You were away for more than two days. The streak reset, but your experience and avatar strength stay with you. Start a new run today!"
+          }
+        }
+      }
+    },
+    "Челленджи": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Челленджи"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Challenges"
+          }
+        }
+      }
+    },
+    "Выполнил вызов": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выполнил вызов"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I completed the challenge"
+          }
+        }
+      }
+    },
+    "История выполненных вызовов": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "История выполненных вызовов"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Completed challenges"
+          }
+        }
+      }
+    },
+    "Пока пусто. Закрой текущий вызов — он появится здесь.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пока пусто. Закрой текущий вызов — он появится здесь."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing yet. Finish the current challenge and it will show up here."
+          }
+        }
+      }
+    },
+    "Уровень": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уровень"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level"
+          }
+        }
+      }
+    },
+    "Закрыто": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закрыто"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "Уровень %lld: %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уровень %lld: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level %lld: %@"
+          }
+        }
+      }
+    },
+    "Мощная победа! 🔥": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мощная победа! 🔥"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Powerful win! 🔥"
+          }
+        }
+      }
+    },
+    "Вызов закрыт. Следующий уже ждёт.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вызов закрыт. Следующий уже ждёт."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Challenge closed. The next one is waiting."
+          }
+        }
+      }
+    },
+    "Получить следующий челлендж": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Получить следующий челлендж"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get the next challenge"
+          }
+        }
+      }
+    },
+    "Легкий": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Легкий"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easy"
+          }
+        }
+      }
+    },
+    "Средний": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Средний"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium"
+          }
+        }
+      }
+    },
+    "Хардкор": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хардкор"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hardcore"
+          }
+        }
+      }
+    },
+    "Мастер первого контакта": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мастер первого контакта"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Master of the first contact"
+          }
+        }
+      }
+    },
+    "3 номера за вечер": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 номера за вечер"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 numbers in one evening"
+          }
+        }
+      }
+    },
+    "За один вечер познакомься с тремя людьми и возьми контакт. Разговор живой, без скрипта в голове.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "За один вечер познакомься с тремя людьми и возьми контакт. Разговор живой, без скрипта в голове."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meet three people in one evening and get their contact. A live conversation, not a script."
+          }
+        }
+      }
+    },
+    "Социальная смелость": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Социальная смелость"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Social courage"
+          }
+        }
+      }
+    },
+    "Неожиданный комплимент": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неожиданный комплимент"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unexpected compliment"
+          }
+        }
+      }
+    },
+    "3 искренних комплимента": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 искренних комплимента"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 sincere compliments"
+          }
+        }
+      }
+    },
+    "Скажи три комплимента разным людям — про поступок или характер, не про внешность ради реакции.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скажи три комплимента разным людям — про поступок или характер, не про внешность ради реакции."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Give three compliments to different people — about an action or character, not looks for a reaction."
+          }
+        }
+      }
+    },
+    "Держи контакт глаз": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Держи контакт глаз"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold eye contact"
+          }
+        }
+      }
+    },
+    "Не отводи взгляд первым": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не отводи взгляд первым"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't look away first"
+          }
+        }
+      }
+    },
+    "В разговоре держи взгляд спокойно и не отводи его первым. Одна встреча — уже зачёт.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В разговоре держи взгляд спокойно и не отводи его первым. Одна встреча — уже зачёт."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a conversation, hold a calm gaze and don't look away first. One meeting counts."
+          }
+        }
+      }
+    },
+    "Разговор в лифте или очереди": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разговор в лифте или очереди"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Talk in an elevator or a line"
+          }
+        }
+      }
+    },
+    "Спонтанный small-talk": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спонтанный small-talk"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spontaneous small talk"
+          }
+        }
+      }
+    },
+    "Начни короткий разговор с незнакомцем в лифте, очереди или транспорте. Достаточно минуты.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Начни короткий разговор с незнакомцем в лифте, очереди или транспорте. Достаточно минуты."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start a short talk with a stranger in an elevator, a line, or transit. One minute is enough."
+          }
+        }
+      }
+    },
+    "Одинокий ужин без экрана": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Одинокий ужин без экрана"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dinner alone, no screen"
+          }
+        }
+      }
+    },
+    "40 минут в тишине": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "40 минут в тишине"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "40 minutes in silence"
+          }
+        }
+      }
+    },
+    "Поешь один, без телефона, видео и музыки. Сорок минут только еда и то, что вокруг.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поешь один, без телефона, видео и музыки. Сорок минут только еда и то, что вокруг."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eat alone, without a phone, video, or music. Forty minutes of food and what is around you."
+          }
+        }
+      }
+    },
+    "Дофаминовый детокс": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дофаминовый детокс"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dopamine detox"
+          }
+        }
+      }
+    },
+    "Черно-белый мир": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Черно-белый мир"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Black-and-white world"
+          }
+        }
+      }
+    },
+    "24 часа в монохроме": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 часа в монохроме"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "24 hours in monochrome"
+          }
+        }
+      }
+    },
+    "Сутки с чёрно-белым экраном. Цвет возвращается только когда день закончен.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сутки с чёрно-белым экраном. Цвет возвращается только когда день закончен."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A day with a black-and-white screen. Color comes back only when the day is over."
+          }
+        }
+      }
+    },
+    "Спальня без смартфона": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спальня без смартфона"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedroom without a smartphone"
+          }
+        }
+      }
+    },
+    "Чистая зона сна": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чистая зона сна"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A clean sleep zone"
+          }
+        }
+      }
+    },
+    "Телефон ночует вне спальни. Зарядка в другой комнате, будильник — отдельно.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Телефон ночует вне спальни. Зарядка в другой комнате, будильник — отдельно."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The phone sleeps outside the bedroom. Charging in another room, alarm separate."
+          }
+        }
+      }
+    },
+    "Дисциплина": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дисциплина"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discipline"
+          }
+        }
+      }
+    },
+    "Ледяной шок": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ледяной шок"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ice shock"
+          }
+        }
+      }
+    },
+    "2 минуты холодного душа": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2 минуты холодного душа"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2 minutes of a cold shower"
+          }
+        }
+      }
+    },
+    "Две минуты под холодной водой. Дыши ровно и дойди до конца, не до «почти».": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Две минуты под холодной водой. Дыши ровно и дойди до конца, не до «почти»."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Two minutes under cold water. Breathe steadily and finish, not “almost”."
+          }
+        }
+      }
+    },
+    "Тело и воля": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тело и воля"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Body and will"
+          }
+        }
+      }
+    },
+    "Сброс импульса: 100 отжиманий": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сброс импульса: 100 отжиманий"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impulse reset: 100 push-ups"
+          }
+        }
+      }
+    },
+    "Сброс за день сериями": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сброс за день сериями"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset across the day, in sets"
+          }
+        }
+      }
+    },
+    "Сто отжиманий за день, любыми сериями. Когда тянет к стимулу — ещё один подход.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сто отжиманий за день, любыми сериями. Когда тянет к стимулу — ещё один подход."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One hundred push-ups in a day, any sets. When the urge hits — one more set."
+          }
+        }
+      }
+    },
+    "Прогулка странника": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прогулка странника"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wanderer's walk"
+          }
+        }
+      }
+    },
+    "10 000 шагов без наушников": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 000 шагов без наушников"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10,000 steps without headphones"
+          }
+        }
+      }
+    },
+    "Десять тысяч шагов без музыки и подкастов. Только улица и свои мысли.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Десять тысяч шагов без музыки и подкастов. Только улица и свои мысли."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ten thousand steps without music or podcasts. Just the street and your thoughts."
+          }
+        }
+      }
+    },
+    "Осознанность": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Осознанность"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Awareness"
+          }
+        }
+      }
+    },
+    "Дневник": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дневник"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Journal"
+          }
+        }
+      }
+    },
+    "Пара строк о том, как прошёл день — только для тебя.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пара строк о том, как прошёл день — только для тебя."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A few lines about the day — only for you."
+          }
+        }
+      }
+    },
+    "Экспресс-чекин": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экспресс-чекин"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick check-in"
+          }
+        }
+      }
+    },
+    "Энергия, тяга, триггеры — 30 секунд": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Энергия, тяга, триггеры — 30 секунд"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energy, urge, triggers — 30 seconds"
+          }
+        }
+      }
+    },
+    "Точка А": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Точка А"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Point A"
+          }
+        }
+      }
+    },
+    "Манифест старта": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Манифест старта"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting manifesto"
+          }
+        }
+      }
+    },
+    "Записей пока нет": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Записей пока нет"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No entries yet"
+          }
+        }
+      }
+    },
+    "Нажми на карандаш вверху или пройди экспресс-чекин выше.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нажми на карандаш вверху или пройди экспресс-чекин выше."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the pencil above or do the quick check-in."
+          }
+        }
+      }
+    },
+    "Новая запись": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Новая запись"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New entry"
+          }
+        }
+      }
+    },
+    "Напиши свои мысли здесь...": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Напиши свои мысли здесь..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write your thoughts here..."
+          }
+        }
+      }
+    },
+    "ВОПРОС ДНЯ": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ВОПРОС ДНЯ"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QUESTION OF THE DAY"
+          }
+        }
+      }
+    },
+    "30 секунд, чтобы честно зафиксировать день.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 секунд, чтобы честно зафиксировать день."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 seconds to record the day honestly."
+          }
+        }
+      }
+    },
+    "Уровень энергии": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уровень энергии"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energy level"
+          }
+        }
+      }
+    },
+    "Уровень либидо / тяги": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уровень либидо / тяги"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Libido / urge level"
+          }
+        }
+      }
+    },
+    "Доступно в Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Доступно в Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available in Pro"
+          }
+        }
+      }
+    },
+    "Сохранить запись": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сохранить запись"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save entry"
+          }
+        }
+      }
+    },
+    "Экспресс-чекин добавлен в дневник.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экспресс-чекин добавлен в дневник."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick check-in added to the journal."
+          }
+        }
+      }
+    },
+    "Диагностика твоего пути": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Диагностика твоего пути"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diagnosis of your path"
+          }
+        }
+      }
+    },
+    "Этот опрос нужен для честного осознания твоих триггеров, слабых мест и фиксации точки А, из которой ты начинаешь свой путь.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Этот опрос нужен для честного осознания твоих триггеров, слабых мест и фиксации точки А, из которой ты начинаешь свой путь."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This quiz is for an honest look at your triggers and weak spots, and to mark point A, where your path starts."
+          }
+        }
+      }
+    },
+    "Начать диагностику": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Начать диагностику"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start the diagnosis"
+          }
+        }
+      }
+    },
+    "Далее": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Далее"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next"
+          }
+        }
+      }
+    },
+    "Войти в приложение": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Войти в приложение"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter the app"
+          }
+        }
+      }
+    },
+    "Можно выбрать до двух": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Можно выбрать до двух"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can pick up to two"
+          }
+        }
+      }
+    },
+    "Как давно эта привычка присутствует в твоей жизни?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как давно эта привычка присутствует в твоей жизни?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How long has this habit been in your life?"
+          }
+        }
+      }
+    },
+    "В какие моменты импульс срывает твою защиту чаще всего?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В какие моменты импульс срывает твою защиту чаще всего?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When does the urge break your guard most often?"
+          }
+        }
+      }
+    },
+    "Что эта привычка отнимает у тебя прямо сейчас?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Что эта привычка отнимает у тебя прямо сейчас?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What is this habit taking from you right now?"
+          }
+        }
+      }
+    },
+    "Какой твой максимальный рекорд осознанного воздержания в прошлом?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Какой твой максимальный рекорд осознанного воздержания в прошлом?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What is your longest conscious streak in the past?"
+          }
+        }
+      }
+    },
+    "Ради чего главного ты хочешь освободиться от зависимости?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ради чего главного ты хочешь освободиться от зависимости?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What is the main reason you want to be free of this?"
+          }
+        }
+      }
+    },
+    "Сколько дней чистоты ты ставишь своей первой целью?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сколько дней чистоты ты ставишь своей первой целью?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How many clean days is your first goal?"
+          }
+        }
+      }
+    },
+    "Твоя отправная точка зафиксирована. Сегодня — твой первый день свободы": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Твоя отправная точка зафиксирована. Сегодня — твой первый день свободы"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your starting point is saved. Today is your first day of freedom"
+          }
+        }
+      }
+    },
+    "Анализ твоих триггеров...": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Анализ твоих триггеров..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Analyzing your triggers..."
+          }
+        }
+      }
+    },
+    "Формирование профиля дисциплины...": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Формирование профиля дисциплины..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Building your discipline profile..."
+          }
+        }
+      }
+    },
+    "Меньше 1 года": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Меньше 1 года"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Less than 1 year"
+          }
+        }
+      }
+    },
+    "Более 7 лет": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Более 7 лет"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More than 7 years"
+          }
+        }
+      }
+    },
+    "Поздно вечером в кровати": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поздно вечером в кровати"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Late at night in bed"
+          }
+        }
+      }
+    },
+    "Стресс и выгорание": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Стресс и выгорание"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stress and burnout"
+          }
+        }
+      }
+    },
+    "От скуки": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "От скуки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Out of boredom"
+          }
+        }
+      }
+    },
+    "Бесцельный скроллинг соцсетей": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бесцельный скроллинг соцсетей"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aimless social scrolling"
+          }
+        }
+      }
+    },
+    "Физическую энергию": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Физическую энергию"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Physical energy"
+          }
+        }
+      }
+    },
+    "Уверенность с девушками": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уверенность с девушками"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confidence with women"
+          }
+        }
+      }
+    },
+    "Радость от простых вещей": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Радость от простых вещей"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Joy in simple things"
+          }
+        }
+      }
+    },
+    "Никогда не пробовал": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Никогда не пробовал"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Never tried"
+          }
+        }
+      }
+    },
+    "1–3 дня": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1–3 дня"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1–3 days"
+          }
+        }
+      }
+    },
+    "1–2 недели": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1–2 недели"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1–2 weeks"
+          }
+        }
+      }
+    },
+    "30+ дней": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30+ дней"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30+ days"
+          }
+        }
+      }
+    },
+    "Чистый взгляд и здоровая сексуальная энергия": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чистый взгляд и здоровая сексуальная энергия"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A clear gaze and healthy sexual energy"
+          }
+        }
+      }
+    },
+    "Уверенность и знакомства с девушками": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уверенность и знакомства с девушками"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confidence and meeting women"
+          }
+        }
+      }
+    },
+    "Дисциплина в спорте и бизнесе": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дисциплина в спорте и бизнесе"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discipline in sport and work"
+          }
+        }
+      }
+    },
+    "Контроль над разумом и телом": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Контроль над разумом и телом"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Control of mind and body"
+          }
+        }
+      }
+    },
+    "7 дней": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 дней"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 days"
+          }
+        }
+      }
+    },
+    "14 дней": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "14 дней"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "14 days"
+          }
+        }
+      }
+    },
+    "30 дней": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 дней"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 days"
+          }
+        }
+      }
+    },
+    "90 дней": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "90 дней"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "90 days"
+          }
+        }
+      }
+    },
+    "Истощенный": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Истощенный"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Depleted"
+          }
+        }
+      }
+    },
+    "Пробуждение": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пробуждение"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Awakening"
+          }
+        }
+      }
+    },
+    "Атлет": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Атлет"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athlete"
+          }
+        }
+      }
+    },
+    "Воин воли": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Воин воли"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warrior of will"
+          }
+        }
+      }
+    },
+    "Титан": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Титан"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titan"
+          }
+        }
+      }
+    },
+    "Сила духа": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сила духа"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strength of will"
+          }
+        }
+      }
+    },
+    "Текущая энергия": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Текущая энергия"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current energy"
+          }
+        }
+      }
+    },
+    "Держится на стрике, вызовах и статьях": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Держится на стрике, вызовах и статьях"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kept up by the streak, challenges, and articles"
+          }
+        }
+      }
+    },
+    "Источники роста": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Источники роста"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sources of growth"
+          }
+        }
+      }
+    },
+    "Челленджей закрыто": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Челленджей закрыто"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Challenges completed"
+          }
+        }
+      }
+    },
+    "Статей изучено": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Статей изучено"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Articles studied"
+          }
+        }
+      }
+    },
+    "+%lld Power": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld Power"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld Power"
+          }
+        }
+      }
+    },
+    "⚡️ %lld / %@ Power": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ %lld / %@ Power"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡️ %lld / %@ Power"
+          }
+        }
+      }
+    },
+    "Аватар и его прокачка доступны в Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Аватар и его прокачка доступны в Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The avatar and its growth are part of Pro"
+          }
+        }
+      }
+    },
+    "Сила, энергия и смена формы открываются вместе с подпиской.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сила, энергия и смена формы открываются вместе с подпиской."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strength, energy, and new forms unlock with a subscription."
+          }
+        }
+      }
+    },
+    "Открыть Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Pro"
+          }
+        }
+      }
+    },
+    "Твой аватар эволюционировал!": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Твой аватар эволюционировал!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your avatar evolved!"
+          }
+        }
+      }
+    },
+    "Новая физическая форма разблокирована 🔥": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Новая физическая форма разблокирована 🔥"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A new physical form is unlocked 🔥"
+          }
+        }
+      }
+    },
+    "Настройки": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настройки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "Внешний вид": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Внешний вид"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appearance"
+          }
+        }
+      }
+    },
+    "Тема": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тема"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theme"
+          }
+        }
+      }
+    },
+    "Как в системе": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Как в системе"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match system"
+          }
+        }
+      }
+    },
+    "Светлая": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Светлая"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        }
+      }
+    },
+    "Тёмная": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тёмная"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dark"
+          }
+        }
+      }
+    },
+    "Данные и прогресс": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Данные и прогресс"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data and progress"
+          }
+        }
+      }
+    },
+    "Сбросить текущий стрик": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сбросить текущий стрик"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset the current streak"
+          }
+        }
+      }
+    },
+    "Правовая информация и поддержка": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Правовая информация и поддержка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Legal and support"
+          }
+        }
+      }
+    },
+    "Политика конфиденциальности": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Политика конфиденциальности"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy Policy"
+          }
+        }
+      }
+    },
+    "Условия использования": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Условия использования"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terms of Use"
+          }
+        }
+      }
+    },
+    "Служба поддержки": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Служба поддержки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support"
+          }
+        }
+      }
+    },
+    "Удалить аккаунт и данные": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить аккаунт и данные"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete account and data"
+          }
+        }
+      }
+    },
+    "Удаление стирает историю воздержания, дневник и сессию на этом устройстве и на сервере.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удаление стирает историю воздержания, дневник и сессию на этом устройстве и на сервере."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deletion erases your abstinence history, journal, and session on this device and on the server."
+          }
+        }
+      }
+    },
+    "Разблокируй полную перезагрузку и контроль": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разблокируй полную перезагрузку и контроль"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock the full reset and control"
+          }
+        }
+      }
+    },
+    "Разблокируй: %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разблокируй: %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock: %@"
+          }
+        }
+      }
+    },
+    "Аналитика триггеров и недели": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Аналитика триггеров и недели"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weekly trigger analytics"
+          }
+        }
+      }
+    },
+    "Оповещение напарника в момент SOS": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оповещение напарника в момент SOS"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Partner alert on SOS"
+          }
+        }
+      }
+    },
+    "Полная база знаний и научные статьи": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полная база знаний и научные статьи"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full knowledge base and science articles"
+          }
+        }
+      }
+    },
+    "Дневник энергии и тонуса": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дневник энергии и тонуса"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energy and tone journal"
+          }
+        }
+      }
+    },
+    "Прокачка аватара": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прокачка аватара"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avatar progression"
+          }
+        }
+      }
+    },
+    "Годовая подписка": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Годовая подписка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yearly"
+          }
+        }
+      }
+    },
+    "Месячная подписка": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Месячная подписка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monthly"
+          }
+        }
+      }
+    },
+    "Навсегда": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Навсегда"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lifetime"
+          }
+        }
+      }
+    },
+    "3 дня бесплатно": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 дня бесплатно"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 days free"
+          }
+        }
+      }
+    },
+    "Выгода 50%": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выгода 50%"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save 50%"
+          }
+        }
+      }
+    },
+    "Попробовать 3 дня бесплатно": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Попробовать 3 дня бесплатно"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try 3 days free"
+          }
+        }
+      }
+    },
+    "Восстановить покупки": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Восстановить покупки"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore purchases"
+          }
+        }
+      }
+    },
+    "Оплата российскими картами / СБП": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оплата российскими картами / СБП"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pay with Russian cards / SBP"
+          }
+        }
+      }
+    },
+    "Закрыть": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закрыть"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "Подписка продлевается автоматически, пока её не отменят в настройках Apple ID. Условия и политика конфиденциальности действуют на весь срок доступа.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подписка продлевается автоматически, пока её не отменят в настройках Apple ID. Условия и политика конфиденциальности действуют на весь срок доступа."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The subscription renews automatically until you cancel it in Apple ID settings. Terms and the privacy policy apply for the whole access period."
+          }
+        }
+      }
+    },
+    "Аватар": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Аватар"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avatar"
+          }
+        }
+      }
+    },
+    "Хорошо": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Хорошо"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Научные разборы биохимии доступны в тарифе Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Научные разборы биохимии доступны в тарифе Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biochemistry breakdowns are part of Pro"
+          }
+        }
+      }
+    },
+    "Научные исследования и механизмы работы мозга доступны подписчикам Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Научные исследования и механизмы работы мозга доступны подписчикам Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Research on how the brain works is part of Pro"
+          }
+        }
+      }
+    },
+    "Отслеживание уровня энергии и физического тонуса входит в Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отслеживание уровня энергии и физического тонуса входит в Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energy and physical tone tracking is part of Pro"
+          }
+        }
+      }
+    },
+    "Прокачка аватара и смена формы доступны в подписке Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прокачка аватара и смена формы доступны в подписке Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avatar growth and new forms are part of Pro"
+          }
+        }
+      }
+    },
+    "Разблокируй готовые сценарии предотвращения срывов": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разблокируй готовые сценарии предотвращения срывов"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock ready-made relapse-prevention scripts"
+          }
+        }
+      }
+    },
+    "Разблокируй детальную аналитику срывов и динамику недели": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разблокируй детальную аналитику срывов и динамику недели"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock relapse analytics and the weekly trend"
+          }
+        }
+      }
+    },
+    "Оповещение напарника в моменты риска доступно в тарифе Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оповещение напарника в моменты риска доступно в тарифе Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A partner alert in risky moments is part of Pro"
+          }
+        }
+      }
+    },
+    "Следующая мысль": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Следующая мысль"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next thought"
+          }
+        }
+      }
+    },
+    "Самоконтроль": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Самоконтроль"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Self-control"
+          }
+        }
+      }
+    },
+    "Характер": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Характер"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Character"
+          }
+        }
+      }
+    },
+    "Стоицизм": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Стоицизм"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stoicism"
+          }
+        }
+      }
+    },
+    "Тело и дух": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тело и дух"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Body and spirit"
+          }
+        }
+      }
+    },
+    "Власть над собой": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Власть над собой"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Power over yourself"
+          }
+        }
+      }
+    },
+    "Преодоление": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Преодоление"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Endurance"
+          }
+        }
+      }
+    },
+    "Путь воина": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Путь воина"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Way of the warrior"
+          }
+        }
+      }
+    },
+    "Фокус": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Фокус"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus"
+          }
+        }
+      }
+    },
+    "Стойкость": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Стойкость"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fortitude"
+          }
+        }
+      }
+    },
+    "Разум": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разум"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reason"
+          }
+        }
+      }
+    },
+    "Дэвид Гоггинс": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дэвид Гоггинс"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "David Goggins"
+          }
+        }
+      }
+    },
+    "Майк Тайсон": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Майк Тайсон"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mike Tyson"
+          }
+        }
+      }
+    },
+    "Марк Аврелий": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Марк Аврелий"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marcus Aurelius"
+          }
+        }
+      }
+    },
+    "Сократ": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сократ"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Socrates"
+          }
+        }
+      }
+    },
+    "Сенека": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сенека"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seneca"
+          }
+        }
+      }
+    },
+    "Миямото Мусаси": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Миямото Мусаси"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miyamoto Musashi"
+          }
+        }
+      }
+    },
+    "Мухаммед Али": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мухаммед Али"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muhammad Ali"
+          }
+        }
+      }
+    },
+    "Уинстон Черчилль": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уинстон Черчилль"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Winston Churchill"
+          }
+        }
+      }
+    },
+    "Платон": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Платон"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plato"
+          }
+        }
+      }
+    },
+    "Никто не придет тебя спасать. Нет никакой волшебной кнопки. Есть только ты, твоя слабость и зеркало напротив.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Никто не придет тебя спасать. Нет никакой волшебной кнопки. Есть только ты, твоя слабость и зеркало напротив."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No one is coming to save you. There is no magic button. There is only you, your weakness, and the mirror in front of you."
+          }
+        }
+      }
+    },
+    "Дисциплина — это делать то, что ты ненавидишь всем нутром, но делать это так, будто ты в этом лучший.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дисциплина — это делать то, что ты ненавидишь всем нутром, но делать это так, будто ты в этом лучший."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discipline is doing what you hate with your whole being, and doing it as if you were the best at it."
+          }
+        }
+      }
+    },
+    "У тебя есть власть над своим разумом, а не над внешними соблазнами. Осознай это — и ты обретешь непоколебимую силу.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "У тебя есть власть над своим разумом, а не над внешними соблазнами. Осознай это — и ты обретешь непоколебимую силу."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have power over your mind — not outside events. Realize this, and you will find strength."
+          }
+        }
+      }
+    },
+    "Какое бесчестие для мужчины — состариться, так и не узнав, на какую силу, выносливость и красоту способно его тело.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Какое бесчестие для мужчины — состариться, так и не узнав, на какую силу, выносливость и красоту способно его тело."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It is a shame for a man to grow old without seeing the strength, endurance, and beauty of which his body is capable."
+          }
+        }
+      }
+    },
+    "Самый могущественный человек на земле — это тот, кто сумел подчинить самого себя.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Самый могущественный человек на земле — это тот, кто сумел подчинить самого себя."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Most powerful is he who has himself in his own power."
+          }
+        }
+      }
+    },
+    "Когда твой мозг шепчет, что ты истощен и пора сдаться, — ты израсходовал всего 40% своего истинного запаса прочности.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Когда твой мозг шепчет, что ты истощен и пора сдаться, — ты израсходовал всего 40% своего истинного запаса прочности."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When your mind is telling you that you're done, you're really only 40 percent done."
+          }
+        }
+      }
+    },
+    "Сегодня я одержу победу над собой вчерашним; завтра я одержу победу над своей главной слабостью.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сегодня я одержу победу над собой вчерашним; завтра я одержу победу над своей главной слабостью."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today I will defeat the self of yesterday; tomorrow I will defeat my greatest weakness."
+          }
+        }
+      }
+    },
+    "Не сдавайся сейчас. Потерпи дискомфорт сегодня — и проживи остаток жизни хозяином своей судьбы.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не сдавайся сейчас. Потерпи дискомфорт сегодня — и проживи остаток жизни хозяином своей судьбы."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't quit now. Endure the discomfort today, and live the rest of your life as the master of your fate."
+          }
+        }
+      }
+    },
+    "Победа — это не финал, срыв — это не приговор. Значение имеет только мужество продолжать путь.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Победа — это не финал, срыв — это не приговор. Значение имеет только мужество продолжать путь."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Success is not final, failure is not fatal: it is the courage to continue that counts."
+          }
+        }
+      }
+    },
+    "Первая и лучшая победа — это победа над своими желаниями. Капитулировать перед ними — самый горький из всех уделов.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Первая и лучшая победа — это победа над своими желаниями. Капитулировать перед ними — самый горький из всех уделов."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The first and best victory is to conquer yourself. To be conquered by yourself is of all things the most shameful."
+          }
+        }
+      }
+    },
+    "Физический сброс": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Физический сброс"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Physical reset"
+          }
+        }
+      }
+    },
+    "Выбери нагрузку и доведи её до конца. Импульс не переживёт жжение в мышцах.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выбери нагрузку и доведи её до конца. Импульс не переживёт жжение в мышцах."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick a drill and finish it. The urge will not survive the burn."
+          }
+        }
+      }
+    },
+    "Взрывные отжимания": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Взрывные отжимания"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explosive push-ups"
+          }
+        }
+      }
+    },
+    "До отказа": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "До отказа"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To failure"
+          }
+        }
+      }
+    },
+    "Перенаправление кровотока в верхний плечевой пояс": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перенаправление кровотока в верхний плечевой пояс"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redirect blood flow into the shoulders and chest"
+          }
+        }
+      }
+    },
+    "Прими упор лёжа с идеальной прямой спиной.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прими упор лёжа с идеальной прямой спиной."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get into a push-up with a perfectly straight back."
+          }
+        }
+      }
+    },
+    "Выполняй отжимания в максимальном темпе без пауз.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выполняй отжимания в максимальном темпе без пауз."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do push-ups at full speed, without pauses."
+          }
+        }
+      }
+    },
+    "В последнем повторении замри в нижней точке на 5 секунд.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В последнем повторении замри в нижней точке на 5 секунд."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the last rep, hold the bottom position for 5 seconds."
+          }
+        }
+      }
+    },
+    "Срочно перенаправляет кровь из тазовой зоны в грудь и плечи. Выброс молочной кислоты выбивает мозг из сексуального транса.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Срочно перенаправляет кровь из тазовой зоны в грудь и плечи. Выброс молочной кислоты выбивает мозг из сексуального транса."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It pulls blood out of the pelvis and into the chest and shoulders. The burn of lactic acid knocks the mind out of a sexual trance."
+          }
+        }
+      }
+    },
+    "«Стульчик» у стены": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«Стульчик» у стены"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wall sit"
+          }
+        }
+      }
+    },
+    "60 секунд": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "60 секунд"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "60 seconds"
+          }
+        }
+      }
+    },
+    "Статическое жжение в квадрицепсах": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Статическое жжение в квадрицепсах"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A static burn in the quads"
+          }
+        }
+      }
+    },
+    "Прижмись спиной к стене и опустись до угла 90° в коленях.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прижмись спиной к стене и опустись до угла 90° в коленях."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Press your back to the wall and sink until your knees are at 90°."
+          }
+        }
+      }
+    },
+    "Руки вытяни перед собой, не клади их на ноги.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Руки вытяни перед собой, не клади их на ноги."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reach your arms forward. Do not rest them on your legs."
+          }
+        }
+      }
+    },
+    "Держи позицию через жжение, пока таймер не завершится.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Держи позицию через жжение, пока таймер не завершится."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold through the burn until the timer ends."
+          }
+        }
+      }
+    },
+    "Изометрическое напряжение крупнейших мышц ног заставляет префронтальную кору фокусироваться на удержании позы, гася компульсивный импульс.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изометрическое напряжение крупнейших мышц ног заставляет префронтальную кору фокусироваться на удержании позы, гася компульсивный импульс."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isometric tension in the biggest leg muscles forces the prefrontal cortex to hold the pose, and the compulsive urge fades."
+          }
+        }
+      }
+    },
+    "Бёрпи на скорость": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Бёрпи на скорость"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speed burpees"
+          }
+        }
+      }
+    },
+    "20 повторений": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "20 повторений"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "20 reps"
+          }
+        }
+      }
+    },
+    "Резкий разгон пульса до анаэробной зоны": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Резкий разгон пульса до анаэробной зоны"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A sharp spike of the heart rate into the anaerobic zone"
+          }
+        }
+      }
+    },
+    "Упор присев -> прыжком в упор лёжа -> коснись пола грудью.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Упор присев -> прыжком в упор лёжа -> коснись пола грудью."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Squat down, jump to a plank, and touch the floor with your chest."
+          }
+        }
+      }
+    },
+    "Взрывным движением вернись в присед и выпрыгни вверх с хлопком.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Взрывным движением вернись в присед и выпрыгни вверх с хлопком."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explode back to a squat and jump up with a clap."
+          }
+        }
+      }
+    },
+    "Делай без пауз на отдых.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Делай без пауз на отдых."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do not pause to rest."
+          }
+        }
+      }
+    },
+    "Поднимает пульс до 140+ уд/мин. Активирует режим «бей или беги», в котором размножение биологически блокируется организмом.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поднимает пульс до 140+ уд/мин. Активирует режим «бей или беги», в котором размножение биологически блокируется организмом."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It drives the heart rate past 140 bpm and switches on fight-or-flight, where the body biologically shuts down mating."
+          }
+        }
+      }
+    },
+    "Планка с коленями к локтям": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Планка с коленями к локтям"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plank with knees to elbows"
+          }
+        }
+      }
+    },
+    "Жесткая фиксация мышечного корсета": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жесткая фиксация мышечного корсета"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A hard lock of the core"
+          }
+        }
+      }
+    },
+    "Встань в планку на предплечьях, напряги пресс и ягодицы.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Встань в планку на предплечьях, напряги пресс и ягодицы."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hold a forearm plank and brace your abs and glutes."
+          }
+        }
+      }
+    },
+    "Поочередно медленно подтягивай колено к локтю с фиксацией на 2 секунды.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поочередно медленно подтягивай колено к локтю с фиксацией на 2 секунды."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slowly draw each knee to the elbow and hold for 2 seconds."
+          }
+        }
+      }
+    },
+    "Не задирай и не проваливай таз.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не задирай и не проваливай таз."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do not pike or sag the hips."
+          }
+        }
+      }
+    },
+    "Разгружает пояснично-крестцовый отдел и включает глубокие стабилизаторы кора, убирая физический застой.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разгружает пояснично-крестцовый отдел и включает глубокие стабилизаторы кора, убирая физический застой."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It unloads the lower back and switches on the deep core stabilizers, clearing physical stagnation."
+          }
+        }
+      }
+    },
+    "Приседания с выпрыгиванием": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Приседания с выпрыгиванием"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jump squats"
+          }
+        }
+      }
+    },
+    "25 повторений": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "25 повторений"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "25 reps"
+          }
+        }
+      }
+    },
+    "Взрывная нагрузка на нижний этаж тела": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Взрывная нагрузка на нижний этаж тела"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explosive work for the lower body"
+          }
+        }
+      }
+    },
+    "Опустись в глубокий присед ниже параллели.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Опустись в глубокий присед ниже параллели."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drop into a deep squat below parallel."
+          }
+        }
+      }
+    },
+    "Резко и мощно выпрыгни максимально высоко.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Резко и мощно выпрыгни максимально высоко."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jump up as high and as hard as you can."
+          }
+        }
+      }
+    },
+    "Приземляйся мягко на носки и сразу уходи в следующий присед.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Приземляйся мягко на носки и сразу уходи в следующий присед."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Land softly on the balls of your feet and sink straight into the next squat."
+          }
+        }
+      }
+    },
+    "Мощная циклическая нагрузка утилизирует избыточный кортизол и адреналин, заменяя навязчивую мысль мышечной усталостью.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мощная циклическая нагрузка утилизирует избыточный кортизол и адреналин, заменяя навязчивую мысль мышечной усталостью."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hard repeating work burns off extra cortisol and adrenaline, and muscle fatigue replaces the obsessive thought."
+          }
+        }
+      }
+    },
+    "Старт": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Старт"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        }
+      }
+    },
+    "Пауза": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пауза"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause"
+          }
+        }
+      }
+    },
+    "Сброс": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сброс"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset"
+          }
+        }
+      }
+    },
+    "Тап для шага": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тап для шага"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap for one rep"
+          }
+        }
+      }
+    },
+    "Я выполнил все повторения": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Я выполнил все повторения"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I finished every rep"
+          }
+        }
+      }
+    },
+    "Выполнено": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выполнено"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "Импульс сломан. Кровь вернулась в мышцы. Отличная работа! 🔥": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Импульс сломан. Кровь вернулась в мышцы. Отличная работа! 🔥"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The urge is broken. Blood is back in the muscles. Strong work! 🔥"
+          }
+        }
+      }
+    },
+    "Вернуться на Главный экран": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вернуться на Главный экран"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back to Home"
+          }
+        }
+      }
+    },
+    "7 ДНЕЙ": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 ДНЕЙ"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 DAYS"
+          }
+        }
+      }
+    },
+    "21 ДЕНЬ": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 ДЕНЬ"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21 DAYS"
+          }
+        }
+      }
+    },
+    "45 ДНЕЙ": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "45 ДНЕЙ"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "45 DAYS"
+          }
+        }
+      }
+    },
+    "90 ДНЕЙ": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "90 ДНЕЙ"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "90 DAYS"
+          }
+        }
+      }
+    },
+    "Разрыв цепи": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрыв цепи"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Breaking the chain"
+          }
+        }
+      }
+    },
+    "Ясный фокус": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ясный фокус"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear focus"
+          }
+        }
+      }
+    },
+    "Глубокая перезагрузка": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Глубокая перезагрузка"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deep reset"
+          }
+        }
+      }
+    },
+    "Новая норма / Титан": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Новая норма / Титан"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New normal / Titan"
+          }
+        }
+      }
+    },
+    "Тестостероновый пик": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Тестостероновый пик"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testosterone peak"
+          }
+        }
+      }
+    },
+    "Регенерация дофамина": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Регенерация дофамина"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dopamine regeneration"
+          }
+        }
+      }
+    },
+    "Калибровка рецепторов": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Калибровка рецепторов"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receptor calibration"
+          }
+        }
+      }
+    },
+    "Структурная нейропластичность": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Структурная нейропластичность"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Structural neuroplasticity"
+          }
+        }
+      }
+    },
+    "Сбить острую тягу и вернуть физическую силу.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сбить острую тягу и вернуть физическую силу."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Knock down the acute urge and get your physical strength back."
+          }
+        }
+      }
+    },
+    "Вернуть ясность ума и контроль над вниманием.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вернуть ясность ума и контроль над вниманием."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get mental clarity and control of your attention back."
+          }
+        }
+      }
+    },
+    "Преодолеть «flatline» и восстановить мужской тонус.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Преодолеть «flatline» и восстановить мужской тонус."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get through the flatline and restore your tone."
+          }
+        }
+      }
+    },
+    "Закрепить новую личность и стать хозяином своего разума.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закрепить новую личность и стать хозяином своего разума."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lock in the new identity and become master of your mind."
+          }
+        }
+      }
+    },
+    "Уровень свободного тестостерона достигает пика в 145.7% (исследование Чжэцзянского университета). Взрыв физической энергии и выносливости.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уровень свободного тестостерона достигает пика в 145.7% (исследование Чжэцзянского университета). Взрыв физической энергии и выносливости."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free testosterone peaks at 145.7% (Zhejiang University study). A surge of physical energy and endurance."
+          }
+        }
+      }
+    },
+    "Восстанавливается плотность D2-рецепторов дофамина. Нормализуется фаза глубокого сна (REM).": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Восстанавливается плотность D2-рецепторов дофамина. Нормализуется фаза глубокого сна (REM)."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dopamine D2 receptor density recovers. Deep REM sleep returns to normal."
+          }
+        }
+      }
+    },
+    "Повышается чувствительность андрогенных рецепторов. Угасает эффект Кулиджа — возвращается здоровое влечение к реальным девушкам.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Повышается чувствительность андрогенных рецепторов. Угасает эффект Кулиджа — возвращается здоровое влечение к реальным девушкам."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Androgen receptors grow more sensitive. The Coolidge effect fades, and attraction to real women returns."
+          }
+        }
+      }
+    },
+    "Дофаминовая система стабилизируется на эволюционной норме. Высокий, ровный уровень энергии с утра до вечера.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дофаминовая система стабилизируется на эволюционной норме. Высокий, ровный уровень энергии с утра до вечера."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dopamine system settles at its natural baseline. Energy stays high and even from morning to night."
+          }
+        }
+      }
+    },
+    "Разрушается компульсивная петля первых 72 часов. Снижается пролактиновая сонливость.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрушается компульсивная петля первых 72 часов. Снижается пролактиновая сонливость."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The compulsive loop of the first 72 hours breaks. Prolactin drowsiness eases."
+          }
+        }
+      }
+    },
+    "Рассеивается «туман в голове». Простые вещи (еда, спорт, хобби) снова приносят естественный кайф без гиперстимуляции.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Рассеивается «туман в голове». Простые вещи (еда, спорт, хобби) снова приносят естественный кайф без гиперстимуляции."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The brain fog lifts. Food, sport, and hobbies feel good again without hyperstimulation."
+          }
+        }
+      }
+    },
+    "Уходит социальная тревожность. Голос становится увереннее и плотнее, взгляд держится расслабленно и прямо.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уходит социальная тревожность. Голос становится увереннее и плотнее, взгляд держится расслабленно и прямо."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Social anxiety drops. The voice gets steadier, and eye contact stays relaxed."
+          }
+        }
+      }
+    },
+    "Префронтальная кора формирует прочные синаптические связи. Контроль импульсов становится твоей естественной природой.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Префронтальная кора формирует прочные синаптические связи. Контроль импульсов становится твоей естественной природой."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The prefrontal cortex builds lasting connections. Impulse control becomes your nature."
+          }
+        }
+      }
+    },
+    "День %lld из %lld": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "День %lld из %lld"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day %lld of %lld"
+          }
+        }
+      }
+    },
+    "РУБЕЖ ПРЕОДОЛЁН": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "РУБЕЖ ПРЕОДОЛЁН"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GOAL CONQUERED"
+          }
+        }
+      }
+    },
+    "Ты покорил планку в %lld дней! ⚔️": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ты покорил планку в %lld дней! ⚔️"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You conquered the %lld-day bar! ⚔️"
+          }
+        }
+      }
+    },
+    "Разрыв цепи завершён. Ты доказал, что сильнее сиюминутного рефлекса.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Разрыв цепи завершён. Ты доказал, что сильнее сиюминутного рефлекса."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The chain is broken. You proved you are stronger than the reflex of the moment."
+          }
+        }
+      }
+    },
+    "Дофаминовый детокс пройден. Твой разум чист, а фокус возвращён.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дофаминовый детокс пройден. Твой разум чист, а фокус возвращён."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dopamine detox is done. Your mind is clear and your focus is back."
+          }
+        }
+      }
+    },
+    "Глубокая перезагрузка состоялась. Твоя андрогенная система перекалибрована.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Глубокая перезагрузка состоялась. Твоя андрогенная система перекалибрована."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The deep reset is complete. Your androgen system has recalibrated."
+          }
+        }
+      }
+    },
+    "Уровень Титана. Нейропластичность закрепила абсолютный контроль над импульсами.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уровень Титана. Нейропластичность закрепила абсолютный контроль над импульсами."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titan level. Neuroplasticity has locked in control over your impulses."
+          }
+        }
+      }
+    },
+    "Рубеж взят. Двигайся дальше.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Рубеж взят. Двигайся дальше."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The bar is cleared. Keep going."
+          }
+        }
+      }
+    },
+    "Твоя энергия теперь принадлежит тебе": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Твоя энергия теперь принадлежит тебе"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your energy belongs to you now"
+          }
+        }
+      }
+    },
+    "Ты вышел из рабства экранной гиперстимуляции. Твоя сексуальная энергия — это не враг, а чистая витальная сила. Направляй её в реальную жизнь: спорт, бизнес, харизму и живые отношения с реальными девушками. Не отдавай эту победу обратно пикселям.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ты вышел из рабства экранной гиперстимуляции. Твоя сексуальная энергия — это не враг, а чистая витальная сила. Направляй её в реальную жизнь: спорт, бизнес, харизму и живые отношения с реальными девушками. Не отдавай эту победу обратно пикселям."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You stepped out of screen hyperstimulation. Your sexual energy is not an enemy. It is vital force. Put it into real life: sport, work, charisma, and living relationships. Do not hand this win back to pixels."
+          }
+        }
+      }
+    },
+    "Поднять планку стрика 🚀": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Поднять планку стрика 🚀"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Raise the bar 🚀"
+          }
+        }
+      }
+    },
+    "Зафиксировать триумф в Дневнике 📌": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зафиксировать триумф в Дневнике 📌"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save the triumph in the journal 📌"
+          }
+        }
+      }
+    },
+    "Остаться на текущем уровне": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Остаться на текущем уровне"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stay at this level"
+          }
+        }
+      }
+    },
+    "Илот / Неофит": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Илот / Неофит"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Helot / Initiate"
+          }
+        }
+      }
+    },
+    "Агог / Рекрут": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Агог / Рекрут"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agoge Trainee"
+          }
+        }
+      }
+    },
+    "Гоплит": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Гоплит"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoplite"
+          }
+        }
+      }
+    },
+    "Спартанский Ветеран": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Спартанский Ветеран"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spartan Veteran"
+          }
+        }
+      }
+    },
+    "Полемарх": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полемарх"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polemarch"
+          }
+        }
+      }
+    },
+    "Гиппей / Царская гвардия": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Гиппей / Царская гвардия"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hippeus Guard"
+          }
+        }
+      }
+    },
+    "Леонид / Царь Спарты": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Леонид / Царь Спарты"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "King Leonidas"
+          }
+        }
+      }
+    },
+    "Сломленный импульсом, но решивший встать на путь.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сломленный импульсом, но решивший встать на путь."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Broken by impulse, but resolved to take the path."
+          }
+        }
+      }
+    },
+    "Первые искры дисциплины. Начало суровой закалки.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Первые искры дисциплины. Начало суровой закалки."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The first sparks of discipline. The hard training begins."
+          }
+        }
+      }
+    },
+    "Крепкий щит и поставленный удар. Контроль базовых триггеров.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Крепкий щит и поставленный удар. Контроль базовых триггеров."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A solid shield and a trained strike. The basic triggers are under control."
+          }
+        }
+      }
+    },
+    "Прошел через сомнения и кризис. Разум побеждает плоть.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прошел через сомнения и кризис. Разум побеждает плоть."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Through doubt and crisis. The mind is winning over the flesh."
+          }
+        }
+      }
+    },
+    "Полководец своей жизни. Высокий уровень тестостерона и фокуса.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полководец своей жизни. Высокий уровень тестостерона и фокуса."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A commander of his own life. High testosterone and focus."
+          }
+        }
+      }
+    },
+    "Элита Спарты. Абсолютное хладнокровие и власть над собой.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Элита Спарты. Абсолютное хладнокровие и власть над собой."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The elite of Sparta. Absolute calm and mastery of the self."
+          }
+        }
+      }
+    },
+    "Живая легенда. Полная трансформация духа, тела и воли.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Живая легенда. Полная трансформация духа, тела и воли."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A living legend. A full transformation of spirit, body, and will."
+          }
+        }
+      }
+    },
+    "Ранг %lld из 7 • %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ранг %lld из 7 • %@"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rank %lld of 7 • %@"
+          }
+        }
+      }
+    },
+    "До следующего ранга осталось: %lld XP": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "До следующего ранга осталось: %lld XP"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld XP left to the next rank"
+          }
+        }
+      }
+    },
+    "Откроется на %lld XP": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Откроется на %lld XP"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlocks at %lld XP"
+          }
+        }
+      }
+    },
+    "Зал славы": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зал славы"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hall of Fame"
+          }
+        }
+      }
+    },
+    "Максимальный ранг": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Максимальный ранг"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximum rank"
+          }
+        }
+      }
+    },
+    "НОВЫЙ СПАРТАНСКИЙ РАНГ РАЗБЛОКИРОВАН!": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "НОВЫЙ СПАРТАНСКИЙ РАНГ РАЗБЛОКИРОВАН!"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A NEW SPARTAN RANK IS UNLOCKED!"
+          }
+        }
+      }
+    },
+    "Продолжить путь воина": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Продолжить путь воина"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue the warrior's path"
+          }
+        }
+      }
+    },
+    "Семь рангов спартанца открываются вместе с подпиской.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Семь рангов спартанца открываются вместе с подпиской."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The seven Spartan ranks unlock with the subscription."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

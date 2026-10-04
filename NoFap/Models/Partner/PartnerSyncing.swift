@@ -36,6 +36,9 @@ protocol PartnerSyncing: AnyObject, Sendable {
     /// оставляет свою запись, а пригласивший её забирает.
     func pollInviteAcceptance() async throws -> PartnerProfile?
 
+    /// Найти профиль по коду, не записывая связь.
+    func preview(code: String) async throws -> PartnerProfile
+
     /// Ввести чужой код и связаться. Сторона присоединяющегося.
     func redeem(code: String) async throws -> PartnerProfile
 
@@ -56,22 +59,16 @@ protocol PartnerSyncing: AnyObject, Sendable {
 }
 
 enum PartnerBackend: String {
-    case fake
-    case cloudKit
+    case supabase
 }
 
 enum PartnerSyncFactory {
 
-    /// Пока нет платного Apple Developer, CloudKit невозможно подписать, и
-    /// весь интерфейс живёт на заглушке. Когда аккаунт появится — меняется
-    /// ровно эта строка.
-    static var backend: PartnerBackend { .fake }
+    /// Напарник ищется только в Supabase по invite_code. Локальная заглушка не используется.
+    static var backend: PartnerBackend { .supabase }
 
     @MainActor
     static func make() -> any PartnerSyncing {
-        switch backend {
-        case .fake:     LocalFakePartnerSync()
-        case .cloudKit: LocalFakePartnerSync()   // TODO: CloudKitPartnerSync()
-        }
+        SupabasePartnerSync()
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UIKit
 import WebKit
 
 struct SettingsView: View {
@@ -14,10 +15,12 @@ struct SettingsView: View {
     @Environment(Backend.self) private var backend
     @Environment(StreakManager.self) private var streak
     @Environment(AvatarManager.self) private var avatar
+    @Environment(AvatarProgressManager.self) private var progress
     @Environment(JournalManager.self) private var journal
     @Environment(CheckInManager.self) private var checkIns
     @Environment(\.openURL) private var openURL
     @Environment(ThemeManager.self) private var theme
+    @Environment(BuddyManager.self) private var buddies
 
     @AppStorage("onboardingDone") private var onboardingDone = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
@@ -27,6 +30,7 @@ struct SettingsView: View {
     @State private var confirmDelete = false
     @State private var isDeleting = false
     @State private var failure: String?
+    @State private var linkCopied = false
 
     private let supportURL = URL(string: "mailto:support@example.com")!
 
@@ -35,7 +39,7 @@ struct SettingsView: View {
             Section("Внешний вид") {
                 Picker("Тема", selection: Bindable(theme).theme) {
                     ForEach(AppTheme.allCases) { item in
-                        Label(item.title, systemImage: item.symbol).tag(item)
+                        Label(LocalizedStringKey(item.title), systemImage: item.symbol).tag(item)
                     }
                 }
                 .pickerStyle(.inline)
@@ -43,6 +47,50 @@ struct SettingsView: View {
                     UISelectionFeedbackGenerator().selectionChanged()
                 }
             }
+
+            Section("Напарники") {
+                if let code = buddies.inviteCode {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Твой персональный инвайт-код")
+                            .font(.system(size: 13))
+                            .foregroundStyle(Palette.ash)
+                        Text(code.map { String($0) }.joined(separator: " "))
+                            .font(.system(size: 28, weight: .bold, design: .monospaced))
+                            .foregroundStyle(Palette.marbleHigh)
+                        HStack {
+                            Button("Скопировать") {
+                                UIPasteboard.general.string = code
+                            }
+                            Button {
+                                UIPasteboard.general.string = InviteLinkHelper.generateInviteURL(for: code).absoluteString
+                                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                linkCopied = true
+                                Task {
+                                    try? await Task.sleep(for: .seconds(1.5))
+                                    linkCopied = false
+                                }
+                            } label: {
+                                Label("Скопировать ссылку", systemImage: linkCopied ? "checkmark" : "link")
+                            }
+                        }
+                        ShareLink(
+                            item: InviteLinkHelper.generateInviteURL(for: code),
+                            subject: Text("Приглашение в напарники"),
+                            message: Text(InviteLinkHelper.shareText(for: code))
+                        ) {
+                            Label("Поделиться ссылкой", systemImage: "square.and.arrow.up")
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .padding(.vertical, 6)
+                }
+                NavigationLink("Мой сквад") {
+                    SquadView()
+                }
+            }
+            .task { await buddies.refresh() }
 
             Section("Данные и прогресс") {
                 Button("Сбросить текущий стрик") {
@@ -179,6 +227,7 @@ private struct LegalWebView: UIViewRepresentable {
         do {
             try await backend.deleteAccount(streak: streak, journal: journal, checkIns: checkIns)
             avatar.resetAll()
+            progress.resetAll()
             onboardingDone = false
             hasCompletedOnboarding = false
             hasCompletedAppTour = false

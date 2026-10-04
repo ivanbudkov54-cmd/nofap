@@ -19,6 +19,7 @@ struct DiaryView: View {
 
     @State private var showEditor = false
     @State private var showCheckIn = false
+    @State private var openedManifest: JournalEntry?
     @State private var draft = ""
     @State private var currentPrompt = ""
 
@@ -54,8 +55,12 @@ struct DiaryView: View {
         }
     }
 
+    private var manifest: JournalEntry? {
+        journal.entries.first(where: \.isManifest)
+    }
+
     private var feed: [FeedItem] {
-        (journal.entries.map(FeedItem.note) + checkIns.entries.map(FeedItem.checkIn))
+        (journal.entries.filter { !$0.isManifest }.map(FeedItem.note) + checkIns.entries.map(FeedItem.checkIn))
             .sorted { lhs, rhs in
                 if lhs.isPinned != rhs.isPinned { return lhs.isPinned }
                 return lhs.date > rhs.date
@@ -65,27 +70,26 @@ struct DiaryView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 22) {
-                if journal.entries.contains(where: \.isManifest) {
-                    header
-                } else {
+                if manifest == nil {
                     header
                         .tourTarget(.journal)
+                } else {
+                    header
                 }
                 checkInEntry
+                if let manifest {
+                    manifestEntry(manifest)
+                        .tourTarget(.journal)
+                }
 
-                if feed.isEmpty {
+                if feed.isEmpty && manifest == nil {
                     empty
                 } else {
                     VStack(spacing: 14) {
                         ForEach(feed) { item in
                             switch item {
                             case .note(let entry):
-                                if entry.isManifest {
-                                    noteCard(entry)
-                                        .tourTarget(.journal)
-                                } else {
-                                    noteCard(entry)
-                                }
+                                noteCard(entry)
                             case .checkIn(let entry): checkInCard(entry)
                             }
                         }
@@ -117,6 +121,9 @@ struct DiaryView: View {
         .fullScreenCover(isPresented: $showCheckIn) {
             NavigationStack { CheckInView() }
                 .preferredColorScheme(.dark)
+        }
+        .sheet(item: $openedManifest) { entry in
+            manifestSheet(entry)
         }
     }
 
@@ -179,6 +186,60 @@ struct DiaryView: View {
             .cardSurface()
         }
         .buttonStyle(.plain)
+    }
+
+    private func manifestEntry(_ entry: JournalEntry) -> some View {
+        Button {
+            openedManifest = entry
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: "flag.fill")
+                    .font(.system(size: 18))
+                    .foregroundStyle(.goldFill)
+                    .frame(width: 44, height: 44)
+                    .background(Palette.gold.opacity(0.12), in: .circle)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Точка А")
+                        .font(Face.display(15, .medium))
+                        .foregroundStyle(Palette.marbleHigh)
+                    Text("Манифест старта")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Palette.ash)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Palette.ash)
+            }
+            .padding(14)
+            .cardSurface()
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func manifestSheet(_ entry: JournalEntry) -> some View {
+        NavigationStack {
+            ScrollView {
+                Text(entry.text)
+                    .font(.system(size: 16))
+                    .foregroundStyle(Palette.marble)
+                    .lineSpacing(5)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(20)
+            }
+            .background(Palette.obsidian.ignoresSafeArea())
+            .navigationTitle("Точка А")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Закрыть") { openedManifest = nil }
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
     }
 
     // MARK: - Пусто

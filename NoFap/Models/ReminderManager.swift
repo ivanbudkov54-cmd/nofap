@@ -87,4 +87,53 @@ final class ReminderManager {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [Self.identifier])
         state = .off
     }
+
+    private static let warningID = "streak_warning_10h"
+    private static let finalID = "streak_final_1h"
+
+    func cancelStreakWarnings() {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(
+            withIdentifiers: [Self.warningID, Self.finalID]
+        )
+    }
+
+    /// Два напоминания внутри 48-часового окна: за 10 часов и за час до сброса.
+    func rescheduleStreakWarnings(deadline: Date) async {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [Self.warningID, Self.finalID])
+
+        let settings = await center.notificationSettings()
+        if settings.authorizationStatus == .notDetermined {
+            _ = try? await center.requestAuthorization(options: [.alert, .sound])
+        }
+        let updated = await center.notificationSettings()
+        guard updated.authorizationStatus == .authorized
+                || updated.authorizationStatus == .provisional
+                || updated.authorizationStatus == .ephemeral else { return }
+
+        await schedule(
+            id: Self.warningID,
+            at: deadline.addingTimeInterval(-10 * 3600),
+            title: "Твой стрик под угрозой! ⏳",
+            body: "Осталось 10 часов, чтобы зафиксировать день. Не дай своим усилиям сгореть — сделай чекин в 1 тап."
+        )
+        await schedule(
+            id: Self.finalID,
+            at: deadline.addingTimeInterval(-3600),
+            title: "Последний шанс спасти серию! 🔥",
+            body: "Остался всего 1 час до сброса стрика. Зайди в приложение прямо сейчас и нажми \"Я держусь\"."
+        )
+    }
+
+    private func schedule(id: String, at date: Date, title: String, body: String) async {
+        let interval = date.timeIntervalSinceNow
+        guard interval > 1 else { return }
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+        try? await UNUserNotificationCenter.current().add(request)
+    }
 }

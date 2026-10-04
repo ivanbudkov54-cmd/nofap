@@ -67,6 +67,12 @@ final class StreakManager {
     /// Сам StreakManager по-прежнему ничего не знает ни о сети, ни о напарнике.
     private(set) var revision = 0
 
+    /// Окно, в котором пропущенный день ещё не обнуляет серию.
+    let gracePeriodHours: Double = 48
+
+    /// Одно спокойное сообщение после автоматического сброса. HomeView гасит его.
+    var streakResetNotice: String?
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         currentStreak = defaults.integer(forKey: Key.currentStreak)
@@ -92,6 +98,7 @@ final class StreakManager {
         guard days > 0 else { return }
         personalGoalDays = days
         justReachedGoal = false
+        UserDefaults.standard.set(days, forKey: "userTargetStreakDays")
         persist()
     }
 
@@ -119,6 +126,51 @@ final class StreakManager {
     func restoreStreakFreeze(_ date: Date?) {
         lastStreakFreezeDate = date
         persist()
+    }
+
+    /// Конец 48-часового окна после последнего «Я держусь».
+    var streakDeadlineDate: Date? {
+        lastCheckinDate?.addingTimeInterval(gracePeriodHours * 3600)
+    }
+
+    func isCheckedIn(on date: Date) -> Bool {
+        status(on: date) == true
+    }
+
+    /// Сколько осталось до полуночи, когда «Я держусь» снова можно нажать.
+    /// nil — сегодня чистого чекина ещё не было.
+    func nextCheckInRemaining(at date: Date = Date()) -> TimeInterval? {
+        guard isCheckedIn(on: date) else { return nil }
+        let start = calendar.startOfDay(for: date)
+        guard let next = calendar.date(byAdding: .day, value: 1, to: start) else { return nil }
+        let remaining = next.timeIntervalSince(date)
+        return remaining > 0 ? remaining : nil
+    }
+
+    /// Часы до сгорания, округлённые вверх. nil — сегодня день уже закрыт
+    /// или серии ещё нет, показывать дедлайн нечего.
+    func hoursUntilDeadline(at date: Date = Date()) -> Int? {
+        guard currentStreak > 0, let deadline = streakDeadlineDate, !hasCheckedIn(asOf: date) else { return nil }
+        let remaining = deadline.timeIntervalSince(date)
+        guard remaining > 0 else { return 0 }
+        return max(1, Int((remaining / 3600).rounded(.up)))
+    }
+
+    /// Сброс только после двух суток без чекина. Пока 48 часов не вышли, серия жива.
+    @discardableResult
+    func checkStreakStatus(now: Date = Date()) -> Bool {
+        guard let last = lastCheckinDate else { return false }
+        guard now.timeIntervalSince(last) > gracePeriodHours * 3600 else { return false }
+        guard currentStreak > 0 else { return false }
+        currentStreak = 0
+        streakAnchor = nil
+        streakResetNotice = "Ты отсутствовал больше двух дней. Стрик обнулился, но твой опыт и сила аватара с тобой. Начни новую серию сегодня!"
+        persist()
+        return true
+    }
+
+    func acknowledgeStreakReset() {
+        streakResetNotice = nil
     }
 
     /// Сколько осталось до конца суток после чистого «Я держусь».
@@ -160,20 +212,13 @@ final class StreakManager {
             recordRelapse(now: now)
             return true
         }
-        guard victoryCountdownRemaining(at: now) == nil else { return false }
         guard !hasCheckedIn(asOf: now) else { return false }
 
         let before = currentStreak
-
-        if clean {
-            // Первый чистый день без якоря сохраняет уже показанное число:
-            // якорь отодвигается назад, чтобы динамический пересчёт не
-            // обнулил кэш. Дальше дни растут сами от этой даты.
-            if streakAnchor == nil {
-                streakAnchor = calendar.date(byAdding: .day, value: -currentStreak, to: calendar.startOfDay(for: now))
-            }
-            currentStreak = elapsedDays(now: now)
-            totalCleanDays += 1
+        currentStreak += 1
+        totalCleanDays += 1
+        if streakAnchor == nil {
+            streakAnchor = calendar.startOfDay(for: now)
         }
 
         bestStreak = max(bestStreak, currentStreak)
@@ -204,27 +249,23 @@ final class StreakManager {
         return max(0, calendar.dateComponents([.day], from: start, to: today).day ?? 0)
     }
 
-    /// Пересчитывает стрик, если наступил новый день. true — число изменилось
-    /// и его нужно отправить в profiles.
+    /// На возврате в приложение проверяет 48-часовое окно, а не дописывает
+    /// дни за время, пока человек не нажимал кнопку.
     @discardableResult
     func syncElapsedToToday(now: Date = Date()) -> Bool {
-        guard streakAnchor != nil else { return false }
-        let days = elapsedDays(now: now)
-        guard days != currentStreak else { return false }
-        currentStreak = days
-        bestStreak = max(bestStreak, days)
-        persist()
-        return true
+        checkStreakStatus(now: now)
     }
 
     /// Сервер — источник после успешной загрузки. До этого на экране уже
     /// лежит кэш из UserDefaults.
     func applyServerProfile(currentDays: Int, best: Int, start: Date?, lastRelapse: Date?, lastFreeze: Date? = nil) {
-        streakAnchor = start
+        if let start { streakAnchor = start }
         lastRelapseAt = lastRelapse
         if let lastFreeze { lastStreakFreezeDate = lastFreeze }
         bestStreak = max(best, bestStreak)
-        currentStreak = start == nil ? currentDays : elapsedDays()
+        if currentDays > currentStreak {
+            currentStreak = currentDays
+        }
         bestStreak = max(bestStreak, currentStreak)
         persist()
     }
@@ -232,7 +273,7 @@ final class StreakManager {
     /// Срыв: рекорд забирает завершённую длину, отсчёт начинается заново.
     @discardableResult
     func recordRelapse(now: Date = Date()) -> Int {
-        let finished = elapsedDays(now: now)
+        let finished = currentStreak
         if finished > bestStreak {
             bestStreak = finished
         }

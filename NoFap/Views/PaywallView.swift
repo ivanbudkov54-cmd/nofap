@@ -14,8 +14,13 @@ struct PaywallView: View {
 
     @Environment(SubscriptionManager.self) private var subscriptions
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
 
-    @State private var yearlySelected = true
+    private enum Offer {
+        case yearly, monthly, lifetime
+    }
+
+    @State private var offer: Offer = .yearly
 
     var body: some View {
         NavigationStack {
@@ -27,7 +32,7 @@ struct PaywallView: View {
                         .fixedSize(horizontal: false, vertical: true)
 
                     if !contextReason.isEmpty {
-                        Text("Разблокируй: \(contextReason)")
+                        Text("Разблокируй: \(L10n.string(contextReason))")
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(Palette.marbleHigh)
                             .fixedSize(horizontal: false, vertical: true)
@@ -47,48 +52,65 @@ struct PaywallView: View {
                     planButton(
                         title: "Годовая подписка",
                         price: yearlyPrice,
-                        detail: "3 дня бесплатно",
+                        detail: RegionHelper.isRussia ? nil : "3 дня бесплатно",
                         badge: "Выгода 50%",
-                        selected: yearlySelected
-                    ) { yearlySelected = true }
+                        selected: offer == .yearly
+                    ) { offer = .yearly }
 
                     planButton(
                         title: "Месячная подписка",
                         price: monthlyPrice,
                         detail: nil,
                         badge: nil,
-                        selected: !yearlySelected
-                    ) { yearlySelected = false }
+                        selected: offer == .monthly
+                    ) { offer = .monthly }
 
-                    Button {
-                        Task {
-                            if yearlySelected {
-                                await subscriptions.purchaseYearly()
-                            } else {
-                                await subscriptions.purchaseMonthly()
+                    planButton(
+                        title: "Навсегда",
+                        price: lifetimePrice,
+                        detail: nil,
+                        badge: nil,
+                        selected: offer == .lifetime
+                    ) { offer = .lifetime }
+
+                    if RegionHelper.isRussia {
+                        Button {
+                            openURL(RegionHelper.russianPaymentURL)
+                        } label: {
+                            Text("Оплата российскими картами / СБП")
+                        }
+                        .buttonStyle(GoldButton())
+                    } else {
+                        Button {
+                            Task {
+                                switch offer {
+                                case .yearly: await subscriptions.purchaseYearly()
+                                case .monthly: await subscriptions.purchaseMonthly()
+                                case .lifetime: await subscriptions.purchaseLifetime()
+                                }
+                                if subscriptions.isPro { dismiss() }
                             }
-                            if subscriptions.isPro { dismiss() }
+                        } label: {
+                            if subscriptions.isBusy {
+                                ProgressView()
+                            } else {
+                                Text(offer == .yearly ? "Попробовать 3 дня бесплатно" : "Продолжить")
+                            }
                         }
-                    } label: {
-                        if subscriptions.isBusy {
-                            ProgressView()
-                        } else {
-                            Text(yearlySelected ? "Попробовать 3 дня бесплатно" : "Продолжить")
-                        }
-                    }
-                    .buttonStyle(GoldButton())
-                    .disabled(subscriptions.isBusy)
+                        .buttonStyle(GoldButton())
+                        .disabled(subscriptions.isBusy)
 
-                    Button("Восстановить покупки") {
-                        Task {
-                            await subscriptions.restorePurchases()
-                            if subscriptions.isPro { dismiss() }
+                        Button("Восстановить покупки") {
+                            Task {
+                                await subscriptions.restorePurchases()
+                                if subscriptions.isPro { dismiss() }
+                            }
                         }
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(Palette.ash)
+                        .frame(maxWidth: .infinity)
+                        .disabled(subscriptions.isBusy)
                     }
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(Palette.ash)
-                    .frame(maxWidth: .infinity)
-                    .disabled(subscriptions.isBusy)
 
                     if let lastError = subscriptions.lastError {
                         Text(lastError)
@@ -129,10 +151,19 @@ struct PaywallView: View {
         .presentationDragIndicator(.visible)
     }
 
-    private var yearlyPrice: String { subscriptions.yearlyPriceText }
-    private var monthlyPrice: String { subscriptions.monthlyPriceText }
+    private var yearlyPrice: String {
+        RegionHelper.isRussia ? "1 490 ₽" : "$29.99"
+    }
 
-    private func benefit(_ text: String) -> some View {
+    private var monthlyPrice: String {
+        RegionHelper.isRussia ? "299 ₽" : "$4.99"
+    }
+
+    private var lifetimePrice: String {
+        RegionHelper.isRussia ? "2 490 ₽" : "$49.99"
+    }
+
+    private func benefit(_ text: LocalizedStringKey) -> some View {
         HStack(spacing: 10) {
             Image(systemName: "checkmark.circle.fill")
                 .foregroundStyle(Palette.gold)
@@ -142,7 +173,7 @@ struct PaywallView: View {
         }
     }
 
-    private func planButton(title: String, price: String, detail: String?, badge: String?, selected: Bool, action: @escaping () -> Void) -> some View {
+    private func planButton(title: LocalizedStringKey, price: String, detail: LocalizedStringKey?, badge: LocalizedStringKey?, selected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {

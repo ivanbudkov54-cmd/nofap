@@ -399,17 +399,22 @@ private struct MonthSpan: View {
             NavigationStack { PartnerView() }
         }
         .sheet(isPresented: $showGoalEditor) {
-            VStack(spacing: 24) {
-                GoalPicker(selected: $goalDraft)
-
-                Button("Сохранить") {
-                    streak.setGoal(goalDraft)
-                    showGoalEditor = false
+            NavigationStack {
+                VStack(spacing: 16) {
+                    GoalPicker(selected: $goalDraft)
+                    Button("Сохранить") {
+                        streak.setGoal(goalDraft)
+                        showGoalEditor = false
+                    }
+                    .buttonStyle(GoldButton())
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 12)
                 }
-                .buttonStyle(GoldButton())
+                .background(Palette.obsidian.ignoresSafeArea())
+                .navigationTitle("Цель")
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .padding(24)
-            .presentationDetents([.height(420)])
+            .presentationDetents([.large])
             .presentationBackground(Palette.obsidian)
         }
     }

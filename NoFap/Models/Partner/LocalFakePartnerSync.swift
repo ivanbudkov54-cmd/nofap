@@ -102,28 +102,15 @@ final class LocalFakePartnerSync: PartnerSyncing {
         guard let created = defaults.object(forKey: Key.inviteCreated) as? Date else { return nil }
         guard Date().timeIntervalSince(created) >= acceptanceDelay else { return nil }
 
-        clearInvite()
-        let partner = Self.samplePartner()
-        store(partner)
-        return partner
+        return nil
+    }
+
+    func preview(code: String) async throws -> PartnerProfile {
+        throw PartnerSyncError.codeNotFound
     }
 
     func redeem(code: String) async throws -> PartnerProfile {
-        try await simulateCall()
-
-        if scenario == .codeNotFound { throw PartnerSyncError.codeNotFound }
-        guard storedPartner == nil else { throw PartnerSyncError.alreadyPaired }
-        guard PartnerCode.isComplete(code) else { throw PartnerSyncError.codeNotFound }
-
-        // Свой же код принимать нельзя — эту ветку тоже надо уметь посмотреть.
-        if let mine = defaults.string(forKey: Key.inviteCode), mine == code {
-            throw PartnerSyncError.codeIsMine
-        }
-
-        clearInvite()
-        let partner = Self.samplePartner()
-        store(partner)
-        return partner
+        throw PartnerSyncError.codeNotFound
     }
 
     func fetchPartner() async throws -> PartnerProfile? {
@@ -220,14 +207,6 @@ final class LocalFakePartnerSync: PartnerSyncing {
         }
     }
 
-    private static func samplePartner() -> PartnerProfile {
-        PartnerProfile(id: UUID().uuidString,
-                       nickname: String(localized: "Марк"),
-                       currentStreak: 12,
-                       goalDays: 30,
-                       lastCheckInDay: DayKey.today(),
-                       updatedAt: Date())
-    }
 
     private var storedPartner: PartnerProfile? {
         guard let data = defaults.data(forKey: Key.partner) else { return nil }

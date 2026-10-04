@@ -17,6 +17,7 @@ final class SubscriptionManager {
     static let entitlementID = "pro_access"
     static let yearlyProductID = "stopfap_yearly_pro"
     static let monthlyProductID = "stopfap_monthly_pro"
+    static let lifetimeProductID = "stopfap_lifetime_pro"
 
     private(set) var isPro = false
     var isProUser: Bool { isPro }
@@ -26,6 +27,7 @@ final class SubscriptionManager {
     private(set) var monthly: Package?
     private(set) var yearlyProduct: StoreProduct?
     private(set) var monthlyProduct: StoreProduct?
+    private(set) var lifetimeProduct: StoreProduct?
     var yearlyPriceText: String {
         yearly?.storeProduct.localizedPriceString
             ?? yearlyProduct?.localizedPriceString
@@ -83,14 +85,19 @@ final class SubscriptionManager {
                 ?? packages.first { $0.packageType == .annual }
             monthly = packages.first { $0.storeProduct.productIdentifier == Self.monthlyProductID }
                 ?? packages.first { $0.packageType == .monthly }
+            lifetimeProduct = packages.first { $0.storeProduct.productIdentifier == Self.lifetimeProductID }?.storeProduct
+                ?? packages.first { $0.packageType == .lifetime }?.storeProduct
         } catch {
             lastError = error.localizedDescription
         }
 
-        if yearly == nil || monthly == nil {
-            let products = await Purchases.shared.products([Self.yearlyProductID, Self.monthlyProductID])
+        if yearly == nil || monthly == nil || lifetimeProduct == nil {
+            let products = await Purchases.shared.products([
+                Self.yearlyProductID, Self.monthlyProductID, Self.lifetimeProductID
+            ])
             yearlyProduct = products.first { $0.productIdentifier == Self.yearlyProductID }
             monthlyProduct = products.first { $0.productIdentifier == Self.monthlyProductID }
+            lifetimeProduct = products.first { $0.productIdentifier == Self.lifetimeProductID }
         }
     }
 
@@ -113,6 +120,14 @@ final class SubscriptionManager {
             await purchase(product: yearlyProduct)
         } else {
             lastError = "Годовой тариф ещё не загрузился из StoreKit."
+        }
+    }
+
+    func purchaseLifetime() async {
+        if let lifetimeProduct {
+            await purchase(product: lifetimeProduct)
+        } else {
+            lastError = "Пожизненный тариф ещё не загрузился из StoreKit."
         }
     }
 

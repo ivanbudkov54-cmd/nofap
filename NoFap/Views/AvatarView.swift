@@ -8,241 +8,127 @@ import UIKit
 
 struct AvatarView: View {
 
-    @Environment(AvatarManager.self) private var avatar
-    @Environment(SubscriptionManager.self) private var subscriptions
+    @Environment(AvatarProgressManager.self) private var progress
     @State private var breathe = false
 
     var body: some View {
-        if subscriptions.isPro {
-            unlocked
-        } else {
-            locked
-        }
+        unlocked
     }
 
     private var unlocked: some View {
         ScrollView {
             VStack(spacing: 22) {
-                header
-                VStack(spacing: 22) {
-                    figure
-                    stageDots
-                    stats
-                }
-                .tourTarget(.avatar)
-                sources
+                rankHeader
+                figure
+                    .tourTarget(.avatar)
+                experienceBar
+                hall
             }
             .padding(.horizontal, 18)
             .padding(.bottom, 28)
         }
         .background(Palette.obsidian.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
-        .fullScreenCover(isPresented: evolutionPresented) {
-            AvatarEvolutionView(stage: avatar.pendingEvolution ?? avatar.stage) {
-                avatar.acknowledgeEvolution()
-            }
-        }
     }
 
-    private var locked: some View {
-        VStack(spacing: 22) {
-            Text("Уровень \(avatar.stage.rawValue): \(avatar.stage.title)")
-                .font(Face.display(26, .semibold))
-                .foregroundStyle(Palette.marbleHigh)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            figure
-                .blur(radius: 8)
-                .allowsHitTesting(false)
-                .tourTarget(.avatar)
-
-            VStack(spacing: 12) {
-                ProLockBadge()
-                Text("Аватар и его прокачка доступны в Pro")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Palette.marbleHigh)
-                    .multilineTextAlignment(.center)
-                Text("Сила, энергия и смена формы открываются вместе с подпиской.")
-                    .font(.system(size: 14))
-                    .foregroundStyle(Palette.ash)
-                    .multilineTextAlignment(.center)
-                Button("Открыть Pro") {
-                    subscriptions.checkProAccess(for: "Прокачка аватара и смена формы доступны в подписке Pro") {}
-                }
-                .buttonStyle(GoldButton())
-            }
-            .padding(.horizontal, 8)
-            Spacer(minLength: 0)
-        }
-        .padding(.horizontal, 18)
-        .padding(.top, 12)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(Palette.obsidian.ignoresSafeArea())
-    }
-
-    private var evolutionPresented: Binding<Bool> {
-        Binding(
-            get: { avatar.pendingEvolution != nil },
-            set: { if !$0 { avatar.acknowledgeEvolution() } }
-        )
-    }
-
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Уровень \(avatar.stage.rawValue): \(avatar.stage.title)")
-                .font(Face.display(26, .semibold))
-                .foregroundStyle(Palette.marbleHigh)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text("⚡️ \(avatar.currentPower) / \(nextLabel) Power")
-                .font(.system(size: 15, weight: .semibold))
+    private var rankHeader: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(rankLine)
+                .font(Face.display(24, .semibold))
                 .foregroundStyle(Palette.gold)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Palette.gold.opacity(0.14), in: Capsule())
+                .fixedSize(horizontal: false, vertical: true)
+            Text(l10n: progress.currentRank.summary)
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.marble)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 6)
     }
 
-    private var nextLabel: String {
-        if let next = avatar.stage.nextThreshold {
-            return "\(next)"
-        }
-        return "\(avatar.stage.floor)+"
+    private var rankLine: String {
+        String(format: L10n.string("Ранг %lld из 7 • %@"), progress.currentRank.rawValue, L10n.string(progress.currentRank.title))
     }
 
     private var figure: some View {
         ZStack {
-            Circle()
-                .fill(glowColor.opacity(0.18 + Double(avatar.currentEnergy) / 100 * 0.55))
-                .blur(radius: 18 + CGFloat(avatar.currentEnergy) * 0.22)
-                .frame(width: 210 + CGFloat(avatar.currentEnergy) * 0.6, height: 210 + CGFloat(avatar.currentEnergy) * 0.6)
-
-            AvatarFigureView(stage: avatar.stage)
-                .frame(height: 280)
-                .scaleEffect(breathe ? 1.03 : 1)
+            Ellipse()
+                .fill(Color.black.opacity(0.45))
+                .frame(width: 160, height: 28)
+                .blur(radius: 8)
+                .offset(y: 132)
+            SpartanFigureView(rank: progress.currentRank)
+                .frame(height: 300)
+                .scaleEffect(breathe ? 1.025 : 1)
+                .offset(y: breathe ? -6 : 0)
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 320)
+        .frame(height: 330)
         .onAppear {
-            withAnimation(.easeInOut(duration: 2.6).repeatForever(autoreverses: true)) {
+            withAnimation(.easeInOut(duration: 2.8).repeatForever(autoreverses: true)) {
                 breathe = true
             }
         }
     }
 
-    private var glowColor: Color {
-        switch avatar.stage {
-        case .exhausted: Color(hex: 0x8E93A3)
-        case .awakening: Color(hex: 0x9BB7E0)
-        case .athlete: Palette.goldLight
-        case .warrior: Palette.gold
-        case .titan: Color(hex: 0xFF7A2F)
-        }
-    }
-
-    private var stageDots: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 10) {
-                ForEach(AvatarStage.allCases) { stage in
-                    Circle()
-                        .fill(stage.rawValue <= avatar.stage.rawValue ? Palette.gold : Palette.vein)
-                        .frame(width: 10, height: 10)
+    private var experienceBar: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("\(progress.totalXP) / \(progress.nextLevelTargetXP) XP")
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Palette.marbleHigh)
+                Spacer()
+                if progress.nextRank == nil {
+                    Text("Максимальный ранг")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(Palette.gold)
                 }
             }
-            ProgressView(value: stageProgress)
-                .tint(Palette.gold)
-            Text(progressCaption)
-                .font(.system(size: 13))
-                .foregroundStyle(Palette.ash)
-        }
-    }
-
-    private var stageProgress: Double {
-        guard let next = avatar.stage.nextThreshold else { return 1 }
-        let span = Double(next - avatar.stage.floor)
-        guard span > 0 else { return 1 }
-        return min(1, max(0, Double(avatar.currentPower - avatar.stage.floor) / span))
-    }
-
-    private var progressCaption: String {
-        if let next = avatar.stage.nextThreshold {
-            return "До следующей формы: \(max(0, next - avatar.currentPower)) силы"
-        }
-        return "Максимальная форма"
-    }
-
-    private var stats: some View {
-        VStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Сила духа")
-                    Spacer()
-                    Text("\(avatar.currentPower)")
+            GeometryReader { proxy in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Color(hex: 0x2A2A30))
+                    Capsule()
+                        .fill(LinearGradient(colors: [Color(hex: 0xF6D48A), Palette.gold, Color(hex: 0xC48A1A)], startPoint: .leading, endPoint: .trailing))
+                        .frame(width: max(8, proxy.size.width * CGFloat(progress.levelProgress)))
                 }
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(Palette.marbleHigh)
-                ProgressView(value: stageProgress)
-                    .tint(Palette.gold)
-                    .animation(.easeInOut(duration: 0.45), value: avatar.currentPower)
             }
-            .padding(14)
-            .cardSurface()
-
-            HStack(spacing: 14) {
-                EnergyRing(percent: avatar.currentEnergy)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Текущая энергия")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Palette.marbleHigh)
-                    Text("\(avatar.currentEnergy)%")
-                        .font(Face.display(22, .semibold))
-                        .foregroundStyle(Palette.marbleHigh)
-                    Text("Держится на стрике, вызовах и статьях")
-                        .font(.system(size: 12))
-                        .foregroundStyle(Palette.ash)
-                }
-                Spacer(minLength: 0)
+            .frame(height: 12)
+            if progress.nextRank != nil {
+                Text(String(format: L10n.string("До следующего ранга осталось: %lld XP"), progress.xpRemainingToNextLevel))
+                    .font(.system(size: 13))
+                    .foregroundStyle(Palette.ash)
             }
-            .padding(14)
-            .cardSurface()
-        }
-    }
-
-    private var sources: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Источники роста")
-                .font(Face.display(18, .semibold))
-                .foregroundStyle(Palette.marbleHigh)
-            sourceRow("Стрик", value: avatar.streakPower)
-            sourceRow("Челленджей закрыто", value: avatar.challengePower)
-            sourceRow("Статей изучено", value: avatar.articlePower)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    private func sourceRow(_ title: String, value: Int) -> some View {
-        HStack {
-            Text(title)
-                .font(.system(size: 15))
-                .foregroundStyle(Palette.marble)
-            Spacer()
-            Text("+\(value) Power")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(Palette.gold)
         }
         .padding(14)
         .cardSurface()
+        .animation(.easeInOut(duration: 0.45), value: progress.totalXP)
+    }
+
+    private var hall: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Зал славы")
+                .font(Face.display(18, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(SpartanRank.allCases) { rank in
+                        SpartanHallCard(rank: rank, unlocked: rank <= progress.currentRank)
+                            .frame(width: 220)
+                    }
+                }
+                .scrollTargetLayout()
+            }
+            .scrollTargetBehavior(.viewAligned)
+        }
     }
 }
 
-struct AvatarFigureView: View {
-    let stage: AvatarStage
+struct SpartanFigureView: View {
+    let rank: SpartanRank
 
     var body: some View {
         Group {
-            if let image = UIImage(named: "avatar_stage_\(stage.rawValue)") {
+            if let image = UIImage(named: rank.assetName) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
@@ -253,136 +139,108 @@ struct AvatarFigureView: View {
     }
 
     private var procedural: some View {
-        let tone = skin
-        let width = shoulder
+        let bronze = Color(hex: UInt32(0x8C5A2B + rank.rawValue * 0x101008))
         return ZStack {
-            if stage == .exhausted {
-                Ellipse()
-                    .fill(Color(hex: 0x8E93A3).opacity(0.28))
-                    .frame(width: 150, height: 90)
-                    .blur(radius: 16)
-                    .offset(y: -20)
-            }
-            if stage == .titan {
-                ForEach(0..<6, id: \.self) { index in
-                    Circle()
-                        .fill(Color(hex: index.isMultiple(of: 2) ? 0xFF7A2F : 0xF0BC4F).opacity(0.55))
-                        .frame(width: 14, height: 14)
-                        .offset(x: CGFloat(index - 3) * 22, y: 90)
-                        .blur(radius: 1)
-                }
-            }
-
             Capsule()
-                .fill(tone)
-                .frame(width: 16, height: 78)
-                .offset(x: -width * 0.28, y: 78)
+                .fill(bronze)
+                .frame(width: 18 + CGFloat(rank.rawValue), height: 86)
+                .offset(x: -28, y: 78)
             Capsule()
-                .fill(tone)
-                .frame(width: 16, height: 78)
-                .offset(x: width * 0.28, y: 78)
-
-            Capsule()
-                .fill(tone)
-                .frame(width: 18, height: 70)
-                .rotationEffect(.degrees(stage == .exhausted ? 28 : 18))
-                .offset(x: -width * 0.55, y: 8)
-            Capsule()
-                .fill(tone)
-                .frame(width: 18, height: 70)
-                .rotationEffect(.degrees(stage == .exhausted ? -28 : -18))
-                .offset(x: width * 0.55, y: 8)
-
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(tone)
-                .frame(width: width, height: stage == .exhausted ? 108 : 124)
+                .fill(bronze)
+                .frame(width: 18 + CGFloat(rank.rawValue), height: 86)
+                .offset(x: 28, y: 78)
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .fill(LinearGradient(colors: [Color(hex: 0xF0BC4F), bronze], startPoint: .top, endPoint: .bottom))
+                .frame(width: 64 + CGFloat(rank.rawValue) * 6, height: 120)
                 .overlay {
-                    if stage.rawValue >= 3 {
-                        RoundedRectangle(cornerRadius: 28, style: .continuous)
-                            .strokeBorder(Palette.gold.opacity(stage == .titan ? 0.9 : 0.45), lineWidth: 2)
-                    }
+                    RoundedRectangle(cornerRadius: 26, style: .continuous)
+                        .strokeBorder(Palette.gold.opacity(0.35 + Double(rank.rawValue) * 0.08), lineWidth: 2)
                 }
-
             Circle()
-                .fill(tone)
-                .frame(width: 58, height: 58)
-                .offset(y: stage == .exhausted ? -62 : -84)
-                .overlay {
-                    HStack(spacing: 10) {
-                        Circle().fill(Color(hex: 0x1A1405).opacity(0.75)).frame(width: 5, height: 5)
-                        Circle().fill(Color(hex: 0x1A1405).opacity(0.75)).frame(width: 5, height: 5)
-                    }
-                    .offset(y: stage == .exhausted ? -58 : -82)
-                }
-        }
-        .rotationEffect(.degrees(stage == .exhausted ? 8 : (stage == .awakening ? 3 : 0)))
-        .offset(y: stage == .exhausted ? 18 : 0)
-    }
-
-    private var skin: Color {
-        switch stage {
-        case .exhausted: Color(hex: 0xA7ADBA)
-        case .awakening: Color(hex: 0xC9D0DE)
-        case .athlete: Color(hex: 0xE7C99A)
-        case .warrior: Color(hex: 0xF0BC4F)
-        case .titan: Color(hex: 0xF6D48A)
-        }
-    }
-
-    private var shoulder: CGFloat {
-        switch stage {
-        case .exhausted: 62
-        case .awakening: 72
-        case .athlete: 84
-        case .warrior: 96
-        case .titan: 108
+                .fill(Color(hex: 0xE7C99A))
+                .frame(width: 54, height: 54)
+                .offset(y: -86)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color(hex: 0xC48A1A))
+                .frame(width: 62, height: 18)
+                .offset(y: -108)
+            Capsule()
+                .fill(Palette.gold)
+                .frame(width: 8, height: 16 + CGFloat(rank.rawValue) * 4)
+                .offset(y: -124)
         }
     }
 }
 
-private struct EnergyRing: View {
-    let percent: Int
+private struct SpartanHallCard: View {
+    let rank: SpartanRank
+    let unlocked: Bool
 
     var body: some View {
-        ZStack {
-            Circle()
-                .stroke(Palette.vein, lineWidth: 8)
-            Circle()
-                .trim(from: 0, to: Double(percent) / 100)
-                .stroke(Palette.gold, style: StrokeStyle(lineWidth: 8, lineCap: .round))
-                .rotationEffect(.degrees(-90))
-                .animation(.easeInOut(duration: 0.45), value: percent)
-            Text("\(percent)")
-                .font(.system(size: 13, weight: .bold, design: .rounded))
-                .foregroundStyle(Palette.marbleHigh)
+        VStack(alignment: .leading, spacing: 10) {
+            ZStack {
+                SpartanFigureView(rank: rank)
+                    .frame(height: 150)
+                    .opacity(unlocked ? 1 : 0.15)
+                    .overlay {
+                        if !unlocked {
+                            LinearGradient(colors: [Color.black.opacity(0.15), Color.black.opacity(0.72)], startPoint: .top, endPoint: .bottom)
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 22, weight: .semibold))
+                                .foregroundStyle(Palette.marbleHigh)
+                        }
+                    }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 160)
+            Text(l10n: rank.title)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(unlocked ? Palette.gold : Palette.ash)
+                .lineLimit(2)
+            Text(unlocked ? L10n.string(rank.summary) : String(format: L10n.string("Откроется на %lld XP"), rank.requiredXP))
+                .font(.system(size: 12))
+                .foregroundStyle(Palette.ash)
+                .lineLimit(3)
         }
-        .frame(width: 72, height: 72)
+        .padding(12)
+        .frame(maxHeight: .infinity, alignment: .top)
+        .cardSurface()
     }
 }
 
-struct AvatarEvolutionView: View {
-    let stage: AvatarStage
+struct SpartanLevelUpView: View {
+    let rank: SpartanRank
     let onClose: () -> Void
+    @State private var appear = false
 
     var body: some View {
         ZStack {
             Palette.obsidian.ignoresSafeArea()
+            ForEach(0..<14, id: \.self) { index in
+                Circle()
+                    .fill(index.isMultiple(of: 2) ? Palette.gold : Color(hex: 0xF6D48A))
+                    .frame(width: 8, height: 8)
+                    .offset(x: appear ? CGFloat((index - 7) * 18) : 0, y: appear ? CGFloat(-40 - (index % 5) * 28) : 40)
+                    .opacity(appear ? 0.15 : 0.9)
+            }
             VStack(spacing: 18) {
-                AvatarFigureView(stage: stage)
-                    .frame(height: 240)
-                Text("Твой аватар эволюционировал!")
+                Text("НОВЫЙ СПАРТАНСКИЙ РАНГ РАЗБЛОКИРОВАН!")
                     .font(Face.display(26, .semibold))
-                    .foregroundStyle(Palette.marbleHigh)
+                    .foregroundStyle(Palette.gold)
                     .multilineTextAlignment(.center)
-                Text("Новая физическая форма разблокирована 🔥")
-                    .font(.system(size: 16))
+                SpartanFigureView(rank: rank)
+                    .frame(height: 260)
+                    .scaleEffect(appear ? 1 : 0.72)
+                    .shadow(color: Palette.gold.opacity(0.45), radius: appear ? 24 : 0)
+                Text(l10n: rank.title)
+                    .font(Face.display(22, .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                Text(l10n: rank.summary)
+                    .font(.system(size: 15))
                     .foregroundStyle(Palette.marble)
                     .multilineTextAlignment(.center)
-                Text("Уровень \(stage.rawValue): \(stage.title)")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(Palette.gold)
                 Button(action: onClose) {
-                    Text("Продолжить")
+                    Text("Продолжить путь воина")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color(hex: 0x1A1405))
                         .frame(maxWidth: .infinity)
@@ -394,19 +252,24 @@ struct AvatarEvolutionView: View {
             .padding(24)
         }
         .onAppear {
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            withAnimation(.spring(response: 0.7, dampingFraction: 0.72)) {
+                appear = true
+            }
         }
     }
 }
 
 struct ArticleStudiedBar: View {
     let articleID: String
+    var isScience: Bool = false
 
+    @Environment(AvatarProgressManager.self) private var progress
     @Environment(AvatarManager.self) private var avatar
 
     var body: some View {
-        let studied = avatar.hasReadArticle(id: articleID)
+        let studied = progress.hasReadArticle(id: articleID) || avatar.hasReadArticle(id: articleID)
         Button {
+            progress.rewardArticleRead(articleId: articleID, isScience: isScience)
             avatar.addPowerForArticle(id: articleID)
         } label: {
             Text(studied ? "Уже изучена" : "Статья изучена")

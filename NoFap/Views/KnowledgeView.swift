@@ -2,8 +2,7 @@
 //  KnowledgeView.swift
 //  NoFap
 //
-//  «База знаний» из трёх вкладок: путь по дням стрика, симулятор тяги и
-//  статьи по категориям.
+//  «База знаний» из двух вкладок: путь по дням стрика и статьи по категориям.
 //
 
 import SwiftUI
@@ -12,7 +11,6 @@ struct KnowledgeView: View {
 
     private enum Tab: String, CaseIterable, Identifiable {
         case journey = "My Journey"
-        case simulator = "Urge Simulator"
         case deepDive = "Deep Dive"
 
         var id: String { rawValue }
@@ -87,8 +85,6 @@ struct KnowledgeView: View {
         switch selected {
         case .journey:
             MyJourneyView()
-        case .simulator:
-            UrgeSimulatorView()
         case .deepDive:
             DeepDiveView()
         }

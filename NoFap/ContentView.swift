@@ -14,6 +14,7 @@ struct ContentView: View {
     @Environment(Backend.self) private var backend
     @Environment(SubscriptionManager.self) private var subscriptions
     @Environment(JournalManager.self) private var journal
+    @Environment(BuddyManager.self) private var buddies
     @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -29,11 +30,19 @@ struct ContentView: View {
                 RootView()
             }
         }
+        .sheet(isPresented: Binding(
+            get: { buddies.pendingBuddyCode != nil },
+            set: { if !$0 { buddies.pendingBuddyCode = nil } }
+        )) {
+            PairBuddyConfirmationSheet()
+        }
         .task {
             blocking.refresh()
             await reminder.refresh()
             await partner.refresh()
+            streak.checkStreakStatus()
             await backend.bootstrap(streak: streak, journal: journal)
+            await syncStreakWarnings()
             if let userId = backend.currentUserId() {
                 await subscriptions.identify(userId.uuidString)
             } else {
@@ -53,12 +62,24 @@ struct ContentView: View {
             Task {
                 await partner.push(from: streak)
                 await backend.pushStreak(from: streak)
+                await syncStreakWarnings()
             }
         }
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
-            streak.syncElapsedToToday()
-            Task { await partner.refresh() }
+            streak.checkStreakStatus()
+            Task {
+                await partner.refresh()
+                await syncStreakWarnings()
+            }
+        }
+    }
+
+    private func syncStreakWarnings() async {
+        if streak.currentStreak == 0 {
+            reminder.cancelStreakWarnings()
+        } else if let deadline = streak.streakDeadlineDate {
+            await reminder.rescheduleStreakWarnings(deadline: deadline)
         }
     }
 }

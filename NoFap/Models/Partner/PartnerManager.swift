@@ -30,6 +30,9 @@ final class PartnerManager {
 
     private(set) var messages: [PartnerMessage] = []
     private(set) var isSending = false
+    private(set) var foundPartner: PartnerProfile?
+    var codeError: String?
+    private var pendingCode: String?
 
     private let sync: any PartnerSyncing
     private let defaults: UserDefaults
@@ -87,10 +90,11 @@ final class PartnerManager {
                 state = .solo
             }
         } catch let error as PartnerSyncError {
-            // Разрыв связи с той стороны — не ошибка, а нормальный исход.
             state = error == .partnerGone ? .solo : .failed(error.message)
+        } catch let error as SupabaseError {
+            state = .failed(error.errorDescription ?? PartnerSyncError.network.message)
         } catch {
-            state = .failed(PartnerSyncError.network.message)
+            state = .failed((error as? LocalizedError)?.errorDescription ?? PartnerSyncError.network.message)
         }
     }
 
@@ -104,7 +108,7 @@ final class PartnerManager {
         } catch let error as PartnerSyncError {
             state = .failed(error.message)
         } catch {
-            state = .failed(PartnerSyncError.network.message)
+            state = .failed(Self.pairingMessage(from: error))
         }
     }
 
@@ -114,18 +118,51 @@ final class PartnerManager {
         state = .solo
     }
 
-    func redeem(code: String) async {
+    func preview(code: String) async {
+        isBusy = true
+        defer { isBusy = false }
+        codeError = nil
+        foundPartner = nil
+        let normalized = PartnerCode.normalize(code)
+        pendingCode = normalized
+        do {
+            foundPartner = try await sync.preview(code: normalized)
+        } catch {
+            codeError = Self.pairingMessage(from: error)
+        }
+    }
+
+    func confirmRedeem() async {
+        guard let code = pendingCode else { return }
         isBusy = true
         defer { isBusy = false }
         do {
-            let profile = try await sync.redeem(code: PartnerCode.normalize(code))
+            let profile = try await sync.redeem(code: code)
             stopPolling()
+            foundPartner = nil
+            pendingCode = nil
+            codeError = nil
             state = .paired(profile)
-        } catch let error as PartnerSyncError {
-            state = .failed(error.message)
         } catch {
-            state = .failed(PartnerSyncError.network.message)
+            codeError = Self.pairingMessage(from: error)
         }
+    }
+
+    private static func pairingMessage(from error: Error) -> String {
+        if let buddy = error as? BuddyError, let text = buddy.errorDescription { return text }
+        if let partner = error as? PartnerSyncError { return partner.message }
+        let text = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+        let lower = text.lowercased()
+        if lower.contains("не найден") || lower.contains("not found") {
+            return BuddyError.userNotFound.errorDescription ?? text
+        }
+        if lower.contains("самим собой") || lower.contains("self") {
+            return BuddyError.cannotPairWithSelf.errorDescription ?? text
+        }
+        if lower.contains("уже") || lower.contains("paired") {
+            return BuddyError.buddyAlreadyPaired.errorDescription ?? text
+        }
+        return text
     }
 
     func unpair() async {

@@ -10,15 +10,18 @@ struct HomeView: View {
     @Environment(BlockingManager.self) private var blocking
     @Environment(StreakManager.self) private var streak
     @Environment(AvatarManager.self) private var avatar
+    @Environment(AvatarProgressManager.self) private var progress
     @Environment(PartnerManager.self) private var partner
+    @Environment(BuddyManager.self) private var buddies
     @Environment(Backend.self) private var backend
     @Environment(AppRouter.self) private var router
     @Environment(SubscriptionManager.self) private var subscriptions
+    @Environment(StreakGoalManager.self) private var goals
+    @Environment(JournalManager.self) private var journal
 
     @State private var showRelapse = false
     @State private var showPartner = false
     @State private var showGoalEditor = false
-    @State private var showGoalReached = false
     @State private var showSOS = false
     @State private var showSettings = false
     @AppStorage("sosNotifyPartner") private var notifyPartner = false
@@ -39,6 +42,7 @@ struct HomeView: View {
                     summitCard
                         .tourTarget(.homeTimer)
                     quoteCard
+                    BuddyCard()
                     if !subscriptions.isPro {
                         weeklyReport
                     }
@@ -79,11 +83,33 @@ struct HomeView: View {
                  ? "Твой прогресс сохранится, но тебе необходимо честно разобрать причину срыва в дневнике прямо сейчас."
                  : "Защита стрика в этом месяце уже использована. Стрик будет сброшен.")
         }
-        .onChange(of: streak.justReachedGoal) { _, reached in
-            if reached {
-                newGoalDraft = streak.personalGoalDays
-                showGoalReached = true
-            }
+        .alert(
+            "Стрик",
+            isPresented: Binding(
+                get: { streak.streakResetNotice != nil },
+                set: { if !$0 { streak.acknowledgeStreakReset() } }
+            )
+        ) {
+            Button("Хорошо", role: .cancel) {}
+        } message: {
+            Text(streak.streakResetNotice ?? "")
+        }
+        .onAppear { celebrateIfNeeded() }
+        .onChange(of: streak.currentStreak) { _, _ in celebrateIfNeeded() }
+        .fullScreenCover(isPresented: Bindable(goals).showVictoryScreen) {
+            GoalVictoryView(
+                targetDays: streak.personalGoalDays,
+                onRaise: {
+                    newGoalDraft = goals.nextTarget(after: streak.personalGoalDays)
+                    goals.showVictoryScreen = false
+                    showGoalEditor = true
+                },
+                onJournal: {
+                    saveVictoryNote()
+                    goals.showVictoryScreen = false
+                },
+                onStay: { goals.showVictoryScreen = false }
+            )
         }
         .sheet(isPresented: $showPartner) {
             NavigationStack { PartnerView() }
@@ -92,41 +118,22 @@ struct HomeView: View {
             NavigationStack { SettingsView() }
         }
         .sheet(isPresented: $showGoalEditor) {
-            VStack(spacing: 24) {
-                GoalPicker(selected: $newGoalDraft)
-                Button("Сохранить") {
-                    streak.setGoal(newGoalDraft)
-                    showGoalEditor = false
+            NavigationStack {
+                VStack(spacing: 16) {
+                    GoalPicker(selected: $newGoalDraft)
+                    Button("Сохранить") {
+                        streak.setGoal(newGoalDraft)
+                        showGoalEditor = false
+                    }
+                    .buttonStyle(GoldButton())
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 12)
                 }
-                .buttonStyle(GoldButton())
+                .background(Palette.obsidian.ignoresSafeArea())
+                .navigationTitle("Цель")
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .padding(24)
-            .presentationDetents([.height(420)])
-            .presentationBackground(Palette.obsidian)
-        }
-        .sheet(isPresented: $showGoalReached, onDismiss: { streak.acknowledgeGoalReached() }) {
-            VStack(spacing: 20) {
-                Text("Цель достигнута!")
-                    .font(Face.display(26, .semibold))
-                    .foregroundStyle(.goldFill)
-
-                Text("Ты продержался \(streak.personalGoalDays.daysCount) — именно столько сам себе и поставил. Поставь себе новую цель.")
-                    .font(.system(size: 15))
-                    .foregroundStyle(Palette.ash)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 8)
-
-                GoalPicker(selected: $newGoalDraft)
-
-                Button("Продолжить") {
-                    streak.setGoal(newGoalDraft)
-                    showGoalReached = false
-                }
-                .buttonStyle(GoldButton())
-            }
-            .padding(24)
-            .presentationDetents([.height(520)])
+            .presentationDetents([.large])
             .presentationBackground(Palette.obsidian)
         }
         .sheet(isPresented: $showSOS, onDismiss: { sosPath = [] }) {
@@ -157,6 +164,24 @@ struct HomeView: View {
 
     private var greetingNote: LocalizedStringResource {
         blocking.isActive ? "Защита стоит. Ты здесь, чтобы стать лучше." : "Ты здесь, чтобы стать лучше."
+    }
+
+    private func celebrateIfNeeded() {
+        goals.checkGoalCompletion(currentStreak: streak.currentStreak, targetDays: streak.personalGoalDays)
+        if goals.showVictoryScreen {
+            streak.acknowledgeGoalReached()
+        }
+    }
+
+    private func saveVictoryNote() {
+        let days = streak.personalGoalDays
+        let title = "🏆 Победа: Рубеж \(days) дней взят"
+        let note = """
+        #Победа
+        Сегодня я закрыл поставленную цель в \(days) дней чистоты. Моё главное осознание на этом этапе: импульс больше не управляет моим поведением. Я чувствую высокий уровень энергии и контроль над телом. Двигаюсь дальше.
+        """
+        journal.addEntry(note, promptQuestion: title)
+        avatar.addPowerForVictory()
     }
 
     // MARK: - Шапка
@@ -234,7 +259,7 @@ struct HomeView: View {
                             newGoalDraft = streak.personalGoalDays
                             showGoalEditor = true
                         } label: {
-                            Text("из \(streak.personalGoalDays) дней")
+                            Text("День \(streak.currentStreak) из \(streak.personalGoalDays)")
                                 .font(Face.display(w * 0.034))
                                 .foregroundStyle(Palette.marbleHigh)
                                 .shadow(color: Palette.goldLight.opacity(0.5), radius: 4)
@@ -314,19 +339,27 @@ struct HomeView: View {
         // SOS остаётся на экране в любом состоянии: тяга не спрашивает,
         // отмечался ли человек сегодня.
         VStack(spacing: 14) {
-            TimelineView(.periodic(from: .now, by: 1)) { context in
-                if let remaining = streak.victoryCountdownRemaining(at: context.date) {
-                    victoryTimer(remaining)
+            TimelineView(.periodic(from: .now, by: 30)) { context in
+                if let remaining = streak.nextCheckInRemaining(at: context.date) {
+                    nextCheckInTimer(remaining)
                 } else {
-                    Button("Я ДЕРЖУСЬ") {
-                        withAnimation(.snappy(duration: 0.25)) {
-                            if streak.checkIn(clean: true) {
-                                avatar.addPowerForStreak()
+                    VStack(spacing: 10) {
+                        if let hours = streak.hoursUntilDeadline(at: context.date) {
+                            Text("До сгорания стрика: \(hours) ч.")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundStyle(Palette.ash)
+                                .contentTransition(.numericText())
+                        }
+                        Button("Я ДЕРЖУСЬ") {
+                            withAnimation(.snappy(duration: 0.25)) {
+                                if streak.checkIn(clean: true) {
+                                    avatar.addPowerForStreak()
+                                    progress.rewardStreakDaily(streakDay: streak.currentStreak)
+                                }
                             }
                         }
+                        .buttonStyle(GoldButton())
                     }
-                    .buttonStyle(GoldButton())
-                    .padding(.top, 6)
                 }
             }
             .tourTarget(.homeTimer)
@@ -338,6 +371,31 @@ struct HomeView: View {
             Button("Сообщить о срыве") { showRelapse = true }
                 .buttonStyle(StoneButton())
         }
+    }
+
+    private func nextCheckInTimer(_ remaining: TimeInterval) -> some View {
+        VStack(spacing: 8) {
+            Text("До следующего «Я держусь»:")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Palette.ash)
+                .multilineTextAlignment(.center)
+            Text(hoursAndMinutes(remaining))
+                .font(Face.display(28, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+                .monospacedDigit()
+                .contentTransition(.numericText(countsDown: true))
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 16)
+        .padding(.horizontal, 12)
+        .cardSurface()
+    }
+
+    private func hoursAndMinutes(_ interval: TimeInterval) -> String {
+        let total = max(0, Int(interval.rounded(.down)))
+        let hours = total / 3600
+        let minutes = (total % 3600) / 60
+        return String(format: "%02d:%02d", hours, minutes)
     }
 
     private func victoryTimer(_ remaining: TimeInterval) -> some View {
@@ -371,6 +429,7 @@ struct HomeView: View {
     // MARK: - SOS
 
     private var sosMenu: some View {
+        ScrollView {
         VStack(spacing: 22) {
             Image(systemName: "hand.raised.fill")
                 .font(.system(size: 34))
@@ -409,6 +468,7 @@ struct HomeView: View {
         }
         .padding(.horizontal, 24)
         .padding(.bottom, 24)
+        }
     }
 
     private var partnerSOSToggle: some View {
@@ -429,7 +489,10 @@ struct HomeView: View {
                     if enabled {
                         subscriptions.checkProAccess(for: "Оповещение напарника в моменты риска доступно в тарифе Pro") {
                             notifyPartner = true
-                            Task { _ = await partner.send("Мне нужна поддержка: я нажал SOS.", kind: .sos) }
+                            Task {
+                                _ = await partner.send("Мне нужна поддержка: я нажал SOS.", kind: .sos)
+                                await buddies.sendSOSAlert(isPro: true)
+                            }
                         }
                     } else {
                         notifyPartner = false
@@ -548,80 +611,37 @@ struct HomeView: View {
     }
 
     private var exerciseView: some View {
-        VStack(spacing: 22) {
-            Image(systemName: "figure.strengthtraining.traditional")
-                .font(.system(size: 32))
-                .foregroundStyle(.red)
-                .padding(.top, 8)
-
-            Text("Физическое упражнение")
-                .font(Face.display(22, .semibold))
-                .foregroundStyle(Palette.marbleHigh)
-
-            Text("Тело переключает мозг быстрее, чем уговоры. Сделай один из вариантов прямо сейчас.")
-                .font(.system(size: 15))
-                .foregroundStyle(Palette.ash)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, 12)
-
-            VStack(alignment: .leading, spacing: 10) {
-                bulletTip("20 приседаний")
-                bulletTip("15 отжиманий")
-                bulletTip("Бег на месте 2 минуты")
-                bulletTip("Холодная вода на лицо или запястья")
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(16)
-            .cardSurface()
-            .padding(.horizontal, 4)
-
-            Spacer()
-
-            Button("Сделал, стало легче") { sosPath.append(.survey) }
-                .buttonStyle(GoldButton())
-        }
-        .padding(.horizontal, 24)
-        .padding(.bottom, 24)
+        SOSPhysicalExercisesView(onHome: { showSOS = false })
     }
 
     private var motivationView: some View {
         let reasons = UserDefaults.standard.stringArray(forKey: "selectedReasons") ?? []
 
-        return VStack(spacing: 22) {
-            Image(systemName: "quote.opening")
-                .font(.system(size: 32))
-                .foregroundStyle(.red)
-                .padding(.top, 8)
+        return ScrollView {
+            VStack(spacing: 22) {
+                Text("Мотивация")
+                    .font(Face.display(26, .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 8)
 
-            Text("Вспомни, зачем")
-                .font(Face.display(22, .semibold))
-                .foregroundStyle(Palette.marbleHigh)
+                SOSMotivationView()
 
-            Text("«\(Motivations.today())»")
-                .font(Face.quote(17))
-                .foregroundStyle(Palette.marble)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, 12)
-
-            if !reasons.isEmpty {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(reasons, id: \.self) { bulletTip($0) }
+                if !reasons.isEmpty {
+                    VStack(alignment: .leading, spacing: 10) {
+                        ForEach(reasons, id: \.self) { bulletTip($0) }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(16)
+                    .cardSurface()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(16)
-                .cardSurface()
-                .padding(.horizontal, 4)
+
+                Button("Держусь дальше") { sosPath.append(.survey) }
+                    .buttonStyle(GoldButton())
             }
-
-            Spacer()
-
-            Button("Держусь дальше") { sosPath.append(.survey) }
-                .buttonStyle(GoldButton())
+            .padding(.horizontal, 24)
+            .padding(.bottom, 24)
         }
-        .padding(.horizontal, 24)
-        .padding(.bottom, 24)
     }
 
     private var triggerSurvey: some View {

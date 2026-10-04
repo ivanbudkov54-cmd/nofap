@@ -13,6 +13,7 @@ struct RootView: View {
     @Environment(AppRouter.self) private var router
     @Environment(SubscriptionManager.self) private var subscriptions
     @Environment(AppTourManager.self) private var tour
+    @Environment(AvatarProgressManager.self) private var progress
     @Environment(\.colorScheme) private var colorScheme
     @State private var toastVisible = false
 
@@ -36,9 +37,12 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: Bindable(router).selectedTab) {
-            HomeView()
-                .tabItem { Label("Главная", systemImage: "house.fill") }
-                .tag(0)
+            NavigationStack {
+                HomeView()
+                    .toolbar(.hidden, for: .navigationBar)
+            }
+            .tabItem { Label("Главная", systemImage: "house.fill") }
+            .tag(0)
 
             NavigationStack {
                 DiaryView()
@@ -68,6 +72,11 @@ struct RootView: View {
         .coordinateSpace(name: TourSpaceName.name)
         .onPreferenceChange(TourFramesKey.self) { tour.setFrames($0) }
         .task { tour.startTourIfNeeded() }
+        .fullScreenCover(isPresented: Bindable(progress).showLevelUpModal) {
+            SpartanLevelUpView(rank: progress.unlockedRank) {
+                progress.showLevelUpModal = false
+            }
+        }
         .sheet(isPresented: Bindable(subscriptions).shouldShowPaywall) {
             PaywallView(contextReason: subscriptions.paywallContextReason)
         }

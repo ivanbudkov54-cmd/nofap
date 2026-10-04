@@ -9,6 +9,7 @@ struct ChallengesView: View {
 
     @Environment(ChallengeManager.self) private var challenges
     @Environment(AvatarManager.self) private var avatar
+    @Environment(AvatarProgressManager.self) private var progress
     @State private var confirmComplete = false
 
     @Environment(AppTourManager.self) private var tour
@@ -47,8 +48,10 @@ struct ChallengesView: View {
             titleVisibility: .visible
         ) {
             Button("Выполнил вызов") {
+                let social = challenges.current.category == "Социальная смелость" || challenges.current.difficulty == .hard
                 challenges.completeCurrentChallenge()
                 avatar.addPowerForChallenge()
+                progress.rewardChallengeCompleted(isSocial: social)
             }
             Button("Отмена", role: .cancel) {}
         }
@@ -69,7 +72,7 @@ struct ChallengesView: View {
 
     private func stat(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(title)
+            Text(l10n: title)
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(Palette.ash)
             Text(value)
@@ -85,11 +88,11 @@ struct ChallengesView: View {
         let item = challenges.current
         return VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text(item.category)
+                Text(l10n: item.category)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Palette.marble)
                 Spacer()
-                Text(item.difficulty.rawValue)
+                Text(l10n: item.difficulty.rawValue)
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(difficultyColor(item.difficulty))
                     .padding(.horizontal, 10)
@@ -97,16 +100,16 @@ struct ChallengesView: View {
                     .background(difficultyColor(item.difficulty).opacity(0.16), in: Capsule())
             }
 
-            Text(item.title)
+            Text(l10n: item.title)
                 .font(Face.display(22, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(item.subtitle)
+            Text(l10n: item.subtitle)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(Palette.gold)
 
-            Text(item.detail)
+            Text(l10n: item.detail)
                 .font(.system(size: 15))
                 .foregroundStyle(Palette.ash)
                 .fixedSize(horizontal: false, vertical: true)
@@ -145,10 +148,10 @@ struct ChallengesView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(item.title)
+                            Text(l10n: item.title)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundStyle(Palette.marbleHigh)
-                            Text(item.subtitle)
+                            Text(l10n: item.subtitle)
                                 .font(.system(size: 13))
                                 .foregroundStyle(Palette.ash)
                         }

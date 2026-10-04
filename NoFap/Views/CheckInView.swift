@@ -148,7 +148,7 @@ struct CheckInView: View {
     ) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Text(title.uppercased())
+                Text(L10n.string(title).localizedUppercase)
                     .font(.system(size: 12, weight: .semibold))
                     .tracking(1.2)
                     .foregroundStyle(Ink.textSecondary)

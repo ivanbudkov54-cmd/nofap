@@ -54,11 +54,16 @@ struct DeepDiveView: View {
     }
 
     private func open(_ article: Article) {
-        let reason = "Научные исследования и механизмы работы мозга доступны подписчикам Pro"
-        if article.category != .neuroscience {
-            openedArticle = article
+        if article.isProExclusive {
+            subscriptions.checkProAccess(for: "Научные разборы биохимии доступны в тарифе Pro") {
+                openedArticle = article
+            }
+        } else if article.category == .neuroscience {
+            subscriptions.checkProAccess(for: "Научные исследования и механизмы работы мозга доступны подписчикам Pro") {
+                openedArticle = article
+            }
         } else {
-            subscriptions.checkProAccess(for: reason) { openedArticle = article }
+            openedArticle = article
         }
     }
 
@@ -117,17 +122,13 @@ struct DeepDiveView: View {
                     .foregroundStyle(Palette.ash)
                     .lineLimit(2)
 
-                HStack(spacing: 6) {
-                    Text(article.category.rawValue)
-                    Text("·")
-                    Text(article.readTime)
-                }
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(Palette.gold)
-                .padding(.top, 2)
+                Text(article.category.rawValue)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(Palette.gold)
+                    .padding(.top, 2)
             }
 
-            if article.category == .neuroscience && !subscriptions.isPro {
+            if (article.isProExclusive || article.category == .neuroscience) && !subscriptions.isPro {
                 ProLockBadge()
             }
 

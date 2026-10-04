@@ -24,7 +24,11 @@ struct NoFapApp: App {
     @State private var challenges = ChallengeManager()
     @State private var contrast = ContrastExperimentManager()
     @State private var avatar = AvatarManager()
+    @State private var avatarProgress = AvatarProgressManager()
     @State private var tour = AppTourManager()
+    @State private var buddies = BuddyManager()
+    @State private var squads = SquadManager()
+    @State private var goals = StreakGoalManager()
 
     init() {
         Face.register()
@@ -50,8 +54,15 @@ struct NoFapApp: App {
                 .environment(challenges)
                 .environment(contrast)
                 .environment(avatar)
+                .environment(avatarProgress)
                 .environment(tour)
+                .environment(buddies)
+                .environment(squads)
+                .environment(goals)
                 .preferredColorScheme(theme.theme.colorScheme)
+                .onOpenURL { url in
+                    buddies.handleIncomingURL(url)
+                }
         }
     }
 }

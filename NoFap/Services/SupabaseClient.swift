@@ -143,8 +143,13 @@ final class SupabaseClient {
             return
         }
         if sessionBox.session != nil {
-            try await refresh()
-            return
+            do {
+                try await refresh()
+                return
+            } catch {
+                supabaseLog("token refresh failed, starting a new session")
+                sessionBox.session = nil
+            }
         }
         try await signInAnonymously()
     }
@@ -168,6 +173,200 @@ final class SupabaseClient {
         supabaseLog("account deleted, session cleared user_id=\(id)")
     }
 
+    func ensureInviteCode() async throws -> UserProfile {
+        try await ensureInviteCodeDirect()
+    }
+
+    func fetchCurrentBuddy() async throws -> UserProfile? {
+        let me = try await loadOwnProfile()
+        guard let buddyId = me?.buddyId else { return nil }
+        return try await loadProfile(id: buddyId)
+    }
+
+    func sendBuddyInvite() async throws -> String {
+        let data = try await rpc("create_buddy_invite", body: Data("{}".utf8))
+        return try decoder.decode(String.self, from: data)
+    }
+
+    func acceptBuddyInvite(code: String) async throws {
+        let body = try JSONSerialization.data(withJSONObject: ["invite_code": code])
+        _ = try await rpc("accept_buddy_invite", body: body)
+    }
+
+    func lookupBuddy(code: String) async throws -> UserProfile {
+        let encoded = code.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? code
+        let rows = try await profileRows("profiles?invite_code=eq.\(encoded)&select=\(Self.profileSelect)&limit=1")
+        if let row = rows.first { return row.asUser }
+        let body = try JSONSerialization.data(withJSONObject: ["target_code": code])
+        let data = try await rpc("lookup_buddy_by_code", body: body)
+        if Self.isNull(data) { throw BuddyError.userNotFound }
+        return try decoder.decode(UserProfile.self, from: data)
+    }
+
+    func pairWithBuddy(code: String) async throws -> UserProfile {
+        let body = try JSONSerialization.data(withJSONObject: ["target_code": code])
+        let data = try await rpc("handle_pair_buddies", body: body)
+        if Self.isNull(data) { throw BuddyError.userNotFound }
+        return try decoder.decode(UserProfile.self, from: data)
+    }
+
+    func pingBuddySOS() async throws {
+        _ = try await rpc("send_sos_push", body: Data("{}".utf8))
+    }
+
+    func fetchMessages() async throws -> [ChatMessage] {
+        guard let userId = currentUserId() else { throw SupabaseError.notSignedIn }
+        let data = try await restData(
+            path: "buddy_messages?or=(sender_id.eq.\(userId.uuidString),receiver_id.eq.\(userId.uuidString))&order=created_at.asc",
+            method: "GET",
+            body: nil
+        )
+        return try decoder.decode([ChatMessage].self, from: data)
+    }
+
+    func sendBuddyMessage(to receiver: UUID, text: String) async throws {
+        guard let userId = currentUserId() else { throw SupabaseError.notSignedIn }
+        let body = try JSONSerialization.data(withJSONObject: [
+            "sender_id": userId.uuidString,
+            "receiver_id": receiver.uuidString,
+            "text": text
+        ])
+        _ = try await rest(path: "buddy_messages", method: "POST", body: body)
+    }
+
+    func fetchUserSquad() async throws -> SquadModel? {
+        do {
+            let data = try await rpc("fetch_user_squad", body: Data("{}".utf8))
+            if Self.isNull(data) { return nil }
+            return try decoder.decode(SquadModel.self, from: data)
+        } catch let error as SupabaseError where Self.isMissingFunction(error) {
+            return nil
+        }
+    }
+
+    func createSquad(name: String) async throws -> String {
+        let body = try JSONSerialization.data(withJSONObject: ["squad_name": name])
+        let data = try await rpc("create_squad", body: body)
+        return try decoder.decode(String.self, from: data)
+    }
+
+    func joinSquad(code: String) async throws {
+        let body = try JSONSerialization.data(withJSONObject: ["invite_code": code])
+        _ = try await rpc("join_squad", body: body)
+    }
+
+    func leaveSquad() async throws {
+        _ = try await rpc("leave_squad", body: Data("{}".utf8))
+    }
+
+    private static let profileSelect = "id,username,invite_code,buddy_id,current_streak_days,streak_days,last_checkin_at"
+
+    private struct ProfileRow: Decodable {
+        let id: UUID
+        let username: String?
+        let inviteCode: String?
+        let streakDays: Int?
+        let currentStreakDays: Int?
+        let lastCheckinAt: Date?
+        let buddyId: UUID?
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case username
+            case inviteCode
+            case streakDays
+            case currentStreakDays
+            case lastCheckinAt
+            case buddyId
+        }
+
+        var asUser: UserProfile {
+            let name = username?.trimmingCharacters(in: .whitespacesAndNewlines)
+            return UserProfile(
+                id: id,
+                username: (name?.isEmpty == false ? name! : "Воин"),
+                inviteCode: inviteCode ?? "",
+                streakDays: currentStreakDays ?? streakDays ?? 0,
+                lastCheckinAt: lastCheckinAt,
+                buddyId: buddyId,
+                squadId: nil
+            )
+        }
+    }
+
+    private func ensureInviteCodeDirect() async throws -> UserProfile {
+        guard let userId = currentUserId() else { throw BuddyError.unauthorized }
+        var profile = try await loadOwnProfile()
+        if profile == nil {
+            let body = try JSONSerialization.data(withJSONObject: ["id": userId.uuidString])
+            _ = try await rest(path: "profiles", method: "POST", body: body)
+            profile = try await loadOwnProfile()
+        }
+        guard let profile else {
+            throw SupabaseError.server("Профиль не создан. Открой приложение ещё раз при наличии сети.")
+        }
+        guard !Self.isShareable(profile.inviteCode) else { return profile }
+        return try await saveInviteCode(for: userId)
+    }
+
+    private func saveInviteCode(for userId: UUID) async throws -> UserProfile {
+        var lastError: Error = SupabaseError.server("Не удалось сохранить код приглашения")
+        for _ in 0..<5 {
+            let code = PartnerCode.generate()
+            let body = try JSONSerialization.data(withJSONObject: ["invite_code": code])
+            do {
+                let updated = try await restData(path: "profiles?id=eq.\(userId.uuidString)", method: "PATCH", body: body)
+                let raw = String(data: updated, encoding: .utf8) ?? ""
+                supabaseLog("invite patch \(raw)")
+                if let saved = try? decoder.decode([ProfileRow].self, from: updated).first?.asUser,
+                   Self.isShareable(saved.inviteCode) {
+                    return saved
+                }
+                if let saved = try await loadOwnProfile(), Self.isShareable(saved.inviteCode) {
+                    return saved
+                }
+                lastError = SupabaseError.server("Не удалось сохранить код приглашения")
+            } catch {
+                lastError = error
+            }
+        }
+        throw lastError
+    }
+
+    private func loadOwnProfile() async throws -> UserProfile? {
+        guard let userId = currentUserId() else { throw BuddyError.unauthorized }
+        return try await profileRows("profiles?id=eq.\(userId.uuidString)&select=\(Self.profileSelect)&limit=1").first?.asUser
+    }
+
+    private func loadProfile(id: UUID) async throws -> UserProfile? {
+        try await profileRows("profiles?id=eq.\(id.uuidString)&select=\(Self.profileSelect)&limit=1").first?.asUser
+    }
+
+    private func profileRows(_ path: String) async throws -> [ProfileRow] {
+        let data = try await restData(path: path, method: "GET", body: nil)
+        return try decoder.decode([ProfileRow].self, from: data)
+    }
+
+    private static func isMissingFunction(_ error: SupabaseError) -> Bool {
+        guard case .server(let message) = error else { return false }
+        let lower = message.lowercased()
+        return lower.contains("could not find the function") || lower.contains("pgrst202")
+    }
+
+    private static func isShareable(_ code: String) -> Bool {
+        PartnerCode.isComplete(code) && code != "000000" && code != "ABCDEF"
+    }
+
+    private static func isNull(_ data: Data) -> Bool {
+        let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+        return text == nil || text == "null" || text?.isEmpty == true
+    }
+
+    private func rpc(_ name: String, body: Data) async throws -> Data {
+        try await ensureSession()
+        return try await restData(path: "rpc/\(name)", method: "POST", body: body)
+    }
+
     func pullProfile() async throws -> RemoteProfile {
         guard let userId = currentUserId() else { throw SupabaseError.notSignedIn }
         let data = try await restData(
@@ -177,6 +376,13 @@ final class SupabaseClient {
         )
         let rows = try decoder.decode([RemoteProfile].self, from: data)
         return rows.first ?? RemoteProfile(currentStreakDays: 0, bestStreakDays: 0, streakStartDate: nil, lastRelapseAt: nil, lastStreakFreezeDate: nil)
+    }
+
+    func pushTotalXP(_ xp: Int) async {
+        guard let userId = currentUserId() else { return }
+        try? await ensureSession()
+        guard let body = try? JSONSerialization.data(withJSONObject: ["total_xp": xp]) else { return }
+        _ = try? await rest(path: "profiles?id=eq.\(userId.uuidString)", method: "PATCH", body: body)
     }
 
     func pushProfile(streakDays: Int, bestStreak: Int, streakStart: Date?, lastRelapse: Date?, lastFreeze: Date? = nil) async throws {
@@ -282,9 +488,10 @@ final class SupabaseClient {
     }
 
     private func send(url: URL, method: String, body: Data?, authorized: Bool) async throws -> (data: Data, status: Int) {
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: url, timeoutInterval: 20)
         request.httpMethod = method
         request.httpBody = body
+        request.assumesHTTP3Capable = false
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(SupabaseConfig.anonKey, forHTTPHeaderField: "apikey")
         request.setValue("return=representation", forHTTPHeaderField: "Prefer")

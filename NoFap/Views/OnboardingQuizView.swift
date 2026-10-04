@@ -30,8 +30,6 @@ struct OnboardingQuizView: View {
     private let costOptions = ["Физическую энергию", "Уверенность с девушками", "Фокус и продуктивность", "Самоуважение", "Радость от простых вещей"]
     private let records = ["Никогда не пробовал", "1–3 дня", "1–2 недели", "30+ дней"]
     private let goalOptions = ["Чистый взгляд и здоровая сексуальная энергия", "Уверенность и знакомства с девушками", "Дисциплина в спорте и бизнесе", "Контроль над разумом и телом"]
-    private let dayOptions = [7, 14, 30, 90]
-
     private let lastQuestion = 6
     private let finale = 7
 
@@ -79,7 +77,6 @@ struct OnboardingQuizView: View {
                 finaleScreen.tag(7)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .scrollDisabled(true)
             .animation(.easeInOut(duration: 0.35), value: page)
 
             footer
@@ -145,7 +142,7 @@ struct OnboardingQuizView: View {
     ) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(title)
+                Text(l10n: title)
                     .font(Face.display(22, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
                     .fixedSize(horizontal: false, vertical: true)
@@ -165,17 +162,20 @@ struct OnboardingQuizView: View {
     }
 
     private var dayQuestion: some View {
-        question(
-            title: "Сколько дней чистоты ты ставишь своей первой целью?",
-            options: dayOptions.map { "\($0) дней" },
-            selected: targetDays.map { ["\($0) дней"] } ?? [],
-            limit: 1
-        ) { title in
-            if let days = dayOptions.first(where: { "\($0) дней" == title }) {
-                targetDays = days
-                UISelectionFeedbackGenerator().selectionChanged()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Сколько дней чистоты ты ставишь своей первой целью?")
+                    .font(Face.display(22, .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .fixedSize(horizontal: false, vertical: true)
+                StreakGoalSelectorView(selected: Binding(
+                    get: { targetDays ?? 0 },
+                    set: { targetDays = $0 }
+                ))
             }
+            .padding(24)
         }
+        .scrollDisabled(false)
     }
 
     private var finaleScreen: some View {
@@ -273,7 +273,7 @@ struct OnboardingQuizView: View {
         🛑 Что привычка отнимает у меня: \(costs.joined(separator: ", "))
         🏆 Прошлый рекорд воздержания: \(pastRecord)
         🎯 Моя главная цель (Точка Б): \(goals.joined(separator: ", "))
-        🔥 Первая планка: \(targetDays) дней чистоты подряд
+        🔥 Первая планка: \(targetDays) дней чистоты подряд — \(StreakTarget(rawValue: targetDays)?.title ?? "")
 
         Я фиксирую это здесь, чтобы перечитывать эту запись в моменты слабости и помнить, почему я начал.
         """
@@ -289,7 +289,7 @@ struct OnboardingQuizView: View {
     private func chip(_ title: String, on: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack {
-                Text(title)
+                Text(l10n: title)
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(on ? Color(hex: 0x1A1405) : Palette.marbleHigh)
                     .multilineTextAlignment(.leading)

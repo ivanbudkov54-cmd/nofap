@@ -35,7 +35,7 @@ struct PartnerView: View {
         .background(Palette.obsidian.ignoresSafeArea())
         .task {
             nicknameDraft = partner.nickname
-            if case .unknown = partner.state { await partner.refresh() }
+            await partner.refresh()
         }
         .sheet(isPresented: $enteringCode) { codeSheet }
         .confirmationDialog("Разорвать связь?",
@@ -295,15 +295,35 @@ struct PartnerView: View {
                 .foregroundStyle(Palette.marbleHigh)
                 .padding(.top, 28)
 
-            PartnerCodeEntry(code: $codeDraft) { code in
-                enteringCode = false
-                Task { await partner.redeem(code: code) }
+            if let found = partner.foundPartner {
+                Text("Вы хотите объединиться с \(found.nickname)?")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .multilineTextAlignment(.center)
+                Button("Подтвердить") {
+                    Task {
+                        await partner.confirmRedeem()
+                        if case .paired = partner.state { enteringCode = false }
+                    }
+                }
+                .buttonStyle(GoldButton())
+                .disabled(partner.isBusy)
+            } else {
+                PartnerCodeEntry(code: $codeDraft) { code in
+                    Task { await partner.preview(code: code) }
+                }
+            }
+            if let error = partner.codeError {
+                Text(error)
+                    .font(.system(size: 13))
+                    .foregroundStyle(Palette.ash)
+                    .multilineTextAlignment(.center)
             }
 
             Spacer()
         }
         .padding(.horizontal, 20)
-        .presentationDetents([.height(260)])
+        .presentationDetents([.medium])
         .presentationBackground(Palette.obsidian)
     }
 
