@@ -249,10 +249,12 @@ private struct HallCard: View {
     var body: some View {
         VStack(spacing: 10) {
             ZStack {
-                if isNext && rank.hasArtwork {
+                // Закрытые ранги, у которых уже есть арт, видны сквозь дымку:
+                // ближайший — заметнее, дальние — едва. Без арта — силуэт.
+                if !unlocked && rank.hasArtwork {
                     SpartanFigure(rank: rank, size: 120)
-                        .grayscale(0.85)
-                        .opacity(0.4)
+                        .grayscale(isNext ? 0.85 : 1)
+                        .opacity(isNext ? 0.4 : 0.22)
                 } else {
                     SpartanFigure(rank: rank, size: 120, silhouette: !unlocked)
                 }
