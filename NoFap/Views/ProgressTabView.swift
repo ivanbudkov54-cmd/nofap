@@ -276,6 +276,7 @@ private struct MonthSpan: View {
     @Environment(SquadManager.self) private var squad
 
     @State private var showGoalEditor = false
+    @State private var showGoalLocked = false
     @State private var showPartner = false
     @State private var showSquad = false
     @State private var goalDraft = 21
@@ -367,12 +368,16 @@ private struct MonthSpan: View {
                                     .contentTransition(.numericText())
                             }
 
-                            // Личная цель, не календарный месяц — тап открывает
-                            // редактор, чтобы её можно было менять не только
-                            // при онбординге.
+                            // Личная цель, не календарный месяц. Тап открывает
+                            // редактор, только пока цель не в процессе, — иначе
+                            // объясняет, когда её можно будет сменить.
                             Button {
-                                goalDraft = streak.personalGoalDays
-                                showGoalEditor = true
+                                if streak.canChangeGoal {
+                                    goalDraft = streak.personalGoalDays
+                                    showGoalEditor = true
+                                } else {
+                                    showGoalLocked = true
+                                }
                             } label: {
                                 Text("из \(streak.personalGoalDays) дней")
                                     .font(Face.display(w * 0.034))
@@ -430,6 +435,11 @@ private struct MonthSpan: View {
         // пришлось бы листать.
         .sheet(isPresented: $showSquad) {
             SquadSheet()
+        }
+        .alert("Цель уже идёт", isPresented: $showGoalLocked) {
+            Button("Понятно", role: .cancel) {}
+        } message: {
+            Text("Ты поставил себе \(streak.personalGoalDays.daysCount) — дойди до них. Новую цель можно выбрать, когда возьмёшь эту.")
         }
         .sheet(isPresented: $showGoalEditor) {
             VStack(spacing: 24) {

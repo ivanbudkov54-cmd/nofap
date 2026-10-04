@@ -78,11 +78,22 @@ final class StreakManager {
         personalGoalDays = storedGoal > 0 ? storedGoal : 21
     }
 
-    func setGoal(_ days: Int) {
-        guard days > 0 else { return }
+    /// Цель нельзя подвинуть на ходу — иначе её проще всего «достичь»,
+    /// опустив планку. Менять можно, только когда текущая цель не в
+    /// процессе: она взята или счёт начинается с нуля.
+    var canChangeGoal: Bool {
+        currentStreak == 0 || currentStreak >= personalGoalDays
+    }
+
+    /// Правило проверяется здесь, а не на экранах: так его не обойти ни
+    /// из одного места, где цель можно задать.
+    @discardableResult
+    func setGoal(_ days: Int) -> Bool {
+        guard days > 0, canChangeGoal else { return false }
         personalGoalDays = days
         justReachedGoal = false
         persist()
+        return true
     }
 
     /// Отмечался ли уже сегодня — чтобы не засчитывать день дважды.
