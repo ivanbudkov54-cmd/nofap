@@ -55,7 +55,7 @@ struct DeepDiveView: View {
 
     private func open(_ article: Article) {
         let reason = "Научные исследования и механизмы работы мозга доступны с Premium"
-        if article.category != .neuroscience {
+        if ![.neuroscience, .science].contains(article.category) {
             openedArticle = article
         } else {
             subscriptions.checkProAccess(for: reason) { openedArticle = article }
@@ -127,7 +127,7 @@ struct DeepDiveView: View {
                 .padding(.top, 2)
             }
 
-            if article.category == .neuroscience && !subscriptions.isPro {
+            if [.neuroscience, .science].contains(article.category) && !subscriptions.isPro {
                 ProLockBadge()
             }
 
