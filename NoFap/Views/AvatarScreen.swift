@@ -29,6 +29,7 @@ struct AvatarScreen: View {
 
                 scene
                 xpCard
+                hall
                 rewardsHint
             }
             .padding(.horizontal, 20)
@@ -70,7 +71,7 @@ struct AvatarScreen: View {
                     .buttonStyle(.plain)
                     // Главный стоит по центру; следующий — справа за его
                     // плечом, у самого края экрана.
-                    .offset(x: 105, y: -45)
+                    .offset(x: 125, y: -45)
                     .accessibilityLabel(Text("Следующий ранг: \(Text(next.title))"))
                 }
 
@@ -119,6 +120,36 @@ struct AvatarScreen: View {
         .padding(16)
         .cardSurface()
         .animation(.easeInOut(duration: 0.6), value: progress.totalXP)
+    }
+
+    // MARK: - Зал славы
+
+    private var hall: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Eyebrow(text: "зал славы", color: Palette.marble)
+                .padding(.horizontal, 4)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 12) {
+                    ForEach(SpartanRank.allCases) { rank in
+                        let open = rank <= progress.currentRank
+                        Button { if open { detailRank = rank } } label: {
+                            HallCard(rank: rank, unlocked: open, isCurrent: rank == progress.currentRank,
+                                     nextProgress: rank == progress.nextRank ? progress.levelProgress : nil)
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(!open)
+                    }
+                }
+                .scrollTargetLayout()
+                .padding(.horizontal, 4)
+            }
+            .scrollTargetBehavior(.viewAligned)
+            // Карусель шире полей экрана — карточки уходят за край, видно,
+            // что их можно листать.
+            .padding(.horizontal, -20)
+            .contentMargins(.horizontal, 20, for: .scrollContent)
+        }
     }
 
     private var rewardsHint: some View {
@@ -227,6 +258,88 @@ private struct XPBar: View {
         .accessibilityElement()
         .accessibilityLabel(Text("Прогресс ранга"))
         .accessibilityValue(Text("\(Int((value * 100).rounded())) процентов"))
+    }
+}
+
+// MARK: - Карточка зала славы
+
+private struct HallCard: View {
+    let rank: SpartanRank
+    let unlocked: Bool
+    let isCurrent: Bool
+    /// Только у следующего ранга: доля пути к нему. Его фигуру видно
+    /// сквозь серую дымку — понятно, к кому идёшь. Дальние ранги — силуэты.
+    var nextProgress: Double? = nil
+
+    private var isNext: Bool { nextProgress != nil }
+
+    var body: some View {
+        VStack(spacing: 10) {
+            ZStack(alignment: .topTrailing) {
+                // Закрытые ранги видны целиком, лишь чуть приглушены, —
+                // чтобы хотелось до них дойти. Замок — маленький значок.
+                SpartanFigure(rank: rank, size: 120, silhouette: !unlocked && !rank.hasArtwork)
+                    .saturation(unlocked ? 1 : 0.8)
+                    .opacity(unlocked ? 1 : 0.92)
+                    .frame(maxWidth: .infinity)
+                if !unlocked {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(Palette.marbleHigh)
+                        .padding(7)
+                        .background(Circle().fill(Color.black.opacity(0.55)))
+                        .padding(.trailing, 10)
+                }
+            }
+
+            VStack(spacing: 4) {
+                Text(isNext ? "Следующий ранг" : "Ранг \(rank.rawValue)")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(unlocked || isNext ? Palette.gold : Palette.ash)
+                Text(rank.title)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(unlocked ? Palette.marbleHigh : Palette.marble)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2, reservesSpace: true)
+                if let nextProgress {
+                    MiniBar(value: nextProgress)
+                        .padding(.horizontal, 18)
+                        .padding(.top, 2)
+                }
+                if !unlocked {
+                    Text("Откроется на \(rank.requiredXP) XP")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Palette.ash)
+                }
+            }
+        }
+        .frame(width: 150)
+        .padding(.vertical, 14)
+        .background {
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Palette.basalt)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 18)
+                .strokeBorder(isCurrent ? Palette.gold.opacity(0.8)
+                              : isNext ? Palette.gold.opacity(0.3) : Palette.vein,
+                              style: StrokeStyle(lineWidth: isCurrent ? 1.5 : 1, dash: isNext ? [4, 3] : []))
+        }
+    }
+}
+
+private struct MiniBar: View {
+    let value: Double
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(Color(hex: 0x24242B))
+                Capsule().fill(.goldFill)
+                    .frame(width: max(geo.size.width * min(max(value, 0), 1), value > 0 ? 4 : 0))
+            }
+        }
+        .frame(height: 4)
     }
 }
 
