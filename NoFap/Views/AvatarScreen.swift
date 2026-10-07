@@ -61,19 +61,20 @@ struct AvatarScreen: View {
                                 .fill(Palette.gold.opacity(0.22))
                                 .frame(width: 190, height: 190)
                                 .blur(radius: 50)
-                            SpartanFigure(rank: next, size: 205)
+                            SpartanFigure(rank: next, size: 185)
                                 .saturation(0.25)
                                 .brightness(-0.05)
                                 .opacity(0.6)
                         }
                     }
                     .buttonStyle(.plain)
-                    .offset(x: 112, y: -50)
+                    // Главный стоит по центру; следующий — справа за его
+                    // плечом, у самого края экрана.
+                    .offset(x: 105, y: -45)
                     .accessibilityLabel(Text("Следующий ранг: \(Text(next.title))"))
                 }
 
                 SpartanFigure(rank: rank, size: 240, floating: true)
-                    .offset(x: progress.nextRank == nil ? 0 : -45)
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 12)
