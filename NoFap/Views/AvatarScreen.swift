@@ -55,22 +55,19 @@ struct AvatarScreen: View {
                 // серой дымке: видно, к кому идёшь.
                 if let next = progress.nextRank {
                     Button { detailRank = next } label: {
-                        VStack(spacing: 6) {
-                            SpartanFigure(rank: next, size: 150)
-                                .grayscale(0.9)
-                                .opacity(0.35)
-                            Text("через \(progress.xpRemainingToNextLevel) XP")
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundStyle(Palette.ash)
-                        }
+                        SpartanFigure(rank: next, size: 175)
+                            .grayscale(0.9)
+                            .opacity(0.3)
                     }
                     .buttonStyle(.plain)
-                    .offset(x: 108, y: -70)
-                    .accessibilityLabel(Text("Следующий ранг: \(Text(next.title)), через \(progress.xpRemainingToNextLevel) XP"))
+                    // За плечом текущего: частично прячется за ним, как
+                    // фигура на заднем плане.
+                    .offset(x: 75, y: -62)
+                    .accessibilityLabel(Text("Следующий ранг: \(Text(next.title))"))
                 }
 
                 SpartanFigure(rank: rank, size: 240, floating: true)
-                    .offset(x: progress.nextRank == nil ? 0 : -30)
+                    .offset(x: progress.nextRank == nil ? 0 : -20)
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 12)
