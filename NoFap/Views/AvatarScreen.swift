@@ -282,10 +282,10 @@ struct SpartanFigure: View {
 
     /// Диагональная полоса света, обрезанная по контуру самой картинки —
     /// бежит только по фигуре, не по фону.
-    /// Положение полосы считается прямо от часов: пробег 0.8 с, затем пауза
+    /// Положение полосы считается прямо от часов: пробег 0.5 с, затем пауза
     /// до 4 с. Без состояния — застрять полосе негде.
     private static func shinePhase(at date: Date) -> CGFloat {
-        let cycle = 4.0, sweep = 0.8
+        let cycle = 4.0, sweep = 0.5
         let t = date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: cycle)
         guard t < sweep else { return -0.6 }
         let p = t / sweep
