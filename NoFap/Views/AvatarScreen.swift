@@ -64,13 +64,11 @@ struct AvatarScreen: View {
                                 .fill(Palette.gold.opacity(0.12 + 0.2 * progress.levelProgress))
                                 .frame(width: 190, height: 190)
                                 .blur(radius: 50)
-                            // Чем ближе ранг, тем больше в нём цвета и
-                            // света: в начале почти серый, перед
-                            // повышением — почти живой.
+                            // Серый — пока недоступен. Цвет он получит, только
+                            // когда станет твоим.
                             SpartanFigure(rank: next, size: 185)
-                                .saturation(0.15 + 0.75 * progress.levelProgress)
-                                .brightness(-0.08 + 0.08 * progress.levelProgress)
-                                .opacity(0.5 + 0.4 * progress.levelProgress)
+                                .grayscale(1)
+                                .opacity(0.75)
                         }
                         // Тихая подпись под ногами: кто это и сколько до него.
                         .overlay(alignment: .bottom) {
