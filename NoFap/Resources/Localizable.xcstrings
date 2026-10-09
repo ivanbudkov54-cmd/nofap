@@ -1,147 +1,90 @@
 {
-  "sourceLanguage" : "ru",
-  "strings" : {
-    "" : {
-
-    },
-    " " : {
-
-    },
-    "—" : {
-
-    },
-    "— Джим Рон" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "— Jim Rohn"
+  "sourceLanguage": "ru",
+  "strings": {
+    "": {},
+    " ": {},
+    "#ТочкаА": {},
+    "%@  %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@  %2$@"
           }
         }
       }
     },
-    "·" : {
-
-    },
-    "«%@»" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“%@”"
+    "%@ в год": {},
+    "%@ в месяц": {},
+    "%@ зовёт тебя в напарники": {},
+    "%@ зовёт тебя в сквад": {},
+    "%@: %lld": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@: %2$lld"
           }
         }
       }
     },
-    "«%@» одним нажатием" : {
-
-    },
-    "«Дисциплина — это мост между целями и достижениями.»" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Discipline is the bridge between goals and accomplishment.”"
+    "%lld": {},
+    "%lld / %lld XP": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld / %2$lld XP"
           }
         }
       }
     },
-    "#ТочкаА" : {
-
-    },
-    "%@  %@" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@  %2$@"
-          }
-        }
-      }
-    },
-    "%@ в год" : {
-
-    },
-    "%@ в месяц" : {
-
-    },
-    "%@ зовёт тебя в напарники" : {
-
-    },
-    "%@ зовёт тебя в сквад" : {
-
-    },
-    "%@: %lld" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: %2$lld"
-          }
-        }
-      }
-    },
-    "%lld" : {
-
-    },
-    "%lld / %lld XP" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld / %2$lld XP"
-          }
-        }
-      }
-    },
-    "%lld XP" : {
-
-    },
-    "%lld дней" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld day"
+    "%lld XP": {},
+    "%lld дней": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld day"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld days"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld days"
                 }
               }
             }
           }
         },
-        "ru" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дня"
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня"
                 }
               },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дней"
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней"
                 }
               },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld день"
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld день"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дней"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней"
                 }
               }
             }
@@ -149,103 +92,51 @@
         }
       }
     },
-    "%lld дней — твой первый рубеж" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld day — your first milestone"
+    "%lld дней подряд": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld day in a row"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld days — your first milestone"
-                }
-              }
-            }
-          }
-        },
-        "ru" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дня — твой первый рубеж"
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дней — твой первый рубеж"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld день — твой первый рубеж"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дней — твой первый рубеж"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "%lld дней подряд" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld day in a row"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld days in a row"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld days in a row"
                 }
               }
             }
           }
         },
-        "ru" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дня подряд"
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня подряд"
                 }
               },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дней подряд"
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней подряд"
                 }
               },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld день подряд"
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld день подряд"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld дней подряд"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней подряд"
                 }
               }
             }
@@ -253,1074 +144,51 @@
         }
       }
     },
-    "%lld из 7 дней чисто на этой неделе" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld of 7 days clean this week"
-          }
-        }
-      }
-    },
-    "%lld из 10" : {
-
-    },
-    "%lld процентов" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld percent"
-          }
-        }
-      }
-    },
-    "%lld/%lld" : {
-
-    },
-    "%lld/7" : {
-
-    },
-    "%lld%%" : {
-
-    },
-    "+%lld Power" : {
-
-    },
-    "+20 XP, научная — +30, один раз за статью" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+20 XP, science: +30, once per article"
-          }
-        }
-      }
-    },
-    "+50 XP, бонусы на 7, 21, 45 и 90 день" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+50 XP, bonuses on days 7, 21, 45 and 90"
-          }
-        }
-      }
-    },
-    "+100 XP, сложный или социальный — +150" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+100 XP, hard or social: +150"
-          }
-        }
-      }
-    },
-    "−%lld%%" : {
-
-    },
-    "⚡️ %lld / %@ Power" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "⚡️ %1$lld / %2$@ Power"
-          }
-        }
-      }
-    },
-    "1" : {
-
-    },
-    "1–3 года" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1–3 years"
-          }
-        }
-      }
-    },
-    "3–7 лет" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "3–7 years"
-          }
-        }
-      }
-    },
-    "4 секунды вдох — 4 секунды задержка — 6 секунд выдох. Три круга снимают острую тягу." : {
-
-    },
-    "7 дней бесплатно, затем %@." : {
-
-    },
-    "10" : {
-
-    },
-    "15 отжиманий" : {
-
-    },
-    "20 приседаний" : {
-
-    },
-    "21" : {
-
-    },
-    "30 секунд, чтобы честно зафиксировать день." : {
-
-    },
-    "90 дней вместо 7: что происходит с телом и головой на каждом этапе" : {
-
-    },
-    "Addiction" : {
-
-    },
-    "Archives of Sexual Behavior" : {
-
-    },
-    "Henry et al., университет Мэсси, 2025" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Henry et al., Massey University, 2025"
-          }
-        }
-      }
-    },
-    "iOS попросит доступ к Экранному времени. Без него фильтр включить нельзя." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iOS will ask for Screen Time access. The filter can't be turned on without it."
-          }
-        }
-      }
-    },
-    "JAMA Psychiatry" : {
-
-    },
-    "Kraus, Voon, Potenza — обзор, Йельский университет, 2016" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kraus, Voon, Potenza — review, Yale University, 2016"
-          }
-        }
-      }
-    },
-    "Kühn & Gallinat, институт Макса Планка, 2014" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kühn & Gallinat, Max Planck Institute, 2014"
-          }
-        }
-      }
-    },
-    "PLOS ONE" : {
-
-    },
-    "premium" : {
-
-    },
-    "Premium" : {
-
-    },
-    "SOS" : {
-
-    },
-    "TikTok, Instagram, лента с триггерными видео" : {
-
-    },
-    "Voon et al., Кембриджский университет, 2014" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voon et al., University of Cambridge, 2014"
-          }
-        }
-      }
-    },
-    "Аватар" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avatar"
-          }
-        }
-      }
-    },
-    "Аватар и его прокачка доступны в Premium" : {
-
-    },
-    "Агог / Рекрут" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agoge Trainee"
-          }
-        }
-      }
-    },
-    "Алкоголь" : {
-
-    },
-    "аналитика триггеров" : {
-
-    },
-    "Аналитика триггеров" : {
-
-    },
-    "Бег на месте 2 минуты" : {
-
-    },
-    "Больше 7 лет" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More than 7 years"
-          }
-        }
-      }
-    },
-    "Больше месяца" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More than a month"
-          }
-        }
-      }
-    },
-    "Больше энергии" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More energy"
-          }
-        }
-      }
-    },
-    "Бывший участник" : {
-
-    },
-    "В 2019 году Всемирная организация здравоохранения включила в МКБ-11 диагноз «компульсивное сексуальное поведение» (код 6C72) — устойчивую неспособность контролировать сексуальные импульсы, которая вредит учёбе, отношениям и здоровью.\n\nФормально это не «зависимость», а расстройство контроля влечений — но суть та же: поведение выходит из-под контроля, и это признают на уровне мировой медицины, а не только форумы." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In 2019 the World Health Organization added “compulsive sexual behaviour disorder” (code 6C72) to ICD-11 — a persistent inability to control sexual impulses that harms studies, relationships and health.\n\nFormally it's an impulse-control disorder rather than an “addiction”, but the point is the same: the behaviour gets out of control, and that's recognized by world medicine, not just by forums."
-          }
-        }
-      }
-    },
-    "В бой!" : {
-
-    },
-    "в воскресенье" : {
-
-    },
-    "В душе" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In the shower"
-          }
-        }
-      }
-    },
-    "В какое время суток тяга накатывает чаще?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What time of day does the urge hit most?"
-          }
-        }
-      }
-    },
-    "в понедельник" : {
-
-    },
-    "В постели с телефоном" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In bed with my phone"
-          }
-        }
-      }
-    },
-    "в пятницу" : {
-
-    },
-    "в разработке" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "coming soon"
-          }
-        }
-      }
-    },
-    "В скваде уже 4 человека — свободных мест нет." : {
-
-    },
-    "В следующий раз: %@" : {
-
-    },
-    "в среду" : {
-
-    },
-    "в субботу" : {
-
-    },
-    "в четверг" : {
-
-    },
-    "Введи код друга" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter your friend's code"
-          }
-        }
-      }
-    },
-    "Вдох" : {
-
-    },
-    "Вернуть вопрос дня" : {
-
-    },
-    "Весь «Мой путь»" : {
-
-    },
-    "Вечер" : {
-
-    },
-    "Вечером" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In the evening"
-          }
-        }
-      }
-    },
-    "Включим защиту" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Let's turn on protection"
-          }
-        }
-      }
-    },
-    "ВКЛЮЧИТЬ ЗАЩИТУ" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TURN ON PROTECTION"
-          }
-        }
-      }
-    },
-    "Внезапный импульс" : {
-
-    },
-    "Внезапный сильный телесный импульс без явной причины" : {
-
-    },
-    "Внешний вид" : {
-
-    },
-    "во вторник" : {
-
-    },
-    "вопрос %lld из %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "question %1$lld of %2$lld"
-          }
-        }
-      }
-    },
-    "ВОПРОС ДНЯ" : {
-
-    },
-    "Восстановить покупки" : {
-
-    },
-    "Вот что ты про себя сказал" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Here's what you told us about yourself"
-          }
-        }
-      }
-    },
-    "Время сравнить ощущения! 📊" : {
-
-    },
-    "время суток" : {
-
-    },
-    "Вс" : {
-
-    },
-    "Всё, что помогает в момент тяги, остаётся бесплатным. Premium — для тех, кто хочет понять себя глубже." : {
-
-    },
-    "Всемирная организация здравоохранения" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "World Health Organization"
-          }
-        }
-      }
-    },
-    "Вспомни, зачем" : {
-
-    },
-    "Вспомнить, зачем ты это делаешь" : {
-
-    },
-    "Вступить" : {
-
-    },
-    "Вт" : {
-
-    },
-    "Вчера" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yesterday"
-          }
-        }
-      }
-    },
-    "Вы будете видеть счёт друг друга. Календарь и срывы останутся только у тебя." : {
-
-    },
-    "Вы перестанете видеть счёт друг друга. Твой прогресс останется при тебе." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You'll stop seeing each other's counts. Your own progress stays with you."
-          }
-        }
-      }
-    },
-    "Выбери срок сам. Это твоя цель, не наша." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pick the length yourself. It's your goal, not ours."
-          }
-        }
-      }
-    },
-    "Выбери сценарий" : {
-
-    },
-    "Выбрать другой сценарий" : {
-
-    },
-    "Вывод сохранён" : {
-
-    },
-    "Выдох" : {
-
-    },
-    "Вызов закрыт. Следующий уже ждёт." : {
-
-    },
-    "Выйди прогуляться" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Go for a walk"
-          }
-        }
-      }
-    },
-    "Выйти" : {
-
-    },
-    "Выйти из сквада" : {
-
-    },
-    "Выйти из сквада?" : {
-
-    },
-    "Выполнил вызов" : {
-
-    },
-    "Высший ранг взят. Путь воина продолжается." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Highest rank reached. The warrior's path goes on."
-          }
-        }
-      }
-    },
-    "Где это обычно происходит?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Where does it usually happen?"
-          }
-        }
-      }
-    },
-    "Гиппей / Царская гвардия" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hippeus Guard"
-          }
-        }
-      }
-    },
-    "Главная" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Home"
-          }
-        }
-      }
-    },
-    "Главный триггер — %@." : {
-
-    },
-    "Год" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Year"
-          }
-        }
-      }
-    },
-    "Гоплит" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hoplite"
-          }
-        }
-      }
-    },
-    "Горжусь тобой" : {
-
-    },
-    "Давай держаться вместе — стань моим напарником.\n\nОткрой ссылку: %@\nИли введи код %@ в разделе «Напарник»." : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Давай держаться вместе — стань моим напарником.\n\nОткрой ссылку: %1$@\nИли введи код %2$@ в разделе «Напарник»."
-          }
-        }
-      }
-    },
-    "давно не заходил" : {
-
-    },
-    "Далее" : {
-
-    },
-    "ДАЛЕЕ" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "NEXT"
-          }
-        }
-      }
-    },
-    "Данные и прогресс" : {
-
-    },
-    "Данные не обновлялись больше суток — напарник давно не заходил." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No updates for over a day — your partner hasn't been in for a while."
-          }
-        }
-      }
-    },
-    "День" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Day"
-          }
-        }
-      }
-    },
-    "День %lld" : {
-
-    },
-    "День %lld из %lld" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "День %1$lld из %2$lld"
-          }
-        }
-      }
-    },
-    "День стрика" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Streak day"
-          }
-        }
-      }
-    },
-    "Держимся вместе" : {
-
-    },
-    "Держись, это пройдёт" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hang in there, it'll pass"
-          }
-        }
-      }
-    },
-    "Держитесь группой" : {
-
-    },
-    "Держится на стрике, вызовах и статьях" : {
-
-    },
-    "держится сегодня" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "holding on today"
-          }
-        }
-      }
-    },
-    "Держусь" : {
-
-    },
-    "Держусь дальше" : {
-
-    },
-    "Диагностика твоего пути" : {
-
-    },
-    "Дневник" : {
-
-    },
-    "дней" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "days"
-          }
-        }
-      }
-    },
-    "дней\nбез срывов" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "days\nwithout relapse"
-          }
-        }
-      }
-    },
-    "днём" : {
-
-    },
-    "Днём" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In the afternoon"
-          }
-        }
-      }
-    },
-    "дни недели" : {
-
-    },
-    "До месяца" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Up to a month"
-          }
-        }
-      }
-    },
-    "До недели" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Up to a week"
-          }
-        }
-      }
-    },
-    "до нового дня" : {
-
-    },
-    "До следующего ранга осталось: %lld XP" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "XP to next rank: %lld"
-          }
-        }
-      }
-    },
-    "До четырёх человек: видите дни друг друга и пишете в общий чат. Напарник — отдельно, один на один." : {
-
-    },
-    "Добавить" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add"
-          }
-        }
-      }
-    },
-    "Документ не найден" : {
-
-    },
-    "Доступ не выдан. Включить его можно в настройках приложения." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Access wasn't granted. You can turn it on in the app's settings."
-          }
-        }
-      }
-    },
-    "Доступно в Premium" : {
-
-    },
-    "Дофаминовая петля: за пиком всегда идёт спад" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The dopamine loop: every peak is followed by a crash"
-          }
-        }
-      }
-    },
-    "Дрочки" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fapping"
-          }
-        }
-      }
-    },
-    "Друг вводит его у себя. Код одноразовый и скоро истечёт." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your friend enters it on their phone. The code is single-use and expires soon."
-          }
-        }
-      }
-    },
-    "Другое" : {
-
-    },
-    "Думскроллинг" : {
-
-    },
-    "Думскроллинг / соцсети" : {
-
-    },
-    "Дыхательная практика" : {
-
-    },
-    "Ещё не отмечено" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not checked in yet"
-          }
-        }
-      }
-    },
-    "Ждём напарника…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Waiting for your partner…"
-          }
-        }
-      }
-    },
-    "Живая легенда. Полная трансформация духа, тела и воли." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A living legend. Complete transformation of spirit, body and will."
-          }
-        }
-      }
-    },
-    "За компьютером ночью" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At the computer at night"
-          }
-        }
-      }
-    },
-    "забирает сейчас" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "what it takes now"
-          }
-        }
-      }
-    },
-    "Задержи" : {
-
-    },
-    "Закрыть" : {
-
-    },
-    "Закрыть без разбора?" : {
-
-    },
-    "зал славы" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hall of fame"
-          }
-        }
-      }
-    },
-    "Залип в ленте" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Got stuck scrolling"
-          }
-        }
-      }
-    },
-    "Записей пока нет" : {
-
-    },
-    "Запись сохранена" : {
-
-    },
-    "Зафиксировать вывод" : {
-
-    },
-    "Зачем ты это делаешь" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Why you're doing this"
-          }
-        }
-      }
-    },
-    "Зачем ты это делаешь?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Why are you doing this?"
-          }
-        }
-      }
-    },
-    "Защита стоит. Ты здесь, чтобы стать лучше." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protection is on. You're here to get better."
-          }
-        }
-      }
-    },
-    "Здесь пусто" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing here yet"
-          }
-        }
-      }
-    },
-    "Знания" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Knowledge"
-          }
-        }
-      }
-    },
-    "Зову тебя в наш сквад — держимся вместе.\n\nОткрой ссылку: %@\nИли введи код %@ в разделе «Напарник» → «Сквад»." : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Зову тебя в наш сквад — держимся вместе.\n\nОткрой ссылку: %1$@\nИли введи код %2$@ в разделе «Напарник» → «Сквад»."
-          }
-        }
-      }
-    },
-    "и своими словами — обязательно" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "and in your own words — required"
-          }
-        }
-      }
-    },
-    "Иди дальше первой недели" : {
-
-    },
-    "из %lld дней" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "of %lld day"
+    "%lld дней — твой первый рубеж": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld day — your first milestone"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "of %lld days"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld days — your first milestone"
                 }
               }
             }
           }
         },
-        "ru" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "из %lld дней"
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дня — твой первый рубеж"
                 }
               },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "из %lld дней"
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней — твой первый рубеж"
                 }
               },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "из %lld дня"
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld день — твой первый рубеж"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "из %lld дней"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld дней — твой первый рубеж"
                 }
               }
             }
@@ -1328,598 +196,1206 @@
         }
       }
     },
-    "Изучить" : {
-
-    },
-    "Илот / Неофит" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Helot / Initiate"
+    "%lld из 10": {},
+    "%lld из 7 дней чисто на этой неделе": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of 7 days clean this week"
           }
         }
       }
     },
-    "Имя увидит только напарник." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only your partner will see the name."
+    "%lld процентов": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld percent"
           }
         }
       }
     },
-    "Институт Макса Планка сравнил снимки мозга людей с разной частотой просмотра порно. У тех, кто смотрел чаще, было меньше серого вещества в зоне вознаграждения и слабее связь между зонами, отвечающими за мотивацию.\n\nАвторы осторожны в выводах о причине и следствии, но сама корреляция задокументирована и опубликована в одном из самых строгих психиатрических журналов." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The Max Planck Institute compared brain scans of people who watch porn at different frequencies. Those who watched more had less grey matter in the reward region and weaker connections between the areas responsible for motivation.\n\nThe authors are careful about cause and effect, but the correlation itself is documented and published in one of the strictest psychiatry journals."
+    "%lld%%": {},
+    "%lld/%lld": {},
+    "%lld/7": {},
+    "+%lld Power": {},
+    "+100 XP, сложный или социальный — +150": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+100 XP, hard or social: +150"
           }
         }
       }
     },
-    "Исследователи поведенческих зависимостей, включая группу профессора Марка Потенцы (Йельский университет), описывают, как компульсивное поведение закрепляется через систему вознаграждения мозга — тот же механизм, что и при других зависимостях.\n\nЭто не оправдание бездействовать, а объяснение того, почему «просто взять себя в руки» часто не работает без системной поддержки — привычка встроена глубже, чем кажется." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Researchers of behavioural addictions, including Professor Marc Potenza's group at Yale, describe how compulsive behaviour gets locked in through the brain's reward system — the same mechanism as in other addictions.\n\nThat's not an excuse to do nothing. It explains why “just pull yourself together” often fails without systematic support — the habit is wired deeper than it seems."
+    "+20 XP, научная — +30, один раз за статью": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+20 XP, science: +30, once per article"
           }
         }
       }
     },
-    "Истекает через" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expires in"
+    "+50 XP, бонусы на 7, 21, 45 и 90 день": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+50 XP, bonuses on days 7, 21, 45 and 90"
           }
         }
       }
     },
-    "историю срывов" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "your relapse history"
+    "1": {},
+    "10": {},
+    "15 отжиманий": {},
+    "1–3 года": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1–3 years"
           }
         }
       }
     },
-    "История выполненных вызовов" : {
-
-    },
-    "источник" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "source"
+    "20 приседаний": {},
+    "21": {},
+    "30 секунд, чтобы честно зафиксировать день.": {},
+    "3–7 лет": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3–7 years"
           }
         }
       }
     },
-    "Источники роста" : {
-
-    },
-    "Каждый день" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Every day"
+    "4 секунды вдох — 4 секунды задержка — 6 секунд выдох. Три круга снимают острую тягу.": {},
+    "7 дней бесплатно, затем %@.": {},
+    "90 дней вместо 7: что происходит с телом и головой на каждом этапе": {},
+    "Addiction": {},
+    "Archives of Sexual Behavior": {},
+    "Henry et al., университет Мэсси, 2025": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henry et al., Massey University, 2025"
           }
         }
       }
     },
-    "Каждый день воздержания делает тебя сильнее." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Every day of abstinence makes you stronger."
+    "JAMA Psychiatry": {},
+    "Kraus, Voon, Potenza — обзор, Йельский университет, 2016": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kraus, Voon, Potenza — review, Yale University, 2016"
           }
         }
       }
     },
-    "Каждый отказ делает следующий чуть легче." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Every no makes the next one a little easier."
+    "Kühn & Gallinat, институт Макса Планка, 2014": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kühn & Gallinat, Max Planck Institute, 2014"
           }
         }
       }
     },
-    "как получать опыт" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "how to earn XP"
+    "PLOS ONE": {},
+    "Premium": {},
+    "SOS": {},
+    "TikTok, Instagram, лента с триггерными видео": {},
+    "Voon et al., Кембриджский университет, 2014": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voon et al., University of Cambridge, 2014"
           }
         }
       }
     },
-    "как тебя звать напарнику" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "what your partner should call you"
+    "iOS попросит доступ к Экранному времени. Без него фильтр включить нельзя.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS will ask for Screen Time access. The filter can't be turned on without it."
           }
         }
       }
     },
-    "Как только её одобрят, Premium откроется сам." : {
-
-    },
-    "Как ты сегодня?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How are you today?"
+    "premium": {},
+    "«%@»": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@”"
           }
         }
       }
     },
-    "Как ты?" : {
-
-    },
-    "Как часто случается срыв?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How often do you relapse?"
+    "«%@» одним нажатием": {},
+    "«Дисциплина — это мост между целями и достижениями.»": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Discipline is the bridge between goals and accomplishment.”"
           }
         }
       }
     },
-    "Какой самый долгий срок ты продержался?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What's the longest you've held out?"
+    "·": {},
+    "Аватар": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avatar"
           }
         }
       }
     },
-    "календарь" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "calendar"
+    "Аватар и его прокачка доступны в Premium": {},
+    "Агог / Рекрут": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agoge Trainee"
           }
         }
       }
     },
-    "календарь и даты" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "the calendar and dates"
+    "Алкоголь": {},
+    "Аналитика триггеров": {},
+    "Бег на месте 2 минуты": {},
+    "Больше 7 лет": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More than 7 years"
           }
         }
       }
     },
-    "Когда и где это случилось?" : {
-
-    },
-    "Когда и где: %@" : {
-
-    },
-    "Когда и почему тянет чаще всего — чтобы готовиться заранее" : {
-
-    },
-    "Когда кто-то видит твой счёт, сорваться труднее. Позови одного человека, которому доверяешь." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "When someone can see your count, it's harder to slip. Invite one person you trust."
+    "Больше месяца": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More than a month"
           }
         }
       }
     },
-    "Код истёк. Попроси новый." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The code has expired. Ask for a new one."
+    "Больше энергии": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More energy"
           }
         }
       }
     },
-    "Код сквада" : {
-
-    },
-    "Крепкий щит и поставленный удар. Контроль базовых триггеров." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A solid shield and a trained strike. Basic triggers under control."
+    "Бывший участник": {},
+    "В 2019 году Всемирная организация здравоохранения включила в МКБ-11 диагноз «компульсивное сексуальное поведение» (код 6C72) — устойчивую неспособность контролировать сексуальные импульсы, которая вредит учёбе, отношениям и здоровью.\n\nФормально это не «зависимость», а расстройство контроля влечений — но суть та же: поведение выходит из-под контроля, и это признают на уровне мировой медицины, а не только форумы.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In 2019 the World Health Organization added “compulsive sexual behaviour disorder” (code 6C72) to ICD-11 — a persistent inability to control sexual impulses that harms studies, relationships and health.\n\nFormally it's an impulse-control disorder rather than an “addiction”, but the point is the same: the behaviour gets out of control, and that's recognized by world medicine, not just by forums."
           }
         }
       }
     },
-    "Кровать перед сном" : {
-
-    },
-    "Кто-нибудь знает о твоей проблеме?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Does anyone know about your problem?"
+    "В бой!": {},
+    "В душе": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the shower"
           }
         }
       }
     },
-    "Лёва" : {
-
-    },
-    "Лежу в кровати перед сном или утром, не могу уснуть" : {
-
-    },
-    "Леонид / Царь Спарты" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "King Leonidas"
+    "В какое время суток тяга накатывает чаще?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What time of day does the urge hit most?"
           }
         }
       }
     },
-    "лучший\nстрик" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "best\nstreak"
+    "В постели с телефоном": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In bed with my phone"
           }
         }
       }
     },
-    "Лучший внешний вид" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Better looks"
+    "В скваде уже 4 человека — свободных мест нет.": {},
+    "В следующий раз: %@": {},
+    "ВКЛЮЧИТЬ ЗАЩИТУ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TURN ON PROTECTION"
           }
         }
       }
     },
-    "Лучший стрик: %@ · Цель: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Best streak: %1$@ · Goal: %2$@"
+    "ВОПРОС ДНЯ": {},
+    "Введи код друга": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter your friend's code"
           }
         }
       }
     },
-    "Марк" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mark"
+    "Вдох": {},
+    "Вернуть вопрос дня": {},
+    "Весь «Мой путь»": {},
+    "Вечер": {},
+    "Вечером": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the evening"
           }
         }
       }
     },
-    "Меньше года" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Less than a year"
+    "Включим защиту": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let's turn on protection"
           }
         }
       }
     },
-    "Меньше тумана в голове" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Less brain fog"
+    "Внезапный импульс": {},
+    "Внезапный сильный телесный импульс без явной причины": {},
+    "Внешний вид": {},
+    "Восстановить покупки": {},
+    "Вот что ты про себя сказал": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Here's what you told us about yourself"
           }
         }
       }
     },
-    "Месяц" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Month"
+    "Время сравнить ощущения! 📊": {},
+    "Вс": {},
+    "Всемирная организация здравоохранения": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "World Health Organization"
           }
         }
       }
     },
-    "МКБ-11, компульсивное сексуальное поведение, 6C72" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ICD-11, compulsive sexual behaviour disorder, 6C72"
+    "Вспомни, зачем": {},
+    "Вспомнить, зачем ты это делаешь": {},
+    "Вступить": {},
+    "Всё, что помогает в момент тяги, остаётся бесплатным. Premium — для тех, кто хочет понять себя глубже.": {},
+    "Вт": {},
+    "Вчера": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yesterday"
           }
         }
       }
     },
-    "Мне сейчас трудно" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I'm struggling right now"
+    "Вы будете видеть счёт друг друга. Календарь и срывы останутся только у тебя.": {},
+    "Вы перестанете видеть счёт друг друга. Твой прогресс останется при тебе.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You'll stop seeing each other's counts. Your own progress stays with you."
           }
         }
       }
     },
-    "Можно выбрать до двух" : {
-
-    },
-    "Можно выбрать несколько" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can pick more than one"
+    "Выбери срок сам. Это твоя цель, не наша.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick the length yourself. It's your goal, not ours."
           }
         }
       }
     },
-    "Мозг реагирует как при зависимости" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The brain responds like it does in addiction"
+    "Выбери сценарий": {},
+    "Выбрать другой сценарий": {},
+    "Вывод сохранён": {},
+    "Выдох": {},
+    "Вызов закрыт. Следующий уже ждёт.": {},
+    "Выйди прогуляться": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go for a walk"
           }
         }
       }
     },
-    "Мозгу нужно время. Ты уже даёшь ему это время." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The brain needs time. You're already giving it that time."
+    "Выйти": {},
+    "Выйти из сквада": {},
+    "Выйти из сквада?": {},
+    "Выполнил вызов": {},
+    "Высший ранг взят. Путь воина продолжается.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Highest rank reached. The warrior's path goes on."
           }
         }
       }
     },
-    "Мой код в приложении: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "My code in the app: %@"
+    "Где это обычно происходит?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where does it usually happen?"
           }
         }
       }
     },
-    "Мой путь" : {
-
-    },
-    "Молодец, что написал" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Good that you wrote"
+    "Гиппей / Царская гвардия": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hippeus Guard"
           }
         }
       }
     },
-    "Мотивация" : {
-
-    },
-    "Мощная победа! 🔥" : {
-
-    },
-    "МЫСЛИ ДНЯ / ЗАМЕТКА" : {
-
-    },
-    "На этом Apple ID нет активной подписки." : {
-
-    },
-    "Наблюдай за возвращением энергии и ясности ума. Опрос сравнения откроется через %@." : {
-
-    },
-    "Нажми на карандаш вверху или пройди экспресс-чекин выше." : {
-
-    },
-    "напарник" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "partner"
+    "Главная": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home"
           }
         }
       }
     },
-    "Напарник" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Partner"
+    "Главный триггер — %@.": {},
+    "Год": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Year"
           }
         }
       }
     },
-    "Напарник разорвал связь." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your partner disconnected."
+    "Гоплит": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoplite"
           }
         }
       }
     },
-    "Написать" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Message"
+    "Горжусь тобой": {},
+    "ДАЛЕЕ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NEXT"
           }
         }
       }
     },
-    "Написать…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Write…"
+    "Давай держаться вместе — стань моим напарником.\n\nОткрой ссылку: %@\nИли введи код %@ в разделе «Напарник».": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Давай держаться вместе — стань моим напарником.\n\nОткрой ссылку: %1$@\nИли введи код %2$@ в разделе «Напарник»."
           }
         }
       }
     },
-    "Напиши здесь" : {
-
-    },
-    "Напиши первым или нажми кнопку внизу, когда станет тяжело." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Write first, or hit the button below when it gets hard."
+    "Далее": {},
+    "Данные и прогресс": {},
+    "Данные не обновлялись больше суток — напарник давно не заходил.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No updates for over a day — your partner hasn't been in for a while."
           }
         }
       }
     },
-    "Напиши свои мысли здесь..." : {
-
-    },
-    "Напоминание перенесено на %lld:00 — за час до твоего опасного времени." : {
-
-    },
-    "Например: не могу дочитать страницу" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "For example: I can't finish reading a page"
+    "День": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day"
           }
         }
       }
     },
-    "Например: после смены, когда все уснули" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "For example: after a shift, once everyone's asleep"
+    "День %lld": {},
+    "День %lld из %lld": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "День %1$lld из %2$lld"
           }
         }
       }
     },
-    "Например: хочу высыпаться" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "For example: I want to sleep well"
+    "День стрика": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Streak day"
           }
         }
       }
     },
-    "Настоящие отношения" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Real relationships"
+    "Держимся вместе": {},
+    "Держись, это пройдёт": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hang in there, it'll pass"
           }
         }
       }
     },
-    "Настройки" : {
-
-    },
-    "Настройки защиты, напоминания и удаление данных." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Protection settings, reminders and data deletion."
+    "Держитесь группой": {},
+    "Держится на стрике, вызовах и статьях": {},
+    "Держусь": {},
+    "Держусь дальше": {},
+    "Диагностика твоего пути": {},
+    "Дневник": {},
+    "Днём": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the afternoon"
           }
         }
       }
     },
-    "Начни с %lld дней — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам." : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Start with %lld day — not because it's the right number, but because it's one you can actually reach. You'll raise it yourself later."
+    "До месяца": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to a month"
+          }
+        }
+      }
+    },
+    "До недели": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to a week"
+          }
+        }
+      }
+    },
+    "До следующего ранга осталось: %lld XP": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XP to next rank: %lld"
+          }
+        }
+      }
+    },
+    "До четырёх человек: видите дни друг друга и пишете в общий чат. Напарник — отдельно, один на один.": {},
+    "Добавить": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add"
+          }
+        }
+      }
+    },
+    "Документ не найден": {},
+    "Доступ не выдан. Включить его можно в настройках приложения.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Access wasn't granted. You can turn it on in the app's settings."
+          }
+        }
+      }
+    },
+    "Доступно в Premium": {},
+    "Дофаминовая петля: за пиком всегда идёт спад": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dopamine loop: every peak is followed by a crash"
+          }
+        }
+      }
+    },
+    "Дрочки": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fapping"
+          }
+        }
+      }
+    },
+    "Друг вводит его у себя. Код одноразовый и скоро истечёт.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your friend enters it on their phone. The code is single-use and expires soon."
+          }
+        }
+      }
+    },
+    "Другое": {},
+    "Думскроллинг": {},
+    "Думскроллинг / соцсети": {},
+    "Дыхательная практика": {},
+    "Ещё не отмечено": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not checked in yet"
+          }
+        }
+      }
+    },
+    "Ждём напарника…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for your partner…"
+          }
+        }
+      }
+    },
+    "За компьютером ночью": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At the computer at night"
+          }
+        }
+      }
+    },
+    "Задержи": {},
+    "Закрыть": {},
+    "Закрыть без разбора?": {},
+    "Залип в ленте": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got stuck scrolling"
+          }
+        }
+      }
+    },
+    "Записей пока нет": {},
+    "Запись сохранена": {},
+    "Зафиксировать вывод": {},
+    "Зачем ты это делаешь": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Why you're doing this"
+          }
+        }
+      }
+    },
+    "Зачем ты это делаешь?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Why are you doing this?"
+          }
+        }
+      }
+    },
+    "Защита стоит. Ты здесь, чтобы стать лучше.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Protection is on. You're here to get better."
+          }
+        }
+      }
+    },
+    "Здесь пусто": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing here yet"
+          }
+        }
+      }
+    },
+    "Знает, откуда приходит тяга. И не сдаётся ей.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Knows where the urge comes from. And doesn't give in."
+          }
+        }
+      }
+    },
+    "Знания": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Knowledge"
+          }
+        }
+      }
+    },
+    "Зову тебя в наш сквад — держимся вместе.\n\nОткрой ссылку: %@\nИли введи код %@ в разделе «Напарник» → «Сквад».": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Зову тебя в наш сквад — держимся вместе.\n\nОткрой ссылку: %1$@\nИли введи код %2$@ в разделе «Напарник» → «Сквад»."
+          }
+        }
+      }
+    },
+    "Иди дальше первой недели": {},
+    "Изучить": {},
+    "Илот / Неофит": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Helot / Initiate"
+          }
+        }
+      }
+    },
+    "Имя увидит только напарник.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only your partner will see the name."
+          }
+        }
+      }
+    },
+    "Институт Макса Планка сравнил снимки мозга людей с разной частотой просмотра порно. У тех, кто смотрел чаще, было меньше серого вещества в зоне вознаграждения и слабее связь между зонами, отвечающими за мотивацию.\n\nАвторы осторожны в выводах о причине и следствии, но сама корреляция задокументирована и опубликована в одном из самых строгих психиатрических журналов.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Max Planck Institute compared brain scans of people who watch porn at different frequencies. Those who watched more had less grey matter in the reward region and weaker connections between the areas responsible for motivation.\n\nThe authors are careful about cause and effect, but the correlation itself is documented and published in one of the strictest psychiatry journals."
+          }
+        }
+      }
+    },
+    "Исследователи поведенческих зависимостей, включая группу профессора Марка Потенцы (Йельский университет), описывают, как компульсивное поведение закрепляется через систему вознаграждения мозга — тот же механизм, что и при других зависимостях.\n\nЭто не оправдание бездействовать, а объяснение того, почему «просто взять себя в руки» часто не работает без системной поддержки — привычка встроена глубже, чем кажется.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Researchers of behavioural addictions, including Professor Marc Potenza's group at Yale, describe how compulsive behaviour gets locked in through the brain's reward system — the same mechanism as in other addictions.\n\nThat's not an excuse to do nothing. It explains why “just pull yourself together” often fails without systematic support — the habit is wired deeper than it seems."
+          }
+        }
+      }
+    },
+    "Истекает через": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expires in"
+          }
+        }
+      }
+    },
+    "История выполненных вызовов": {},
+    "Источники роста": {},
+    "Каждый день": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every day"
+          }
+        }
+      }
+    },
+    "Каждый день воздержания делает тебя сильнее.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every day of abstinence makes you stronger."
+          }
+        }
+      }
+    },
+    "Каждый отказ делает следующий чуть легче.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every no makes the next one a little easier."
+          }
+        }
+      }
+    },
+    "Как только её одобрят, Premium откроется сам.": {},
+    "Как ты сегодня?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How are you today?"
+          }
+        }
+      }
+    },
+    "Как ты?": {},
+    "Как часто случается срыв?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How often do you relapse?"
+          }
+        }
+      }
+    },
+    "Какой самый долгий срок ты продержался?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's the longest you've held out?"
+          }
+        }
+      }
+    },
+    "Когда и где это случилось?": {},
+    "Когда и где: %@": {},
+    "Когда и почему тянет чаще всего — чтобы готовиться заранее": {},
+    "Когда кто-то видит твой счёт, сорваться труднее. Позови одного человека, которому доверяешь.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When someone can see your count, it's harder to slip. Invite one person you trust."
+          }
+        }
+      }
+    },
+    "Код истёк. Попроси новый.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The code has expired. Ask for a new one."
+          }
+        }
+      }
+    },
+    "Код сквада": {},
+    "Кровать перед сном": {},
+    "Кто-нибудь знает о твоей проблеме?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Does anyone know about your problem?"
+          }
+        }
+      }
+    },
+    "Лежу в кровати перед сном или утром, не могу уснуть": {},
+    "Леонид / Царь Спарты": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "King Leonidas"
+          }
+        }
+      }
+    },
+    "Лучший внешний вид": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Better looks"
+          }
+        }
+      }
+    },
+    "Лучший стрик: %@ · Цель: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best streak: %1$@ · Goal: %2$@"
+          }
+        }
+      }
+    },
+    "Лёва": {},
+    "МКБ-11, компульсивное сексуальное поведение, 6C72": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ICD-11, compulsive sexual behaviour disorder, 6C72"
+          }
+        }
+      }
+    },
+    "МЫСЛИ ДНЯ / ЗАМЕТКА": {},
+    "Марк": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark"
+          }
+        }
+      }
+    },
+    "Меньше года": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Less than a year"
+          }
+        }
+      }
+    },
+    "Меньше тумана в голове": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Less brain fog"
+          }
+        }
+      }
+    },
+    "Месяц": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Month"
+          }
+        }
+      }
+    },
+    "Мне сейчас трудно": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'm struggling right now"
+          }
+        }
+      }
+    },
+    "Можно выбрать до двух": {},
+    "Можно выбрать несколько": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can pick more than one"
+          }
+        }
+      }
+    },
+    "Мозг реагирует как при зависимости": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The brain responds like it does in addiction"
+          }
+        }
+      }
+    },
+    "Мозгу нужно время. Ты уже даёшь ему это время.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The brain needs time. You're already giving it that time."
+          }
+        }
+      }
+    },
+    "Мой код в приложении: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My code in the app: %@"
+          }
+        }
+      }
+    },
+    "Мой путь": {},
+    "Молодец, что написал": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good that you wrote"
+          }
+        }
+      }
+    },
+    "Мотивация": {},
+    "Мощная победа! 🔥": {},
+    "На этом Apple ID нет активной подписки.": {},
+    "Наблюдай за возвращением энергии и ясности ума. Опрос сравнения откроется через %@.": {},
+    "Нажми на карандаш вверху или пройди экспресс-чекин выше.": {},
+    "Напарник": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Partner"
+          }
+        }
+      }
+    },
+    "Напарник разорвал связь.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your partner disconnected."
+          }
+        }
+      }
+    },
+    "Написать": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Message"
+          }
+        }
+      }
+    },
+    "Написать…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write…"
+          }
+        }
+      }
+    },
+    "Напиши здесь": {},
+    "Напиши первым или нажми кнопку внизу, когда станет тяжело.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write first, or hit the button below when it gets hard."
+          }
+        }
+      }
+    },
+    "Напиши свои мысли здесь...": {},
+    "Напоминание перенесено на %lld:00 — за час до твоего опасного времени.": {},
+    "Например: не могу дочитать страницу": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For example: I can't finish reading a page"
+          }
+        }
+      }
+    },
+    "Например: после смены, когда все уснули": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For example: after a shift, once everyone's asleep"
+          }
+        }
+      }
+    },
+    "Например: хочу высыпаться": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For example: I want to sleep well"
+          }
+        }
+      }
+    },
+    "Настоящие отношения": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real relationships"
+          }
+        }
+      }
+    },
+    "Настройки": {},
+    "Настройки защиты, напоминания и удаление данных.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Protection settings, reminders and data deletion."
+          }
+        }
+      }
+    },
+    "Начни с %lld дней — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам.": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Start with %lld day — not because it's the right number, but because it's one you can actually reach. You'll raise it yourself later."
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Start with %lld days — not because it's the right number, but because it's one you can actually reach. You'll raise it yourself later."
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Start with %lld days — not because it's the right number, but because it's one you can actually reach. You'll raise it yourself later."
                 }
               }
             }
           }
         },
-        "ru" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Начни с %lld дней — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам."
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Начни с %lld дней — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам."
                 }
               },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Начни с %lld дней — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам."
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Начни с %lld дней — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам."
                 }
               },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Начни с %lld дня — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам."
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Начни с %lld дня — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам."
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Начни с %lld дней — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам."
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Начни с %lld дней — не потому что это правильный срок, а потому что его реально пройти. Дальше поднимешь сам."
                 }
               }
             }
@@ -1927,2121 +1403,2035 @@
         }
       }
     },
-    "Не было" : {
-
-    },
-    "Не обязательно чувствовать себя сильным. Достаточно не открывать браузер." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You don't have to feel strong. Just don't open the browser."
+    "Не было": {},
+    "Не обязательно чувствовать себя сильным. Достаточно не открывать браузер.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You don't have to feel strong. Just don't open the browser."
           }
         }
       }
-    },
-    "Не получилось" : {
-
-    },
-    "Не сейчас" : {
-
     },
-    "Не сила воли, а устройство" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not willpower — the device"
+    "Не получилось": {},
+    "Не сейчас": {},
+    "Не сила воли, а устройство": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not willpower — the device"
           }
         }
       }
     },
-    "Не удалось включить защиту. Попробуй ещё раз." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Couldn't turn on protection. Try again."
+    "Не удалось включить защиту. Попробуй ещё раз.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't turn on protection. Try again."
           }
         }
       }
     },
-    "Не удалось загрузить варианты подписки. Проверь интернет." : {
-
-    },
-    "Не удалось удалить аккаунт" : {
-
-    },
-    "Неделя" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Week"
+    "Не удалось загрузить варианты подписки. Проверь интернет.": {},
+    "Не удалось удалить аккаунт": {},
+    "Неделя": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Week"
           }
         }
       }
-    },
-    "Нервы, конфликт, тяжёлый день, попытка сбежать от реальности" : {
-
     },
-    "Несколько раз в месяц" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A few times a month"
+    "Нервы, конфликт, тяжёлый день, попытка сбежать от реальности": {},
+    "Несколько раз в месяц": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A few times a month"
           }
         }
       }
     },
-    "Несколько раз в неделю" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Several times a week"
+    "Несколько раз в неделю": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Several times a week"
           }
         }
       }
     },
-    "Несколько человек" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A few people"
+    "Несколько человек": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A few people"
           }
         }
       }
     },
-    "Нет связи. Попробуй ещё раз." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No connection. Try again."
+    "Нет связи. Попробуй ещё раз.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No connection. Try again."
           }
         }
       }
     },
-    "Нет энергии" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No energy"
+    "Нет энергии": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No energy"
           }
         }
       }
     },
-    "Ни аккаунта, ни истории посещений. Счётчик и календарь живут только на этом телефоне. Захочешь позвать напарника — он увидит лишь счёт дней и отметился ли ты сегодня. Ни календаря, ни срывов, ни имени." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No account, no browsing history. The counter and calendar live only on this phone. If you invite a partner, they'll see just your day count and whether you checked in today. No calendar, no relapses, no name."
+    "Ни аккаунта, ни истории посещений. Счётчик и календарь живут только на этом телефоне. Захочешь позвать напарника — он увидит лишь счёт дней и отметился ли ты сегодня. Ни календаря, ни срывов, ни имени.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No account, no browsing history. The counter and calendar live only on this phone. If you invite a partner, they'll see just your day count and whether you checked in today. No calendar, no relapses, no name."
           }
         }
       }
     },
-    "Никогда не считал" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Never counted"
+    "Никогда не считал": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Never counted"
           }
         }
       }
     },
-    "Никто" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No one"
+    "Никто": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No one"
           }
         }
       }
     },
-    "Ничего не уходит без спроса" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing leaves without asking"
+    "Ничего не уходит без спроса": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing leaves without asking"
           }
         }
       }
     },
-    "Новая запись" : {
-
-    },
-    "Новая физическая форма разблокирована 🔥" : {
-
-    },
-    "Новый спартанский ранг разблокирован!" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New Spartan rank unlocked!"
+    "Новая запись": {},
+    "Новая физическая форма разблокирована 🔥": {},
+    "Новый спартанский ранг разблокирован!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Spartan rank unlocked!"
           }
         }
       }
-    },
-    "Ночь" : {
-
     },
-    "ночью" : {
-
-    },
-    "Ночью" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At night"
+    "Ночь": {},
+    "Ночью": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At night"
           }
         }
       }
     },
-    "Нужен вход в iCloud — без него напарник не работает." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in to iCloud is required — the partner feature doesn't work without it."
+    "Нужен вход в iCloud — без него напарник не работает.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to iCloud is required — the partner feature doesn't work without it."
           }
         }
       }
     },
-    "Обычно тяга накатывает примерно сейчас. Ты уже держишься — не срывай на ровном месте." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This is about when the urge usually hits. You're already holding on — don't slip over nothing."
+    "Обычно тяга накатывает примерно сейчас. Ты уже держишься — не срывай на ровном месте.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This is about when the urge usually hits. You're already holding on — don't slip over nothing."
           }
         }
       }
     },
-    "Один день — это мало для результата и много для привычки." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "One day is little for results and a lot for a habit."
+    "Один день — это мало для результата и много для привычки.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One day is little for results and a lot for a habit."
           }
         }
       }
     },
-    "Один дома вечером" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Home alone in the evening"
+    "Один дома вечером": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home alone in the evening"
           }
         }
       }
     },
-    "Один человек" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "One person"
+    "Один человек": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One person"
           }
         }
       }
     },
-    "Одиночество" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loneliness"
+    "Одиночество": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loneliness"
           }
         }
       }
     },
-    "Одиночество — это триггер, а не причина. Напиши кому-нибудь." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loneliness is a trigger, not a reason. Text someone."
+    "Одиночество / апатия": {},
+    "Одиночество — это триггер, а не причина. Напиши кому-нибудь.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loneliness is a trigger, not a reason. Text someone."
           }
         }
       }
-    },
-    "Одиночество / апатия" : {
-
     },
-    "Одна ссылка для всех · действует до" : {
-
-    },
-    "Одному тяжелее" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It's harder alone"
+    "Одна ссылка для всех · действует до": {},
+    "Одному тяжелее": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's harder alone"
           }
         }
       }
-    },
-    "Ок" : {
-
     },
-    "Она поднимается и всегда спадает. Выбери, что поможет продержаться следующие пару минут." : {
-
-    },
-    "Опиши победы или триггеры дня..." : {
-
-    },
-    "опыт" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "experience"
+    "Ок": {},
+    "Она поднимается и всегда спадает. Выбери, что поможет продержаться следующие пару минут.": {},
+    "Опиши победы или триггеры дня...": {},
+    "Отвлекись на пару минут": {},
+    "Откроется на %lld XP": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlocks at %lld XP"
           }
         }
       }
-    },
-    "особенно %@" : {
-
     },
-    "Отвлекись на пару минут" : {
-
-    },
-    "Откроется на %lld XP" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlocks at %lld XP"
+    "Открыть Premium": {},
+    "Открыть источник": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open source"
           }
         }
       }
     },
-    "Открыть Premium" : {
-
-    },
-    "Открыть источник" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open source"
+    "Открыть настройки": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Settings"
           }
         }
       }
     },
-    "Открыть настройки" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Settings"
+    "Открыть с Premium": {},
+    "Отмена": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
-    },
-    "Открыть с Premium" : {
-
     },
-    "Отмена" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
+    "Отменить": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
     },
-    "Отменить" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
+    "Отменить приглашение": {},
+    "Отметить «%@» выполненным?": {},
+    "Отметить срыв": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark relapse"
           }
         }
       }
     },
-    "Отменить приглашение" : {
-
-    },
-    "отметился ли ты сегодня" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "whether you checked in today"
+    "Отметить срыв?": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark a relapse?"
           }
         }
       }
     },
-    "отметился сегодня" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "checked in today"
+    "Отметок триггеров у тебя уже: %lld. Посмотри, что за ними стоит: когда тянет чаще и что этому предшествует.": {},
+    "Отмечай триггеры в SOS и экспресс-чекине — здесь появится картина: когда тянет чаще и что этому предшествует.": {},
+    "Отмечено: был срыв": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checked in: relapsed"
           }
         }
       }
     },
-    "Отметить «%@» выполненным?" : {
-
-    },
-    "Отметить срыв" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mark relapse"
+    "Отмечено: чисто": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checked in: clean"
           }
         }
       }
     },
-    "Отметить срыв?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mark a relapse?"
+    "Отношения": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relationships"
           }
         }
       }
-    },
-    "Отметок триггеров у тебя уже: %lld. Посмотри, что за ними стоит: когда тянет чаще и что этому предшествует." : {
-
     },
-    "Отмечай триггеры в SOS и экспресс-чекине — здесь появится картина: когда тянет чаще и что этому предшествует." : {
-
-    },
-    "Отмечено: был срыв" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Checked in: relapsed"
+    "Отправить код": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send code"
           }
         }
       }
     },
-    "Отмечено: чисто" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Checked in: clean"
+    "Отправить приглашение": {},
+    "Отправь приглашение — друг откроет ссылку и подтвердит. Или продиктуй код: он одноразовый и скоро истечёт.": {},
+    "Оформить Premium": {},
+    "Ошибка — не повод обнулять всё. Просто отметь и иди дальше.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A slip is no reason to throw it all away. Just mark it and keep going."
           }
         }
       }
     },
-    "Отношения" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Relationships"
+    "Падает самооценка": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Low self-esteem"
           }
         }
       }
     },
-    "Отправить код" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send code"
+    "Пара строк о том, как прошёл день — только для тебя.": {},
+    "Переключить тело прямо сейчас": {},
+    "Пиши, я на связи": {},
+    "Пн": {},
+    "По твоему настоящему опасному часу, а не по ответу из анкеты": {},
+    "По твоим отметкам тяга чаще приходит около %lld:00. Реши заранее, чем займёшь этот час.": {},
+    "По-разному": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It varies"
           }
         }
       }
-    },
-    "Отправить приглашение" : {
-
-    },
-    "Отправь приглашение — друг откроет ссылку и подтвердит. Или продиктуй код: он одноразовый и скоро истечёт." : {
-
-    },
-    "Оформить Premium" : {
-
     },
-    "Ошибка — не повод обнулять всё. Просто отметь и иди дальше." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A slip is no reason to throw it all away. Just mark it and keep going."
+    "Повторить": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry"
           }
         }
       }
     },
-    "Падает самооценка" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Low self-esteem"
+    "Подписка продлевается автоматически. Отменить можно в любой момент в настройках Apple ID, но не позже чем за сутки до конца периода.": {},
+    "Позвать в сквад": {},
+    "Позвать напарника": {},
+    "Позвони мне": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Call me"
           }
         }
       }
     },
-    "Пара строк о том, как прошёл день — только для тебя." : {
-
-    },
-    "Первые искры дисциплины. Начало суровой закалки." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "First sparks of discipline. The harsh training begins."
+    "Поздно лёг в постель": {},
+    "Позови напарника": {},
+    "Пока мало данных. Отмечай триггеры в опросе после SOS и в экспресс-чекине — после %lld отметок здесь появится картина.": {},
+    "Пока пусто. Закрой текущий вызов — он появится здесь.": {},
+    "Пока слабый. Но уже начал.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Still weak. But already started."
           }
         }
       }
-    },
-    "Переключить тело прямо сейчас" : {
-
-    },
-    "Пиши, я на связи" : {
-
-    },
-    "Пн" : {
-
-    },
-    "по вечерам" : {
-
-    },
-    "По твоему настоящему опасному часу, а не по ответу из анкеты" : {
-
     },
-    "По твоим отметкам тяга чаще приходит около %lld:00. Реши заранее, чем займёшь этот час." : {
-
-    },
-    "по утрам" : {
-
-    },
-    "По-разному" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It varies"
+    "Покупка ждёт подтверждения": {},
+    "Покупка не прошла. Деньги не списаны — попробуй ещё раз.": {},
+    "Покупок не найдено": {},
+    "Полемарх": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polemarch"
           }
         }
       }
     },
-    "Повторить" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retry"
+    "Политика конфиденциальности": {},
+    "Получить следующий челлендж": {},
+    "Помни свою цель. Возвращайся к ней каждый день.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remember your goal. Come back to it every day."
           }
         }
       }
-    },
-    "Подписка продлевается автоматически. Отменить можно в любой момент в настройках Apple ID, но не позже чем за сутки до конца периода." : {
-
     },
-    "позвать\nнапарника" : {
-
-    },
-    "Позвать в сквад" : {
-
-    },
-    "Позвать напарника" : {
-
-    },
-    "Позвони мне" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Call me"
+    "Понял тебя": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got you"
           }
         }
       }
-    },
-    "Поздно лёг в постель" : {
-
     },
-    "Позови напарника" : {
-
-    },
-    "Пока мало данных. Отмечай триггеры в опросе после SOS и в экспресс-чекине — после %lld отметок здесь появится картина." : {
-
-    },
-    "Пока пусто. Закрой текущий вызов — он появится здесь." : {
-
-    },
-    "Покупка ждёт подтверждения" : {
-
-    },
-    "Покупка не прошла. Деньги не списаны — попробуй ещё раз." : {
-
-    },
-    "Покупок не найдено" : {
-
-    },
-    "Полемарх" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Polemarch"
+    "Понятно": {},
+    "Попробовать 7 дней бесплатно": {},
+    "Порно": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porn"
           }
         }
       }
-    },
-    "Политика конфиденциальности" : {
-
     },
-    "Полководец своей жизни. Высокий уровень энергии и фокуса." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commander of your own life. High energy and focus."
+    "Поставил цель — добейся": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set a goal — reach it"
           }
         }
       }
     },
-    "Получить следующий челлендж" : {
-
-    },
-    "Помни свою цель. Возвращайся к ней каждый день." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remember your goal. Come back to it every day."
+    "Правовая информация и поддержка": {},
+    "Практика парадоксального наблюдения: сними любые ограничения на один день, доведя импульс до полного пресыщения. После этого остановись и на контрасте отследи, как меняется твоя биохимия и фокус.": {},
+    "Привет, воин": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hey, warrior"
           }
         }
       }
     },
-    "Понял тебя" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Got you"
+    "Пригласить в сквад": {},
+    "Приложение блокирует материалы для взрослых во всех браузерах этого iPhone. Не нужно каждый вечер побеждать себя заново — достаточно решить сейчас.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app blocks adult content in every browser on this iPhone. You don't have to win against yourself every evening — deciding once is enough."
           }
         }
       }
-    },
-    "Понятно" : {
-
-    },
-    "Попробовать 7 дней бесплатно" : {
-
     },
-    "Порно" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Porn"
+    "Примерно раз в неделю": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About once a week"
           }
         }
       }
     },
-    "Поставил цель — добейся" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Set a goal — reach it"
+    "Проверяем связь…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking the connection…"
           }
         }
       }
     },
-    "Правовая информация и поддержка" : {
-
-    },
-    "Практика парадоксального наблюдения: сними любые ограничения на один день, доведя импульс до полного пресыщения. После этого остановись и на контрасте отследи, как меняется твоя биохимия и фокус." : {
-
-    },
-    "Привет, воин" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hey, warrior"
+    "Прогресс": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progress"
           }
         }
       }
     },
-    "Пригласить в сквад" : {
-
-    },
-    "Приложение блокирует материалы для взрослых во всех браузерах этого iPhone. Не нужно каждый вечер побеждать себя заново — достаточно решить сейчас." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The app blocks adult content in every browser on this iPhone. You don't have to win against yourself every evening — deciding once is enough."
+    "Прогресс ранга": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rank progress"
           }
         }
       }
     },
-    "Примерно раз в неделю" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "About once a week"
+    "Продиктуй этот код": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read this code out"
           }
         }
       }
     },
-    "Проверяем связь…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Checking the connection…"
+    "Продолжить": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
           }
         }
       }
     },
-    "Прогресс" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Progress"
+    "Продолжить путь воина": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue the warrior's path"
           }
         }
       }
     },
-    "Прогресс ранга" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rank progress"
+    "Продолжить разбор": {},
+    "Прозвище": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nickname"
           }
         }
       }
     },
-    "Продиктуй этот код" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Read this code out"
+    "Пройди ситуацию до конца и увидь, к чему реально ведёт каждый выбор.": {},
+    "Пройти заново": {},
+    "Прокачивай разум. Понимай, что происходит на самом деле.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Train your mind. Understand what's really going on."
           }
         }
       }
     },
-    "Продолжить" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue"
+    "Прокрастинация": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Procrastination"
           }
         }
       }
     },
-    "Продолжить путь воина" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue the warrior's path"
+    "Пропустить": {},
+    "Профиль": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profile"
           }
         }
       }
-    },
-    "Продолжить разбор" : {
-
     },
-    "Прозвище" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nickname"
+    "Проходил через срывы и сомнения. Остался в строю.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Went through relapses and doubt. Still standing."
           }
         }
       }
     },
-    "Пройди ситуацию до конца и увидь, к чему реально ведёт каждый выбор." : {
-
-    },
-    "Пройти заново" : {
-
-    },
-    "Прокачивай разум. Понимай, что происходит на самом деле." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Train your mind. Understand what's really going on."
+    "Прошёл весь путь. Теперь на него равняются.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Walked the whole path. Now others look up to him."
           }
         }
       }
     },
-    "Прокрастинация" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Procrastination"
+    "Пт": {},
+    "Разбор срыва": {},
+    "Разорвать": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect"
           }
         }
       }
-    },
-    "Пропустить" : {
-
     },
-    "Профиль" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Profile"
+    "Разорвать связь": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect"
           }
         }
       }
     },
-    "Прошёл через сомнения и кризис. Разум побеждает плоть." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Through doubt and crisis. Mind conquers flesh."
+    "Разорвать связь?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnect?"
           }
         }
       }
     },
-    "Пт" : {
-
-    },
-    "Разбор срыва" : {
-
-    },
-    "Разорвать" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disconnect"
+    "Ранг %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rank %lld"
           }
         }
       }
     },
-    "Разорвать связь" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disconnect"
+    "Ранг %lld из %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rank %lld of %lld"
           }
         }
       }
     },
-    "Разорвать связь?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disconnect?"
+    "Ранг %lld из %lld • %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rank %lld of %lld • %@"
           }
         }
       }
     },
-    "ранг %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "rank %lld"
+    "Решение принимается один раз": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The decision is made once"
           }
         }
       }
     },
-    "Ранг %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rank %lld"
+    "Сам решает, на что тратить силы. И тратит на дело.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chooses where his strength goes. And spends it well."
           }
         }
       }
     },
-    "Ранг %lld из %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rank %lld of %lld"
+    "Самое сложное — первые двадцать минут. Дальше проще.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The hardest part is the first twenty minutes. It gets easier after."
           }
         }
       }
     },
-    "Ранг %lld из %lld • %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rank %lld of %lld • %@"
+    "Самоуважение": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Self-respect"
           }
         }
       }
     },
-    "Решение принимается один раз" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The decision is made once"
+    "Сб": {},
+    "Сбитый сон": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Broken sleep"
           }
         }
       }
     },
-    "Самое сложное — первые двадцать минут. Дальше проще." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The hardest part is the first twenty minutes. It gets easier after."
+    "Сброс: счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину.": {},
+    "Сброс: счётчик обнулится, рекорд останется. Отметку видишь только ты.": {},
+    "Сбросить": {},
+    "Сбросить стрик": {},
+    "Сбросить текущий стрик": {},
+    "Сбросить текущий стрик?": {},
+    "Свобода от зависимости": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freedom from addiction"
           }
         }
       }
     },
-    "Самоуважение" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Self-respect"
+    "Свободное место": {},
+    "Своими словами": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In your own words"
           }
         }
       }
-    },
-    "Сб" : {
-
     },
-    "Сбитый сон" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Broken sleep"
+    "Своё число:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom:"
           }
         }
       }
     },
-    "Сброс: счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину." : {
-
-    },
-    "Сброс: счётчик обнулится, рекорд останется. Отметку видишь только ты." : {
-
-    },
-    "Сбросить" : {
-
-    },
-    "Сбросить стрик" : {
-
-    },
-    "Сбросить текущий стрик" : {
-
-    },
-    "Сбросить текущий стрик?" : {
-
-    },
-    "свобода в этом месяце" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "freedom this month"
+    "Связаться": {},
+    "Сделай что-то физическое прямо сейчас: вода, воздух, десять приседаний.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do something physical right now: water, fresh air, ten squats."
           }
         }
       }
     },
-    "Свобода от зависимости" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Freedom from addiction"
+    "Сделал, стало легче": {},
+    "Сегодня": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
           }
         }
       }
-    },
-    "Свободное место" : {
-
     },
-    "Своё число:" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom:"
+    "Сегодня отмечено. Следующая отметка через %@": {},
+    "Сегодня тоже отметился": {},
+    "Сегодня ты держишься": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're holding on today"
           }
         }
       }
     },
-    "Своими словами" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In your own words"
+    "Сегодня ты свободен от:": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today you're free from:"
           }
         }
       }
     },
-    "Связаться" : {
-
-    },
-    "Сделай что-то физическое прямо сейчас: вода, воздух, десять приседаний." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Do something physical right now: water, fresh air, ten squats."
+    "Сервер напарника не настроен.": {},
+    "Сервер не подключён — на нём нечего удалять.": {},
+    "Сервер отклонил запрос. Попробуй позже.": {},
+    "Сигнал напарнику": {},
+    "Сизиф-%lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sisyphus-%lld"
           }
         }
       }
     },
-    "Сделал, стало легче" : {
-
-    },
-    "сегодня" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "today"
+    "Сила духа": {},
+    "Сила, энергия и смена формы открываются вместе с подпиской.": {},
+    "Симулятор тяги": {},
+    "Сквад": {},
+    "Сквад: %@": {},
+    "Сквад: пока никого": {},
+    "Сколько лет длится эта привычка?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How many years has this habit lasted?"
           }
         }
       }
     },
-    "Сегодня" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today"
+    "Скоро твой опасный час": {},
+    "Скука": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boredom"
           }
         }
       }
     },
-    "сегодня ещё не отмечался" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "hasn't checked in today yet"
+    "Скука / прокрастинация": {},
+    "Скука и усталость врут громче всего. Переспи с этим решением.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boredom and tiredness lie the loudest. Sleep on it."
           }
         }
       }
-    },
-    "Сегодня отмечено. Следующая отметка через %@" : {
-
     },
-    "Сегодня тоже отметился" : {
-
-    },
-    "Сегодня ты держишься" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You're holding on today"
+    "Скука, нежелание делать сложное дело или учёбу": {},
+    "Следующий ранг": {},
+    "Следующий ранг: %@": {},
+    "Сменить вопрос": {},
+    "Снять напряжение за 3 круга дыхания": {},
+    "Собрать сквад": {},
+    "Создать код": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a code"
           }
         }
       }
     },
-    "Сегодня ты свободен от:" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today you're free from:"
+    "Сообщить о срыве": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report a relapse"
           }
         }
       }
-    },
-    "Сервер напарника не настроен." : {
-
-    },
-    "Сервер не подключён — на нём нечего удалять." : {
-
-    },
-    "Сервер отклонил запрос. Попробуй позже." : {
-
     },
-    "Сигнал напарнику" : {
-
-    },
-    "Сизиф-%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sisyphus-%lld"
+    "Сорвался": {},
+    "Сорвался?": {},
+    "Сохранить": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
           }
         }
       }
-    },
-    "Сила духа" : {
-
-    },
-    "Сила, энергия и смена формы открываются вместе с подпиской." : {
-
-    },
-    "Симулятор тяги" : {
-
-    },
-    "сквад" : {
-
-    },
-    "Сквад" : {
-
-    },
-    "Сквад: %@" : {
-
     },
-    "Сквад: пока никого" : {
-
-    },
-    "сколько дней ты держишься" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "how many days you've held on"
+    "Сохранить запись": {},
+    "Сохранить разбор и стрик": {},
+    "Сохранить стрик щитом": {},
+    "Соцсети": {},
+    "Спартанский ветеран": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spartan Veteran"
           }
         }
       }
     },
-    "Сколько лет длится эта привычка?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How many years has this habit lasted?"
+    "Специальный эксперимент": {},
+    "Спокоен там, где другие ломаются.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calm where others break."
           }
         }
       }
     },
-    "Скоро твой опасный час" : {
-
-    },
-    "Скука" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boredom"
+    "Ср": {},
+    "Сравни это ощущение с состоянием, когда ты держишь стрик. Стоила ли сиюминутная слабость такого отката?": {},
+    "Сравнительный разбор": {},
+    "Срыв": {},
+    "Срыв не отменяет пройденный путь. Он просто часть пути.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A relapse doesn't erase the road behind you. It's just part of the road."
           }
         }
       }
-    },
-    "Скука / прокрастинация" : {
-
     },
-    "Скука и усталость врут громче всего. Переспи с этим решением." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boredom and tiredness lie the loudest. Sleep on it."
+    "Стало легче": {},
+    "Статьи": {},
+    "Статья": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Article"
           }
         }
       }
-    },
-    "Скука, нежелание делать сложное дело или учёбу" : {
-
-    },
-    "Следующий ранг" : {
-
-    },
-    "Следующий ранг: %@" : {
-
     },
-    "Сломленный импульсом, но решивший встать на путь." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Broken by the urge, yet determined to take the path."
+    "Статья изучена": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Article studied"
           }
         }
       }
     },
-    "Сменить вопрос" : {
-
-    },
-    "Снять напряжение за 3 круга дыхания" : {
-
-    },
-    "Собрать сквад" : {
-
-    },
-    "Создать код" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create a code"
+    "Стоп. Тяга — это волна": {},
+    "Стресс": {},
+    "Стресс / тревога": {},
+    "Стресс или тревога": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stress or anxiety"
           }
         }
       }
     },
-    "Сообщить о срыве" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Report a relapse"
+    "Стрик останется на месте, если честно разобрать, что случилось. Щит — один раз в месяц.": {},
+    "Стрик сохранён": {},
+    "Сутки наблюдения прошли. Зафиксируй, чем сегодняшнее состояние отличается от момента срыва.": {},
+    "Счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The counter resets, your record stays. Your partner will see the count restart, but not why."
           }
         }
       }
     },
-    "Сорвался" : {
-
-    },
-    "Сорвался?" : {
-
-    },
-    "Сохранить" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save"
+    "Счётчик обнулится, рекорд останется. Отметка нужна только тебе — она никуда не отправляется.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The counter resets, your record stays. The mark is for you only — it isn't sent anywhere."
           }
         }
       }
-    },
-    "Сохранить запись" : {
-
-    },
-    "Сохранить разбор и стрик" : {
-
     },
-    "Сохранить стрик щитом" : {
-
-    },
-    "Соцсети" : {
-
-    },
-    "Спартанский ветеран" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spartan Veteran"
+    "ТРИГГЕРЫ ЗА ДЕНЬ": {},
+    "Такого кода нет. Проверь буквы.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That code doesn't exist. Check the letters."
           }
         }
       }
-    },
-    "Специальный эксперимент" : {
-
     },
-    "Ср" : {
-
-    },
-    "Сравни это ощущение с состоянием, когда ты держишь стрик. Стоила ли сиюминутная слабость такого отката?" : {
-
-    },
-    "Сравнительный разбор" : {
-
-    },
-    "срыв" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "relapse"
+    "Твой аватар эволюционировал!": {},
+    "Твой прогресс": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your progress"
           }
         }
       }
-    },
-    "Срыв" : {
-
     },
-    "Срыв не отменяет пройденный путь. Он просто часть пути." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A relapse doesn't erase the road behind you. It's just part of the road."
+    "Твоя отправная точка зафиксирована. Сегодня — твой первый день свободы": {},
+    "Твоя причина": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your reason"
           }
         }
       }
     },
-    "Стало легче" : {
-
-    },
-    "Статьи" : {
-
-    },
-    "Статья" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Article"
+    "Тебе не нужно объяснять никому, зачем ты это делаешь.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You don't owe anyone an explanation for why you're doing this."
           }
         }
       }
     },
-    "Статья изучена" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Article studied"
+    "Тебя зовут в напарники": {},
+    "Тебя зовут в сквад": {},
+    "Текущая энергия": {},
+    "Текущий счётчик обнулится. Рекорд сохранится, если он был больше.": {},
+    "Тело переключает мозг быстрее, чем уговоры. Сделай один из вариантов прямо сейчас.": {},
+    "Тема": {},
+    "Тестостерон на максимуме": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testosterone at its peak"
           }
         }
       }
-    },
-    "Стоп. Тяга — это волна" : {
-
     },
-    "Стресс" : {
-
-    },
-    "Стресс / тревога" : {
-
-    },
-    "Стресс или тревога" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stress or anxiety"
+    "Тимур": {},
+    "То, что тяжело сегодня, станет фоном через месяц.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's hard today will be background noise in a month."
           }
         }
       }
-    },
-    "Стрик останется на месте, если честно разобрать, что случилось. Щит — один раз в месяц." : {
-
-    },
-    "Стрик сохранён" : {
-
     },
-    "Сутки наблюдения прошли. Зафиксируй, чем сегодняшнее состояние отличается от момента срыва." : {
-
-    },
-    "Счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The counter resets, your record stays. Your partner will see the count restart, but not why."
+    "Триггер: %@": {},
+    "Туман в голове": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brain fog"
           }
         }
       }
     },
-    "Счётчик обнулится, рекорд останется. Отметка нужна только тебе — она никуда не отправляется." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The counter resets, your record stays. The mark is for you only — it isn't sent anywhere."
+    "Ты": {},
+    "Ты готов к настоящей любви": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're ready for real love"
           }
         }
       }
     },
-    "Такого кода нет. Проверь буквы." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "That code doesn't exist. Check the letters."
+    "Ты здесь, чтобы стать лучше.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're here to get better."
           }
         }
       }
-    },
-    "Твой аватар эволюционировал!" : {
-
-    },
-    "твой день" : {
-
     },
-    "твой напарник" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "your partner"
+    "Ты не борешься с собой. Ты возвращаешь себе внимание.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're not fighting yourself. You're taking your attention back."
           }
         }
       }
     },
-    "Твой прогресс" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your progress"
+    "Ты не привязал тягу ко времени. Значит опорой будет ежедневная отметка, а не один опасный час.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You didn't tie the urge to a time of day. So your anchor is the daily check-in, not one dangerous hour."
           }
         }
       }
     },
-    "твой стрик" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "your streak"
+    "Ты перестанешь видеть участников и общий чат. Вернуться можно только по новому приглашению.": {},
+    "Ты поставил себе %@ — дойди до них. Новую цель можно выбрать, когда возьмёшь эту.": {},
+    "Ты продержался %@ — именно столько сам себе и поставил. Поставь себе новую цель.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You held out for %@ — exactly what you set for yourself. Set a new goal."
           }
         }
       }
     },
-    "твой трек" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "your track"
+    "Ты сам назвал обстановку: «%@». Это триггер, а не слабость.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You named the setting yourself: “%@”. That's a trigger, not a weakness."
           }
         }
       }
     },
-    "Твоя отправная точка зафиксирована. Сегодня — твой первый день свободы" : {
-
-    },
-    "Твоя причина" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your reason"
+    "Ты сейчас не отказываешь себе. Ты выбираешь что-то получше.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're not denying yourself. You're choosing something better."
           }
         }
       }
     },
-    "Тебе не нужно объяснять никому, зачем ты это делаешь." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You don't owe anyone an explanation for why you're doing this."
+    "Ты справишься": {},
+    "Ты уважаешь себя": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You respect yourself"
           }
         }
       }
-    },
-    "Тебя зовут в напарники" : {
-
-    },
-    "Тебя зовут в сквад" : {
-
     },
-    "Текущая энергия" : {
-
-    },
-    "текущий\nстрик" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "current\nstreak"
+    "Ты уже в другом скваде. Чтобы войти в этот, сначала выйди из своего.": {},
+    "Ты уже проходил это": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've been through this before"
           }
         }
       }
-    },
-    "Текущий счётчик обнулится. Рекорд сохранится, если он был больше." : {
-
-    },
-    "Тело переключает мозг быстрее, чем уговоры. Сделай один из вариантов прямо сейчас." : {
-
     },
-    "Тема" : {
-
-    },
-    "Тестостерон на максимуме" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Testosterone at its peak"
+    "Ты хозяин своих желаний": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You own your desires"
           }
         }
       }
-    },
-    "Тимур" : {
-
     },
-    "То, что тяжело сегодня, станет фоном через месяц." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What's hard today will be background noise in a month."
+    "Ты чувствуешь себя живым": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You feel alive"
           }
         }
       }
-    },
-    "Триггер: %@" : {
-
-    },
-    "ТРИГГЕРЫ ЗА ДЕНЬ" : {
-
     },
-    "Туман в голове" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Brain fog"
+    "Тяга %lld": {},
+    "Тяга без причины": {},
+    "Тяга чаще накатывает %@. Слабое место — примерно с %lld:00.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The urge hits most often %1$@. Your weak spot starts around %2$lld:00."
           }
         }
       }
     },
-    "Ты" : {
-
-    },
-    "Ты готов к настоящей любви" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You're ready for real love"
+    "Тяга — это волна. Она поднимается, но всегда спадает.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An urge is a wave. It rises, but it always falls."
           }
         }
       }
     },
-    "Ты здесь, чтобы стать лучше." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You're here to get better."
+    "Тяжелее всего %@.": {},
+    "У меня есть код": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I have a code"
           }
         }
       }
     },
-    "Ты не борешься с собой. Ты возвращаешь себе внимание." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You're not fighting yourself. You're taking your attention back."
+    "У тебя уже есть напарник": {},
+    "У тебя уже есть напарник.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You already have a partner."
           }
         }
       }
     },
-    "Ты не привязал тягу ко времени. Значит опорой будет ежедневная отметка, а не один опасный час." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You didn't tie the urge to a time of day. So your anchor is the daily check-in, not one dangerous hour."
+    "Убрать вопрос": {},
+    "Уверенность": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confidence"
           }
         }
       }
-    },
-    "Ты перестанешь видеть участников и общий чат. Вернуться можно только по новому приглашению." : {
-
-    },
-    "Ты поставил себе %@ — дойди до них. Новую цель можно выбрать, когда возьмёшь эту." : {
-
     },
-    "ты пришёл за" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "what you came for"
+    "Удаление стирает историю воздержания, дневник и сессию на этом устройстве и на сервере.": {},
+    "Удаление…": {},
+    "Удалить аккаунт и данные": {},
+    "Удалить аккаунт и данные?": {},
+    "Удалить всё": {},
+    "Уже изучена": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Already studied"
           }
         }
       }
     },
-    "Ты продержался %@ — именно столько сам себе и поставил. Поставь себе новую цель." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You held out for %@ — exactly what you set for yourself. Set a new goal."
+    "Умные напоминания": {},
+    "Уровень %lld: %@": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Уровень %1$lld: %2$@"
           }
         }
       }
     },
-    "Ты сам назвал обстановку: «%@». Это триггер, а не слабость." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You named the setting yourself: “%@”. That's a trigger, not a weakness."
+    "Уровень физической энергии и ясности мыслей прямо сейчас": {},
+    "Условия": {},
+    "Условия использования": {},
+    "Усталость": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiredness"
           }
         }
       }
     },
-    "Ты сейчас не отказываешь себе. Ты выбираешь что-то получше." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You're not denying yourself. You're choosing something better."
+    "Утро": {},
+    "Утром": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the morning"
           }
         }
       }
     },
-    "Ты справишься" : {
-
-    },
-    "Ты уважаешь себя" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You respect yourself"
+    "Участники увидят твоё прозвище «%@», число дней и отметился ли ты сегодня. Календарь и срывы останутся только у тебя.": {},
+    "Учится держать удар. Пока больно — значит, растёт.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learning to take a hit. If it hurts, he's growing."
           }
         }
       }
     },
-    "Ты уже в другом скваде. Чтобы войти в этот, сначала выйди из своего." : {
-
-    },
-    "Ты уже проходил это" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You've been through this before"
+    "Учёные Кембриджского университета показывали людям с компульсивным просмотром порно и людям без него одни и те же сексуальные сюжеты, наблюдая за их мозгом.\n\nУ первой группы зоны вознаграждения включались похожим образом на то, что видят у людей с зависимостью от психоактивных веществ при виде триггеров их пристрастия.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cambridge researchers showed the same sexual clips to people with compulsive porn use and to people without it, while watching their brains.\n\nIn the first group, the reward regions lit up in a way similar to what's seen in people with substance addiction when they're shown their triggers."
           }
         }
       }
     },
-    "Ты хозяин своих желаний" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You own your desires"
+    "Учёные из университета Мэсси четыре недели отслеживали 22 человек прямо в моменте — до, во время и после просмотра порно и мастурбации, а не по памяти в опроснике задним числом.\n\nПодъём настроения оказался коротким, а спад — долгим: он держался по несколько часов, прежде чем откатиться к обычному состоянию. У тех, чьи ценности расходились с собственным поведением, спад был выражен сильнее всего — стыд, вина, спутанность мыслей, отдаление от близких.\n\nЭто и есть механизм петли: мозг гасит всплеск удовольствия встречным провалом, и именно погоня за следующим пиком, который перекрыл бы этот провал, удерживает в цикле — а не нехватка силы воли.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Researchers at Massey University tracked 22 people for four weeks in the moment — before, during and after porn and masturbation — rather than from memory in a questionnaire afterwards.\n\nThe mood lift was short and the crash was long: it lasted several hours before returning to baseline. In people whose values clashed with their own behaviour, the crash was the strongest — shame, guilt, foggy thinking, pulling away from people close to them.\n\nThat is the loop: the brain cancels the spike of pleasure with a matching dip, and chasing the next peak to cover that dip is what keeps you in the cycle — not a lack of willpower."
           }
         }
       }
     },
-    "Ты чувствуешь себя живым" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You feel alive"
+    "Физическое упражнение": {},
+    "Фильтр работает на уровне системы, через встроенное Экранное время. Он действует и в Safari, и в других браузерах, и его не обходит приватная вкладка.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The filter works at the system level, through built-in Screen Time. It covers Safari and every other browser, and a private tab doesn't get around it."
           }
         }
       }
     },
-    "Тяга — это волна. Она поднимается, но всегда спадает." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "An urge is a wave. It rises, but it always falls."
+    "Фокус в учёбе и зале": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus at school and the gym"
           }
         }
       }
-    },
-    "Тяга %lld" : {
-
     },
-    "Тяга без причины" : {
-
-    },
-    "Тяга чаще накатывает %@. Слабое место — примерно с %lld:00." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The urge hits most often %1$@. Your weak spot starts around %2$lld:00."
+    "Фокус и продуктивность": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus and productivity"
           }
         }
       }
     },
-    "Тяжелее всего %@." : {
-
-    },
-    "У меня есть код" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I have a code"
+    "Холодная вода на лицо или запястья": {},
+    "Хорошо": {},
+    "Цель достигнута!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goal reached!"
           }
         }
       }
-    },
-    "У тебя уже есть напарник" : {
-
     },
-    "У тебя уже есть напарник." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You already have a partner."
+    "Цель уже идёт": {},
+    "Чат сквада": {},
+    "Чаще всего тянет %@": {},
+    "Чаще всего это случается тут: %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It usually happens here: %@."
           }
         }
       }
     },
-    "Убрать вопрос" : {
-
-    },
-    "Уверенность" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confidence"
+    "Челлендж": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Challenge"
           }
         }
       }
-    },
-    "Удаление стирает историю воздержания, дневник и сессию на этом устройстве и на сервере." : {
-
-    },
-    "Удаление…" : {
-
-    },
-    "Удалить аккаунт и данные" : {
-
     },
-    "Удалить аккаунт и данные?" : {
-
-    },
-    "Удалить всё" : {
-
-    },
-    "Уже изучена" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Already studied"
+    "Челленджи": {},
+    "Чем больше смотришь — тем меньше отклика": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The more you watch, the less it responds"
           }
         }
       }
-    },
-    "Умные напоминания" : {
-
     },
-    "Уровень %lld: %@" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Уровень %1$lld: %2$@"
+    "Через час — опасное время": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danger hour in one hour"
           }
         }
       }
-    },
-    "Уровень физической энергии и ясности мыслей прямо сейчас" : {
-
-    },
-    "Условия" : {
-
-    },
-    "Условия использования" : {
-
     },
-    "Усталость" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tiredness"
+    "Чт": {},
+    "Что обычно случается прямо перед срывом?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What usually happens right before a relapse?"
           }
         }
       }
     },
-    "Утро" : {
-
-    },
-    "Утром" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In the morning"
+    "Что сделаешь в следующий раз, когда накатит так же?": {},
+    "Что стало главным триггером?": {},
+    "Что стало триггером?": {},
+    "Что тебя цепляет": {},
+    "Что ты замечаешь за собой сильнее всего?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What do you notice in yourself the most?"
           }
         }
       }
     },
-    "Участники увидят твоё прозвище «%@», число дней и отметился ли ты сегодня. Календарь и срывы останутся только у тебя." : {
-
-    },
-    "Учёные из университета Мэсси четыре недели отслеживали 22 человек прямо в моменте — до, во время и после просмотра порно и мастурбации, а не по памяти в опроснике задним числом.\n\nПодъём настроения оказался коротким, а спад — долгим: он держался по несколько часов, прежде чем откатиться к обычному состоянию. У тех, чьи ценности расходились с собственным поведением, спад был выражен сильнее всего — стыд, вина, спутанность мыслей, отдаление от близких.\n\nЭто и есть механизм петли: мозг гасит всплеск удовольствия встречным провалом, и именно погоня за следующим пиком, который перекрыл бы этот провал, удерживает в цикле — а не нехватка силы воли." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Researchers at Massey University tracked 22 people for four weeks in the moment — before, during and after porn and masturbation — rather than from memory in a questionnaire afterwards.\n\nThe mood lift was short and the crash was long: it lasted several hours before returning to baseline. In people whose values clashed with their own behaviour, the crash was the strongest — shame, guilt, foggy thinking, pulling away from people close to them.\n\nThat is the loop: the brain cancels the spike of pleasure with a matching dip, and chasing the next peak to cover that dip is what keeps you in the cycle — not a lack of willpower."
+    "Что ты хочешь получить взамен?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What do you want in return?"
           }
         }
       }
     },
-    "Учёные Кембриджского университета показывали людям с компульсивным просмотром порно и людям без него одни и те же сексуальные сюжеты, наблюдая за их мозгом.\n\nУ первой группы зоны вознаграждения включались похожим образом на то, что видят у людей с зависимостью от психоактивных веществ при виде триггеров их пристрастия." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cambridge researchers showed the same sexual clips to people with compulsive porn use and to people without it, while watching their brains.\n\nIn the first group, the reward regions lit up in a way similar to what's seen in people with substance addiction when they're shown their triggers."
+    "Что ты чувствовал сразу после сброса?": {},
+    "Чтобы связаться с новым, сначала разорви текущую связь.": {},
+    "Чувство одиночества, апатия, «всё надоело»": {},
+    "Шаг %lld из 5": {},
+    "Щит не потратится, но и стрик не сохранится. Срыв можно будет отметить заново.": {},
+    "Щит сохранит стрик, если сразу честно разобрать срыв в дневнике. Он даётся раз в месяц. Без щита счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину.": {},
+    "Щит сохранит стрик, если сразу честно разобрать срыв в дневнике. Он даётся раз в месяц. Без щита счётчик обнулится, рекорд останется. Отметку видишь только ты.": {},
+    "Эксперимент запущен. Когда завершишь цикл, нажми кнопку ниже, чтобы запустить таймер чистоты и сравнения.": {},
+    "Эксперимент: Осознание контраста": {},
+    "Экспресс-чекин": {},
+    "Экспресс-чекин добавлен в дневник.": {},
+    "Энергия": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energy"
           }
         }
       }
-    },
-    "Физическое упражнение" : {
-
     },
-    "Фильтр работает на уровне системы, через встроенное Экранное время. Он действует и в Safari, и в других браузерах, и его не обходит приватная вкладка." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The filter works at the system level, through built-in Screen Time. It covers Safari and every other browser, and a private tab doesn't get around it."
+    "Энергия %lld": {},
+    "Энергия и ясность: %lld/10": {},
+    "Энергия, тяга, триггеры — 30 секунд": {},
+    "Это действие безвозвратно удалит вашу историю воздержания, заметки в дневнике и все персональные данные. Продолжить?": {},
+    "Это не просто слабоволие": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's not just weak will"
           }
         }
       }
     },
-    "Фокус в учёбе и зале" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Focus at school and the gym"
+    "Это общий чат сквада — его видят все участники. Напиши первым или позови на помощь кнопкой внизу.": {},
+    "Это официально признанный диагноз": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's an officially recognized diagnosis"
           }
         }
       }
     },
-    "Фокус и продуктивность" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Focus and productivity"
+    "Это твой собственный код.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That's your own code."
           }
         }
       }
     },
-    "Холодная вода на лицо или запястья" : {
-
-    },
-    "Хорошо" : {
-
-    },
-    "Цель достигнута!" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Goal reached!"
+    "Этот код уже использовали.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That code has already been used."
           }
         }
       }
-    },
-    "Цель уже идёт" : {
-
-    },
-    "Чат сквада" : {
-
     },
-    "чаще всего" : {
-
-    },
-    "Чаще всего тянет %@" : {
-
-    },
-    "Чаще всего это случается тут: %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It usually happens here: %@."
+    "Этот опрос нужен для честного осознания твоих триггеров, слабых мест и фиксации точки А, из которой ты начинаешь свой путь.": {},
+    "Я ДЕРЖУСЬ": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'M HOLDING ON"
           }
         }
       }
     },
-    "чего не увидит" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "what they won't see"
+    "Я рядом": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'm here"
           }
         }
       }
     },
-    "Челлендж" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Challenge"
+    "Я тоже держусь": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'm holding on too"
           }
         }
       }
-    },
-    "Челленджи" : {
-
     },
-    "Чем больше смотришь — тем меньше отклика" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The more you watch, the less it responds"
+    "аналитика триггеров": {},
+    "в воскресенье": {},
+    "в понедельник": {},
+    "в пятницу": {},
+    "в разработке": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "coming soon"
           }
         }
       }
     },
-    "через %lld дн." : {
-
-    },
-    "Через час — опасное время" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Danger hour in one hour"
+    "в среду": {},
+    "в субботу": {},
+    "в четверг": {},
+    "во вторник": {},
+    "вопрос %lld из %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "question %1$lld of %2$lld"
           }
         }
       }
     },
-    "чисто" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "clean"
+    "время суток": {},
+    "давно не заходил": {},
+    "держится сегодня": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "holding on today"
           }
         }
       }
-    },
-    "Чт" : {
-
     },
-    "Что обычно случается прямо перед срывом?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What usually happens right before a relapse?"
+    "дней": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "days"
           }
         }
       }
-    },
-    "Что сделаешь в следующий раз, когда накатит так же?" : {
-
-    },
-    "Что стало главным триггером?" : {
-
     },
-    "Что стало триггером?" : {
-
+    "дней\nбез срывов": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "days\nwithout relapse"
+          }
+        }
+      }
     },
-    "Что тебя цепляет" : {
-
+    "дни недели": {},
+    "днём": {},
+    "до нового дня": {},
+    "забирает сейчас": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "what it takes now"
+          }
+        }
+      }
     },
-    "Что ты замечаешь за собой сильнее всего?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What do you notice in yourself the most?"
+    "зал славы": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hall of fame"
           }
         }
       }
     },
-    "Что ты хочешь получить взамен?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What do you want in return?"
+    "и своими словами — обязательно": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "and in your own words — required"
           }
         }
       }
     },
-    "Что ты чувствовал сразу после сброса?" : {
-
+    "из %lld дней": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "of %lld day"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "of %lld days"
+                }
+              }
+            }
+          }
+        },
+        "ru": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "из %lld дней"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "из %lld дней"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "из %lld дня"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "из %lld дней"
+                }
+              }
+            }
+          }
+        }
+      }
     },
-    "что увидит напарник" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "what your partner will see"
+    "историю срывов": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "your relapse history"
           }
         }
       }
     },
-    "Чтобы связаться с новым, сначала разорви текущую связь." : {
-
+    "источник": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "source"
+          }
+        }
+      }
     },
-    "Чувство одиночества, апатия, «всё надоело»" : {
-
+    "как получать опыт": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "how to earn XP"
+          }
+        }
+      }
     },
-    "Шаг %lld из 5" : {
-
+    "как тебя звать напарнику": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "what your partner should call you"
+          }
+        }
+      }
     },
-    "Щит не потратится, но и стрик не сохранится. Срыв можно будет отметить заново." : {
-
+    "календарь": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "calendar"
+          }
+        }
+      }
     },
-    "Щит сохранит стрик, если сразу честно разобрать срыв в дневнике. Он даётся раз в месяц. Без щита счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину." : {
-
+    "календарь и даты": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the calendar and dates"
+          }
+        }
+      }
     },
-    "Щит сохранит стрик, если сразу честно разобрать срыв в дневнике. Он даётся раз в месяц. Без щита счётчик обнулится, рекорд останется. Отметку видишь только ты." : {
-
+    "лучший\nстрик": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "best\nstreak"
+          }
+        }
+      }
     },
-    "щит стрика" : {
-
+    "напарник": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "partner"
+          }
+        }
+      }
     },
-    "Эксперимент запущен. Когда завершишь цикл, нажми кнопку ниже, чтобы запустить таймер чистоты и сравнения." : {
-
+    "ночью": {},
+    "опыт": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "experience"
+          }
+        }
+      }
     },
-    "Эксперимент: Осознание контраста" : {
-
+    "особенно %@": {},
+    "отметился ли ты сегодня": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "whether you checked in today"
+          }
+        }
+      }
     },
-    "Экспресс-чекин" : {
-
+    "отметился сегодня": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "checked in today"
+          }
+        }
+      }
     },
-    "Экспресс-чекин добавлен в дневник." : {
-
+    "по вечерам": {},
+    "по утрам": {},
+    "позвать\nнапарника": {},
+    "ранг %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rank %lld"
+          }
+        }
+      }
     },
-    "Элита Спарты. Абсолютное хладнокровие и власть над собой." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sparta's elite. Absolute composure and self-mastery."
+    "свобода в этом месяце": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "freedom this month"
           }
         }
       }
     },
-    "Энергия" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Energy"
+    "сегодня": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "today"
           }
         }
       }
     },
-    "Энергия %lld" : {
-
+    "сегодня ещё не отмечался": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hasn't checked in today yet"
+          }
+        }
+      }
     },
-    "Энергия и ясность: %lld/10" : {
-
+    "сквад": {},
+    "сколько дней ты держишься": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "how many days you've held on"
+          }
+        }
+      }
     },
-    "Энергия, тяга, триггеры — 30 секунд" : {
-
+    "срыв": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "relapse"
+          }
+        }
+      }
     },
-    "Это действие безвозвратно удалит вашу историю воздержания, заметки в дневнике и все персональные данные. Продолжить?" : {
-
+    "твой день": {},
+    "твой напарник": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "your partner"
+          }
+        }
+      }
     },
-    "Это не просто слабоволие" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It's not just weak will"
+    "твой стрик": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "your streak"
           }
         }
       }
     },
-    "Это общий чат сквада — его видят все участники. Напиши первым или позови на помощь кнопкой внизу." : {
-
+    "твой трек": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "your track"
+          }
+        }
+      }
     },
-    "Это официально признанный диагноз" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It's an officially recognized diagnosis"
+    "текущий\nстрик": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "current\nstreak"
           }
         }
       }
     },
-    "Это твой собственный код." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "That's your own code."
+    "ты пришёл за": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "what you came for"
           }
         }
       }
     },
-    "Этот код уже использовали." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "That code has already been used."
+    "чаще всего": {},
+    "чего не увидит": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "what they won't see"
           }
         }
       }
     },
-    "Этот опрос нужен для честного осознания твоих триггеров, слабых мест и фиксации точки А, из которой ты начинаешь свой путь." : {
-
+    "через %lld дн.": {},
+    "чисто": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "clean"
+          }
+        }
+      }
     },
-    "Я ДЕРЖУСЬ" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I'M HOLDING ON"
+    "что увидит напарник": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "what your partner will see"
           }
         }
       }
     },
-    "Я рядом" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I'm here"
+    "щит стрика": {},
+    "—": {},
+    "— Джим Рон": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "— Jim Rohn"
           }
         }
       }
     },
-    "Я тоже держусь" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I'm holding on too"
+    "−%lld%%": {},
+    "⚡️ %lld / %@ Power": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "new",
+            "value": "⚡️ %1$lld / %2$@ Power"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }
