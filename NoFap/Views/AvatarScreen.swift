@@ -208,7 +208,7 @@ struct SpartanFigure: View {
     @State private var lifted = false
     @State private var inhale = false
     @State private var bounce = 0
-    @State private var shinePhase: CGFloat = -1
+    @State private var shinePhase: CGFloat = -0.6
 
     private var artworkRank: SpartanRank? {
         SpartanRank.allCases.filter { $0 <= rank && $0.hasArtwork }.last
@@ -263,8 +263,8 @@ struct SpartanFigure: View {
             guard shining, !reduceMotion else { return }
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(1.6))
-                shinePhase = -1
-                withAnimation(.easeInOut(duration: 1.2)) { shinePhase = 1.6 }
+                shinePhase = -0.6
+                withAnimation(.easeInOut(duration: 0.8)) { shinePhase = 1.2 }
                 try? await Task.sleep(for: .seconds(2.4))
             }
         }
@@ -285,9 +285,9 @@ struct SpartanFigure: View {
     /// игрушки, у воинов в бронзе — яркий золотой отблеск металла.
     private var shineStrength: Double {
         switch rank {
-        case .initiate, .agoge: 0.6
-        case .hoplite, .veteran: 0.8
-        default: 1
+        case .initiate, .agoge: 0.45
+        case .hoplite, .veteran: 0.6
+        default: 0.75
         }
     }
 
@@ -297,15 +297,17 @@ struct SpartanFigure: View {
     private var shine: some View {
         GeometryReader { geo in
             let w = geo.size.width
+            // Узкая чёткая полоса — пробегающий блик, а не заливка светом.
             LinearGradient(
                 stops: [
                     .init(color: .clear, location: 0),
-                    .init(color: Color(hex: 0xFFE9B0).opacity(shineStrength), location: 0.5),
+                    .init(color: .white.opacity(shineStrength), location: 0.5),
                     .init(color: .clear, location: 1),
                 ],
                 startPoint: .leading, endPoint: .trailing)
-                .frame(width: w * 0.45)
-                .rotationEffect(.degrees(20))
+                .frame(width: w * 0.1, height: geo.size.height * 1.6)
+                .rotationEffect(.degrees(22))
+                .frame(width: w, height: geo.size.height)
                 .offset(x: shinePhase * w)
                 .blendMode(.plusLighter)
         }
