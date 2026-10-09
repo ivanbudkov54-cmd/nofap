@@ -79,7 +79,7 @@ struct AvatarScreen: View {
                     .accessibilityLabel(Text("Следующий ранг: \(Text(next.title))"))
                 }
 
-                SpartanFigure(rank: rank, size: 240, breathing: true, reactsToTap: true)
+                SpartanFigure(rank: rank, size: 240, breathing: true, reactsToTap: true, shining: true)
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 12)
@@ -201,11 +201,14 @@ struct SpartanFigure: View {
     var breathing = false
     /// Подпрыгивает с отдачей на нажатие.
     var reactsToTap = false
+    /// Блик, пробегающий по фигуре раз в несколько секунд.
+    var shining = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var lifted = false
     @State private var inhale = false
     @State private var bounce = 0
+    @State private var shinePhase: CGFloat = -1
 
     private var artworkRank: SpartanRank? {
         SpartanRank.allCases.filter { $0 <= rank && $0.hasArtwork }.last
@@ -222,8 +225,9 @@ struct SpartanFigure: View {
 
             figure
                 .frame(width: size, height: size)
+                .overlay { if shining && !silhouette { shine } }
                 // Дыхание — масштаб от ступней, чтобы фигура не «плыла».
-                .scaleEffect(x: inhale ? 1.012 : 1, y: inhale ? 1.025 : 1, anchor: .bottom)
+                .scaleEffect(x: inhale ? 1.015 : 1, y: inhale ? 1.035 : 1, anchor: .bottom)
                 .keyframeAnimator(initialValue: TapPose(), trigger: bounce) { content, pose in
                     content
                         .scaleEffect(x: pose.squashX, y: pose.squashY, anchor: .bottom)
@@ -254,6 +258,16 @@ struct SpartanFigure: View {
             if !reduceMotion { bounce += 1 }
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         }, including: reactsToTap ? .all : .subviews)
+        // Блик: пробег за 1.2 с, потом пауза — раз в 4 секунды.
+        .task {
+            guard shining, !reduceMotion else { return }
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(1.6))
+                shinePhase = -1
+                withAnimation(.easeInOut(duration: 1.2)) { shinePhase = 1.6 }
+                try? await Task.sleep(for: .seconds(2.4))
+            }
+        }
         .onAppear {
             guard !reduceMotion else { return }
             if floating {
@@ -265,6 +279,38 @@ struct SpartanFigure: View {
         }
         .accessibilityElement()
         .accessibilityLabel(Text(rank.title))
+    }
+
+    /// Сила блика растёт с рангом: у малыша — мягкий глянец виниловой
+    /// игрушки, у воинов в бронзе — яркий золотой отблеск металла.
+    private var shineStrength: Double {
+        switch rank {
+        case .initiate, .agoge: 0.6
+        case .hoplite, .veteran: 0.8
+        default: 1
+        }
+    }
+
+    /// Диагональная полоса света, обрезанная по контуру самой картинки —
+    /// бежит только по фигуре, не по фону.
+    @ViewBuilder
+    private var shine: some View {
+        GeometryReader { geo in
+            let w = geo.size.width
+            LinearGradient(
+                stops: [
+                    .init(color: .clear, location: 0),
+                    .init(color: Color(hex: 0xFFE9B0).opacity(shineStrength), location: 0.5),
+                    .init(color: .clear, location: 1),
+                ],
+                startPoint: .leading, endPoint: .trailing)
+                .frame(width: w * 0.45)
+                .rotationEffect(.degrees(20))
+                .offset(x: shinePhase * w)
+                .blendMode(.plusLighter)
+        }
+        .mask { figure }
+        .allowsHitTesting(false)
     }
 
     @ViewBuilder
