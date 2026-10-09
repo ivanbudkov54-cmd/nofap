@@ -43,7 +43,7 @@ struct AvatarScreen: View {
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $detailRank) { rank in
-            SpartanDetailSheet(rank: rank)
+            SpartanDetailSheet(rank: rank, progress: progress)
         }
     }
 
@@ -71,6 +71,21 @@ struct AvatarScreen: View {
                                 .saturation(0.15 + 0.75 * progress.levelProgress)
                                 .brightness(-0.08 + 0.08 * progress.levelProgress)
                                 .opacity(0.5 + 0.4 * progress.levelProgress)
+                        }
+                        // Подпись — чтобы было понятно, кто это и что на
+                        // него можно нажать.
+                        .overlay(alignment: .top) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "lock.fill")
+                                    .font(.system(size: 9, weight: .bold))
+                                Text("Следующий")
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .foregroundStyle(Color(hex: 0x1A1405))
+                            .padding(.horizontal, 9)
+                            .padding(.vertical, 4)
+                            .background(Capsule().fill(.goldFill))
+                            .offset(y: -6)
                         }
                     }
                     .buttonStyle(.plain)
@@ -451,6 +466,15 @@ private struct MiniBar: View {
 
 private struct SpartanDetailSheet: View {
     let rank: SpartanRank
+    let progress: AvatarProgressManager
+
+    private var locked: Bool { rank > progress.currentRank }
+    private var remaining: Int { max(rank.requiredXP - progress.totalXP, 0) }
+    /// Для следующего ранга — доля пути к нему, для дальних — от нуля.
+    private var fraction: Double {
+        rank == progress.nextRank ? progress.levelProgress
+            : min(Double(progress.totalXP) / Double(max(rank.requiredXP, 1)), 1)
+    }
 
     var body: some View {
         VStack(spacing: 16) {
@@ -467,9 +491,32 @@ private struct SpartanDetailSheet: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 24)
+
+            if locked {
+                VStack(spacing: 10) {
+                    HStack {
+                        Label("Откроется на \(rank.requiredXP) XP", systemImage: "lock.fill")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(Palette.marble)
+                        Spacer()
+                        Text("ещё \(remaining) XP")
+                            .font(Face.display(15, .semibold))
+                            .foregroundStyle(.goldFill)
+                    }
+                    MiniBar(value: fraction)
+                    Text("Опыт дают челленджи, дни стрика и статьи.")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Palette.ash)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(16)
+                .cardSurface()
+                .padding(.horizontal, 20)
+                .padding(.top, 4)
+            }
             Spacer()
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large])
         .presentationBackground(Palette.obsidian)
         .presentationDragIndicator(.visible)
     }
