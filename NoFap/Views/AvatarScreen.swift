@@ -25,6 +25,8 @@ struct AvatarScreen: View {
                     .font(Face.display(28, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
                     .frame(maxWidth: .infinity, alignment: .center)
+                    // На уровень кнопки «назад» — по центру она не мешает.
+                    .padding(.top, -44)
                     .accessibilityAddTraits(.isHeader)
 
                 scene
