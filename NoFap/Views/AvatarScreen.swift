@@ -436,9 +436,8 @@ private struct HallCard: View {
         }
         .overlay {
             RoundedRectangle(cornerRadius: 18)
-                .strokeBorder(isCurrent ? Palette.gold.opacity(0.8)
-                              : isNext ? Palette.gold.opacity(0.3) : Palette.vein,
-                              style: StrokeStyle(lineWidth: isCurrent ? 1.5 : 1, dash: isNext ? [4, 3] : []))
+                .strokeBorder(isCurrent ? Palette.gold.opacity(0.8) : Palette.vein,
+                              lineWidth: isCurrent ? 1.5 : 1)
         }
     }
 }

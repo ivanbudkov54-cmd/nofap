@@ -55,8 +55,8 @@ enum SpartanRank: Int, CaseIterable, Comparable, Identifiable {
 
     var summary: LocalizedStringResource {
         switch self {
-        case .initiate:  "Пока слабый. Но уже начал."
-        case .agoge:     "Учится держать удар. Пока больно — значит, растёт."
+        case .initiate:  "Слабость ещё внутри. Но первый шаг сделан."
+        case .agoge:     "Закаляется каждый день. Без поблажек."
         case .hoplite:   "Знает, откуда приходит тяга. И не сдаётся ей."
         case .veteran:   "Проходил через срывы и сомнения. Остался в строю."
         case .polemarch: "Сам решает, на что тратить силы. И тратит на дело."
