@@ -252,7 +252,7 @@ struct ContrastReflectionSheet: View {
                             .foregroundStyle(Color(hex: 0x1A1405))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .background(Palette.gold, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .background(.goldFill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                     .disabled(comparison.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .opacity(comparison.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1)

@@ -387,7 +387,7 @@ struct AvatarEvolutionView: View {
                         .foregroundStyle(Color(hex: 0x1A1405))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(Palette.gold, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .background(.goldFill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
                 .padding(.top, 8)
             }

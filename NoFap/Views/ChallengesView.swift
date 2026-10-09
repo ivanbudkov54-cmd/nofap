@@ -10,7 +10,7 @@ struct ChallengesView: View {
     @Environment(ChallengeManager.self) private var challenges
     @Environment(AvatarManager.self) private var avatar
     @Environment(AvatarProgressManager.self) private var xp
-    @State private var confirmComplete = false
+    @State private var completionGain: XPGain?
 
     @Environment(AppTourManager.self) private var tour
 
@@ -42,24 +42,8 @@ struct ChallengesView: View {
                 proxy.scrollTo("tour-challenge", anchor: .center)
             }
         }
-        .confirmationDialog(
-            "Отметить «\(challenges.current.title)» выполненным?",
-            isPresented: $confirmComplete,
-            titleVisibility: .visible
-        ) {
-            Button("Выполнил вызов") {
-                // Сложный или социальный вызов ценится выше — берём его
-                // до завершения: потом `current` уже следующий.
-                let item = challenges.current
-                let isHard = item.difficulty == .hard || item.category == "Социальная смелость"
-                challenges.completeCurrentChallenge()
-                avatar.addPowerForChallenge()
-                xp.rewardChallengeCompleted(isHard: isHard)
-            }
-            Button("Отмена", role: .cancel) {}
-        }
         .sheet(isPresented: Bindable(challenges).showCompletion) {
-            ChallengeCompletionView {
+            ChallengeCompletionView(gain: completionGain) {
                 challenges.showCompletion = false
             }
         }
@@ -117,15 +101,17 @@ struct ChallengesView: View {
                 .foregroundStyle(Palette.ash)
                 .fixedSize(horizontal: false, vertical: true)
 
+            // Одно нажатие — без «вы уверены?»: это не необратимое действие,
+            // а отметка о победе.
             Button {
-                confirmComplete = true
+                completeChallenge()
             } label: {
                 Text("Выполнил вызов")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(Color(hex: 0x1A1405))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Palette.gold, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .background(.goldFill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
             .padding(.top, 4)
         }
@@ -165,6 +151,19 @@ struct ChallengesView: View {
                 }
             }
         }
+    }
+
+    private func completeChallenge() {
+        // Сложный или социальный вызов ценится выше — берём его
+        // до завершения: потом `current` уже следующий.
+        let item = challenges.current
+        let isHard = item.difficulty == .hard || item.category == "Социальная смелость"
+        // Награда показывается в окне «Мощная победа» — забираем её до
+        // того, как всплыла бы отдельная карточка.
+        xp.rewardChallengeCompleted(isHard: isHard)
+        completionGain = xp.takeGain()
+        avatar.addPowerForChallenge()
+        challenges.completeCurrentChallenge()
     }
 
     private func difficultyColor(_ difficulty: ChallengeItem.Difficulty) -> Color {

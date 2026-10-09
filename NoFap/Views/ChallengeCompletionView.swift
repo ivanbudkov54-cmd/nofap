@@ -6,11 +6,11 @@
 import SwiftUI
 
 struct ChallengeCompletionView: View {
+    let gain: XPGain?
     let onClaim: () -> Void
 
     @Environment(AvatarProgressManager.self) private var xp
     @State private var burst = false
-    @State private var gain: XPGain?
 
     var body: some View {
         ZStack {
@@ -22,7 +22,7 @@ struct ChallengeCompletionView: View {
             VStack(spacing: 18) {
                 Image(systemName: "trophy.fill")
                     .font(.system(size: 64))
-                    .foregroundStyle(Palette.gold)
+                    .foregroundStyle(.goldFill)
                     .scaleEffect(burst ? 1 : 0.6)
                     .padding(.top, 28)
 
@@ -51,7 +51,7 @@ struct ChallengeCompletionView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .padding(.horizontal, 8)
-                        .background(Palette.gold, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .background(.goldFill, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
                 .padding(.top, 8)
             }
@@ -67,7 +67,6 @@ struct ChallengeCompletionView: View {
             }
         }
         .onAppear {
-            gain = xp.takeGain()
             withAnimation(.spring(response: 0.55, dampingFraction: 0.7)) {
                 burst = true
             }
