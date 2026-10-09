@@ -71,7 +71,7 @@ struct AvatarScreen: View {
                     .buttonStyle(.plain)
                     // Главный стоит по центру; следующий — справа за его
                     // плечом, у самого края экрана.
-                    .offset(x: 125, y: -45)
+                    .offset(x: 140, y: -45)
                     .accessibilityLabel(Text("Следующий ранг: \(Text(next.title))"))
                 }
 
