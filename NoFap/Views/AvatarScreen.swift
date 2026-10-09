@@ -59,23 +59,27 @@ struct AvatarScreen: View {
                         ZStack {
                             // Мягкий свет со стороны будущего ранга.
                             Circle()
-                                .fill(Palette.gold.opacity(0.22))
+                                .fill(Palette.gold.opacity(0.12 + 0.2 * progress.levelProgress))
                                 .frame(width: 190, height: 190)
                                 .blur(radius: 50)
+                            // Чем ближе ранг, тем больше в нём цвета и
+                            // света: в начале почти серый, перед
+                            // повышением — почти живой.
                             SpartanFigure(rank: next, size: 185)
-                                .saturation(0.25)
-                                .brightness(-0.05)
-                                .opacity(0.6)
+                                .saturation(0.15 + 0.75 * progress.levelProgress)
+                                .brightness(-0.08 + 0.08 * progress.levelProgress)
+                                .opacity(0.5 + 0.4 * progress.levelProgress)
                         }
                     }
                     .buttonStyle(.plain)
+                    .animation(.easeInOut(duration: 0.8), value: progress.levelProgress)
                     // Главный стоит по центру; следующий — справа за его
                     // плечом, у самого края экрана.
                     .offset(x: 140, y: -45)
                     .accessibilityLabel(Text("Следующий ранг: \(Text(next.title))"))
                 }
 
-                SpartanFigure(rank: rank, size: 240, floating: true)
+                SpartanFigure(rank: rank, size: 240, breathing: true, reactsToTap: true)
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 12)
@@ -181,14 +185,27 @@ struct AvatarScreen: View {
 
 /// Картинка ранга. Пока нарисованы не все — до появления арта показываем
 /// ближайший нарисованный ранг ниже, а если нет и его, силуэт.
+/// Поза фигуры на нажатие: приседает, подпрыгивает, пружинит обратно.
+private struct TapPose {
+    var squashX: CGFloat = 1
+    var squashY: CGFloat = 1
+    var lift: CGFloat = 0
+}
+
 struct SpartanFigure: View {
     let rank: SpartanRank
     let size: CGFloat
     var floating = false
     var silhouette = false
+    /// Едва заметное «дыхание» — фигура живая, но спокойная.
+    var breathing = false
+    /// Подпрыгивает с отдачей на нажатие.
+    var reactsToTap = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var lifted = false
+    @State private var inhale = false
+    @State private var bounce = 0
 
     private var artworkRank: SpartanRank? {
         SpartanRank.allCases.filter { $0 <= rank && $0.hasArtwork }.last
@@ -205,12 +222,46 @@ struct SpartanFigure: View {
 
             figure
                 .frame(width: size, height: size)
+                // Дыхание — масштаб от ступней, чтобы фигура не «плыла».
+                .scaleEffect(x: inhale ? 1.012 : 1, y: inhale ? 1.025 : 1, anchor: .bottom)
+                .keyframeAnimator(initialValue: TapPose(), trigger: bounce) { content, pose in
+                    content
+                        .scaleEffect(x: pose.squashX, y: pose.squashY, anchor: .bottom)
+                        .offset(y: pose.lift)
+                } keyframes: { _ in
+                    KeyframeTrack(\.squashY) {
+                        SpringKeyframe(0.9, duration: 0.08)
+                        SpringKeyframe(1.08, duration: 0.18)
+                        SpringKeyframe(1, duration: 0.35, spring: .bouncy)
+                    }
+                    KeyframeTrack(\.squashX) {
+                        SpringKeyframe(1.08, duration: 0.08)
+                        SpringKeyframe(0.95, duration: 0.18)
+                        SpringKeyframe(1, duration: 0.35, spring: .bouncy)
+                    }
+                    KeyframeTrack(\.lift) {
+                        LinearKeyframe(0, duration: 0.08)
+                        SpringKeyframe(-size * 0.09, duration: 0.18)
+                        SpringKeyframe(0, duration: 0.35, spring: .bouncy)
+                    }
+                }
                 .offset(y: lifted ? -size * 0.04 : 0)
         }
         .frame(width: size, height: size * 1.04)
+        // Жест только у главной фигуры: внутри кнопок (зал славы, фоновый
+        // воин) он перехватывал бы нажатие.
+        .simultaneousGesture(TapGesture().onEnded {
+            if !reduceMotion { bounce += 1 }
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        }, including: reactsToTap ? .all : .subviews)
         .onAppear {
-            guard floating, !reduceMotion else { return }
-            withAnimation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true)) { lifted = true }
+            guard !reduceMotion else { return }
+            if floating {
+                withAnimation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true)) { lifted = true }
+            }
+            if breathing {
+                withAnimation(.easeInOut(duration: 3.2).repeatForever(autoreverses: true)) { inhale = true }
+            }
         }
         .accessibilityElement()
         .accessibilityLabel(Text(rank.title))
