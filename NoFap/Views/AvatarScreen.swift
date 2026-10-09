@@ -24,7 +24,7 @@ struct AvatarScreen: View {
                 Text("Аватар")
                     .font(Face.display(28, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .accessibilityAddTraits(.isHeader)
 
                 scene
