@@ -208,7 +208,6 @@ struct SpartanFigure: View {
     @State private var lifted = false
     @State private var inhale = false
     @State private var bounce = 0
-    @State private var shinePhase: CGFloat = -0.6
 
     private var artworkRank: SpartanRank? {
         SpartanRank.allCases.filter { $0 <= rank && $0.hasArtwork }.last
@@ -225,7 +224,7 @@ struct SpartanFigure: View {
 
             figure
                 .frame(width: size, height: size)
-                .overlay { if shining && !silhouette { shine } }
+                .overlay { if shining && !silhouette && !reduceMotion { shine } }
                 // Дыхание — масштаб от ступней, чтобы фигура не «плыла».
                 .scaleEffect(x: inhale ? 1.015 : 1, y: inhale ? 1.035 : 1, anchor: .bottom)
                 .keyframeAnimator(initialValue: TapPose(), trigger: bounce) { content, pose in
@@ -258,16 +257,6 @@ struct SpartanFigure: View {
             if !reduceMotion { bounce += 1 }
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         }, including: reactsToTap ? .all : .subviews)
-        // Блик: пробег за 1.2 с, потом пауза — раз в 4 секунды.
-        .task {
-            guard shining, !reduceMotion else { return }
-            while !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(1.6))
-                shinePhase = -0.6
-                withAnimation(.easeInOut(duration: 0.8)) { shinePhase = 1.2 }
-                try? await Task.sleep(for: .seconds(2.4))
-            }
-        }
         .onAppear {
             guard !reduceMotion else { return }
             if floating {
@@ -293,8 +282,21 @@ struct SpartanFigure: View {
 
     /// Диагональная полоса света, обрезанная по контуру самой картинки —
     /// бежит только по фигуре, не по фону.
+    /// Положение полосы считается прямо от часов: пробег 0.8 с, затем пауза
+    /// до 4 с. Без состояния — застрять полосе негде.
+    private static func shinePhase(at date: Date) -> CGFloat {
+        let cycle = 4.0, sweep = 0.8
+        let t = date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: cycle)
+        guard t < sweep else { return -0.6 }
+        let p = t / sweep
+        let eased = p < 0.5 ? 2 * p * p : 1 - pow(-2 * p + 2, 2) / 2
+        return -0.6 + 1.8 * eased
+    }
+
     @ViewBuilder
     private var shine: some View {
+        TimelineView(.animation) { context in
+        let shinePhase = Self.shinePhase(at: context.date)
         GeometryReader { geo in
             let w = geo.size.width
             // Узкая чёткая полоса — пробегающий блик, а не заливка светом.
@@ -310,6 +312,7 @@ struct SpartanFigure: View {
                 .frame(width: w, height: geo.size.height)
                 .offset(x: shinePhase * w)
                 .blendMode(.plusLighter)
+        }
         }
         .mask { figure }
         .allowsHitTesting(false)
