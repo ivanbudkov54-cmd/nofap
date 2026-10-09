@@ -110,8 +110,7 @@ struct HomeView: View {
                 .buttonStyle(GoldButton())
             }
             .padding(24)
-            .presentationDetents([.height(520)])
-            .presentationBackground(Palette.obsidian)
+            .fittedSheet()
         }
         .sheet(isPresented: $showSOS, onDismiss: { sosPath = [] }) {
             NavigationStack(path: $sosPath) {
@@ -637,6 +636,12 @@ struct HomeView: View {
 
 extension View {
     /// Поверхность карточки: чуть светлее фона плюс тонкая граница.
+    /// Лист ровно по высоте содержимого: поднимается снизу настолько,
+    /// насколько нужно, без пустоты внизу. Одинаково для всех таких листов.
+    func fittedSheet() -> some View {
+        modifier(FittedSheet())
+    }
+
     func cardSurface() -> some View {
         background(Palette.basalt, in: .rect(cornerRadius: 18))
             .overlay {
@@ -793,5 +798,19 @@ private struct NextCheckInCountdown: View {
         formatter.allowedUnits = interval >= 3600 ? [.hour, .minute] : [.minute]
         formatter.unitsStyle = .full
         return formatter.string(from: interval) ?? ""
+    }
+}
+
+private struct FittedSheet: ViewModifier {
+    @State private var height: CGFloat = 320
+
+    func body(content: Content) -> some View {
+        content
+            .padding(.bottom, 12)
+            .fixedSize(horizontal: false, vertical: true)
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height = $0 }
+            .presentationDetents([.height(height)])
+            .presentationDragIndicator(.visible)
+            .presentationBackground(Palette.obsidian)
     }
 }

@@ -98,11 +98,9 @@ private struct PartnerJoinSheet: View {
                     .buttonStyle(StoneButton())
             }
 
-            Spacer()
         }
         .padding(.horizontal, 20)
-        .presentationDetents([.large])
-        .presentationBackground(Palette.obsidian)
+        .fittedSheet()
         .onAppear { nicknameDraft = partner.nickname }
     }
 }
@@ -136,11 +134,9 @@ private struct SquadJoinSheet: View {
                     .buttonStyle(StoneButton())
             }
 
-            Spacer()
         }
         .padding(.horizontal, 20)
-        .presentationDetents([.large])
-        .presentationBackground(Palette.obsidian)
+        .fittedSheet()
     }
 }
 

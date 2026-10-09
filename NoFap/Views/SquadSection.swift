@@ -228,11 +228,9 @@ struct SquadSection: View {
                 Task { await squad.join(code: code) }
             }
 
-            Spacer()
         }
         .padding(.horizontal, 20)
-        .presentationDetents([.height(260)])
-        .presentationBackground(Palette.obsidian)
+        .fittedSheet()
     }
 }
 

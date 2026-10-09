@@ -49,8 +49,7 @@ struct ChallengeCompletionView: View {
             }
             .padding(24)
         }
-        .presentationDetents([.medium])
-        .presentationDragIndicator(.visible)
+        .fittedSheet()
         .onAppear {
             withAnimation(.spring(response: 0.55, dampingFraction: 0.7)) {
                 burst = true

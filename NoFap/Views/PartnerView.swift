@@ -311,11 +311,9 @@ struct PartnerView: View {
                 Task { await partner.redeem(code: code) }
             }
 
-            Spacer()
         }
         .padding(.horizontal, 20)
-        .presentationDetents([.height(260)])
-        .presentationBackground(Palette.obsidian)
+        .fittedSheet()
     }
 
 }

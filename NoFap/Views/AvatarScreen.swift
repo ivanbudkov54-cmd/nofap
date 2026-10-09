@@ -72,20 +72,18 @@ struct AvatarScreen: View {
                                 .brightness(-0.08 + 0.08 * progress.levelProgress)
                                 .opacity(0.5 + 0.4 * progress.levelProgress)
                         }
-                        // Подпись — чтобы было понятно, кто это и что на
-                        // него можно нажать.
-                        .overlay(alignment: .top) {
-                            HStack(spacing: 4) {
-                                Image(systemName: "lock.fill")
-                                    .font(.system(size: 9, weight: .bold))
-                                Text("Следующий")
-                                    .font(.system(size: 11, weight: .semibold))
+                        // Тихая подпись под ногами: кто это и сколько до него.
+                        .overlay(alignment: .bottom) {
+                            VStack(spacing: 1) {
+                                Text("следующий")
+                                    .font(.system(size: 11, weight: .medium))
+                                    .foregroundStyle(Palette.ash)
+                                Text("ещё \(progress.xpRemainingToNextLevel) XP")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundStyle(Palette.gold.opacity(0.9))
                             }
-                            .foregroundStyle(Color(hex: 0x1A1405))
-                            .padding(.horizontal, 9)
-                            .padding(.vertical, 4)
-                            .background(Capsule().fill(.goldFill))
-                            .offset(y: -6)
+                            .fixedSize()
+                            .offset(y: 22)
                         }
                     }
                     .buttonStyle(.plain)
@@ -514,11 +512,8 @@ private struct SpartanDetailSheet: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 4)
             }
-            Spacer()
         }
-        .presentationDetents([.large])
-        .presentationBackground(Palette.obsidian)
-        .presentationDragIndicator(.visible)
+        .fittedSheet()
     }
 }
 

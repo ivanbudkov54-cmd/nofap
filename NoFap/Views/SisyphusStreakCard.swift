@@ -152,8 +152,7 @@ struct SisyphusStreakCard: View {
                 .buttonStyle(GoldButton())
             }
             .padding(24)
-            .presentationDetents([.height(420)])
-            .presentationBackground(Palette.obsidian)
+            .fittedSheet()
         }
     }
 }
