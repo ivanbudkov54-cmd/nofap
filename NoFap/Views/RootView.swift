@@ -96,6 +96,14 @@ private struct RootOverlays: ViewModifier {
             }
             // Новый ранг празднуется там, где его заработали: за статьёй,
             // челленджем или «Держусь», а не при следующем заходе в аватар.
+            // Карточка награды — над таб-баром, после каждого начисления опыта.
+            .overlay(alignment: .bottom) {
+                if let gain = xp.lastGain {
+                    XPGainToast(gain: gain) { xp.finishGain() }
+                        .id(gain.id)
+                        .padding(.bottom, 96)
+                }
+            }
             .fullScreenCover(isPresented: Bindable(xp).showLevelUp) {
                 SpartanLevelUpView(rank: xp.unlockedRank) { xp.showLevelUp = false }
             }

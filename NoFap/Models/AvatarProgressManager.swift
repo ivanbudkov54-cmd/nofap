@@ -81,6 +81,33 @@ enum SpartanRank: Int, CaseIterable, Comparable, Identifiable {
 /// Откуда пришёл опыт — для журнала и будущей статистики.
 enum XPSource: String {
     case challenge, streak, article
+
+    var title: LocalizedStringResource {
+        switch self {
+        case .challenge: "Челлендж выполнен"
+        case .streak:    "День засчитан"
+        case .article:   "Статья изучена"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .challenge: "flag.fill"
+        case .streak:    "flame.fill"
+        case .article:   "book.fill"
+        }
+    }
+}
+
+/// Одно начисление опыта — для карточки награды.
+struct XPGain: Identifiable, Equatable {
+    let id = UUID()
+    let amount: Int
+    let source: XPSource
+    let fromXP: Int
+    let toXP: Int
+    /// Ранг, который открылся этим начислением, если открылся.
+    let rankUp: SpartanRank?
 }
 
 // MARK: - Менеджер
@@ -122,6 +149,9 @@ final class AvatarProgressManager {
 
     /// Поднимается при переходе на новый ранг — экран показывает торжество.
     var showLevelUp = false
+
+    /// Последнее начисление — RootView показывает карточку награды.
+    var lastGain: XPGain?
     private(set) var unlockedRank: SpartanRank = .initiate
 
     /// Отправка опыта на сервер. Задаёт CloudSync — менеджер о сети не знает.
@@ -166,15 +196,20 @@ final class AvatarProgressManager {
     func addXP(_ amount: Int, source: XPSource) {
         guard amount > 0 else { return }
         let before = currentRank
+        let fromXP = totalXP
         totalXP += amount
         let after = currentRank
 
+        var rankUp: SpartanRank?
         if after > before, after.rawValue > lastCelebratedRank {
             lastCelebratedRank = after.rawValue
             unlockedRank = after
-            showLevelUp = true
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            rankUp = after
         }
+        // Торжество нового ранга открывает карточка награды, когда полоса
+        // дозаполнится, — а не сразу поверх неё.
+        lastGain = XPGain(amount: amount, source: source, fromXP: fromXP,
+                          toXP: totalXP, rankUp: rankUp)
         onTotalChanged?(totalXP)
     }
 
@@ -198,6 +233,29 @@ final class AvatarProgressManager {
     }
 
     /// Полный сброс после удаления аккаунта.
+    /// Окно (например, «Мощная победа») показывает награду само — тогда
+    /// всплывающая карточка не нужна. Торжество — после закрытия окна.
+    func takeGain() -> XPGain? {
+        defer { lastGain = nil }
+        return lastGain
+    }
+
+    func celebrate(_ gain: XPGain?) {
+        guard gain?.rankUp != nil else { return }
+        showLevelUp = true
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+    }
+
+    /// Карточка награды досмотрена: если был новый ранг — торжество.
+    func finishGain() {
+        guard let gain = lastGain else { return }
+        lastGain = nil
+        if gain.rankUp != nil {
+            showLevelUp = true
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+        }
+    }
+
     func resetAll() {
         totalXP = 0
         readArticleIDs = []

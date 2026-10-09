@@ -8,7 +8,9 @@ import SwiftUI
 struct ChallengeCompletionView: View {
     let onClaim: () -> Void
 
+    @Environment(AvatarProgressManager.self) private var xp
     @State private var burst = false
+    @State private var gain: XPGain?
 
     var body: some View {
         ZStack {
@@ -35,6 +37,12 @@ struct ChallengeCompletionView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 12)
 
+                // Опыт аватару — прямо здесь, а не за этим окном.
+                if let gain {
+                    XPGainCard(gain: gain)
+                        .padding(.top, 4)
+                }
+
                 Button(action: onClaim) {
                     Text("Получить следующий челлендж")
                         .font(.system(size: 16, weight: .semibold))
@@ -50,7 +58,16 @@ struct ChallengeCompletionView: View {
             .padding(24)
         }
         .fittedSheet()
+        // Новый ранг — когда окно закрыто, иначе торжество спрячется за ним.
+        .onDisappear {
+            let gain = gain
+            Task {
+                try? await Task.sleep(for: .milliseconds(450))
+                xp.celebrate(gain)
+            }
+        }
         .onAppear {
+            gain = xp.takeGain()
             withAnimation(.spring(response: 0.55, dampingFraction: 0.7)) {
                 burst = true
             }
