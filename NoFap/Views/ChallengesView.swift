@@ -21,7 +21,7 @@ struct ChallengesView: View {
                 Text("Челленджи")
                     .font(Face.display(28, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
-                    .padding(.top, 6)
+                    .padding(.top, 8)
 
                 ContrastExperimentView()
 
@@ -35,7 +35,8 @@ struct ChallengesView: View {
             .padding(.bottom, 28)
         }
         .background(Palette.obsidian.ignoresSafeArea())
-        .navigationBarTitleDisplayMode(.inline)
+        // Своя шапка вместо панели навигации — у всех вкладок одна высота.
+        .toolbar(.hidden, for: .navigationBar)
         .onChange(of: tour.currentStepIndex) { _, _ in
             guard tour.isTourActive, tour.step == .challenges else { return }
             withAnimation(.easeInOut(duration: 0.35)) {

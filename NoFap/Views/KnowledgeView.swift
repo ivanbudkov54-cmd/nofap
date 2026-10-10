@@ -36,7 +36,8 @@ struct KnowledgeView: View {
             content
         }
         .background(Palette.obsidian.ignoresSafeArea())
-        .navigationBarTitleDisplayMode(.inline)
+        // Своя шапка вместо панели навигации — у всех вкладок одна высота.
+        .toolbar(.hidden, for: .navigationBar)
     }
 
     private var header: some View {
@@ -50,7 +51,7 @@ struct KnowledgeView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 18)
-        .padding(.top, 6)
+        .padding(.top, 8)
     }
 
     private var tabBar: some View {

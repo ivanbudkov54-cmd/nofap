@@ -96,19 +96,8 @@ struct DiaryView: View {
             .padding(.bottom, 24)
         }
         .background(Palette.obsidian.ignoresSafeArea())
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    draft = ""
-                    currentPrompt = DailyPrompts.next()
-                    showEditor = true
-                } label: {
-                    Image(systemName: "square.and.pencil")
-                        .foregroundStyle(Palette.gold)
-                }
-            }
-        }
+        // Своя шапка вместо панели навигации — у всех вкладок одна высота.
+        .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $showEditor) { editor }
         .onAppear { openShieldNoteIfNeeded() }
         .onChange(of: router.openRelapseReview) { _, open in
@@ -139,12 +128,29 @@ struct DiaryView: View {
             Text("Дневник")
                 .font(Face.display(28, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                // Кнопка — поверх строки заголовка, чтобы не раздувать её
+                // высоту: заголовок стоит на той же линии, что у соседей.
+                .overlay(alignment: .trailing) {
+                    Button {
+                        draft = ""
+                        currentPrompt = DailyPrompts.next()
+                        showEditor = true
+                    } label: {
+                        Image(systemName: "square.and.pencil")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundStyle(Palette.gold)
+                            .frame(width: 44, height: 44)
+                            .contentShape(.rect)
+                    }
+                    .accessibilityLabel("Новая запись")
+                }
             Text("Пара строк о том, как прошёл день — только для тебя.")
                 .font(.system(size: 15))
                 .foregroundStyle(Palette.ash)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.top, 6)
+        .padding(.top, 8)
     }
 
     // MARK: - Вход в экспресс-чекин
