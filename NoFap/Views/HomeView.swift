@@ -557,7 +557,7 @@ struct HomeView: View {
                 // Без транзакции `.contentTransition(.numericText())` на числе
                 // стрика не срабатывает — число просто перещёлкивалось. Это
                 // главный момент награды в приложении, он должен перекатиться.
-                circleAction(icon: "flame.fill", title: "Держусь",
+                circleAction(icon: "FlameIcon", custom: true, title: "Держусь",
                              tint: Palette.gold, filled: true, size: 92, glow: true) {
                     withAnimation(.snappy(duration: 0.25)) {
                         if streak.checkIn(clean: true) {
@@ -581,6 +581,7 @@ struct HomeView: View {
     /// раз: обозначить главное действие, а не забить светом всё вокруг.
     private func circleAction(
         icon: String,
+        custom: Bool = false,
         title: LocalizedStringResource,
         tint: Color,
         filled: Bool,
@@ -613,8 +614,19 @@ struct HomeView: View {
                             .overlay { Circle().strokeBorder(tint.opacity(0.5), lineWidth: 1.5) }
                     }
 
-                    Image(systemName: icon)
-                        .font(.system(size: size * 0.33, weight: .medium))
+                    Group {
+                        if custom {
+                            // Своя иконка — шаблон, красится как системная.
+                            Image(icon)
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: size * 0.4)
+                        } else {
+                            Image(systemName: icon)
+                                .font(.system(size: size * 0.33, weight: .medium))
+                        }
+                    }
                         // На залитом круге иконка «вырезана» фоном экрана,
                         // на пустом — светится самим цветом круга.
                         .foregroundStyle(filled ? Color(hex: 0x1A1405) : tint)
