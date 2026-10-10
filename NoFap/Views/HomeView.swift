@@ -29,6 +29,8 @@ struct HomeView: View {
         case breathing, exercise, motivation, survey
         /// Сигнал напарнику уже ушёл — открыт чат, чтобы видеть ответ.
         case partner
+        /// Напарника нет — экран, где его можно позвать.
+        case invitePartner
     }
 
     var body: some View {
@@ -122,11 +124,12 @@ struct HomeView: View {
                         case .motivation: motivationView
                         case .survey:     triggerSurvey
                         case .partner:    PartnerChatView()
+                        case .invitePartner: PartnerView()
                         }
                     }
             }
             // С напарником в меню четыре пути — окну нужно чуть больше места.
-            .presentationDetents([.height(partner.isPaired ? 650 : 560), .large])
+            .presentationDetents([.height(650), .large])
             .presentationBackground(Palette.obsidian)
             .presentationDragIndicator(.visible)
         }
@@ -165,11 +168,17 @@ struct HomeView: View {
                 // Тот же сигнал «Мне сейчас трудно», что и в чате, — но
                 // одним нажатием отсюда: до кнопки в чате в момент тяги
                 // никто не дойдёт. Бесплатно, как всё для момента тяги.
+                // Строка есть всегда: без напарника она ведёт туда, где его
+                // можно позвать, — иначе функция просто «пропадала».
                 if partner.isPaired {
                     sosRow(icon: "person.wave.2.fill", title: "Сигнал напарнику",
                            subtitle: "«\(ChatPresets.sos)» одним нажатием", option: .partner) {
                         Task { _ = await partner.send(ChatPresets.sos, kind: .sos) }
                     }
+                } else {
+                    sosRow(icon: "person.badge.plus", title: "Сигнал напарнику",
+                           subtitle: "Сначала позови напарника — он увидит, когда тебе трудно",
+                           option: .invitePartner)
                 }
             }
             .padding(.horizontal, 4)
