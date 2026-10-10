@@ -52,7 +52,7 @@ struct NoFapApp: App {
                 .environment(avatar)
                 .environment(tour)
                 .environment(xp)
-                .preferredColorScheme(theme.theme.colorScheme)
+                .preferredColorScheme(.dark)
         }
     }
 }

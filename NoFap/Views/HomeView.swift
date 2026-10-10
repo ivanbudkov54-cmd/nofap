@@ -505,8 +505,8 @@ struct HomeView: View {
                     .strokeBorder(Palette.vein, lineWidth: 1)
                     .frame(width: 36, height: 36)
                     .overlay {
-                        Image(systemName: "person")
-                            .font(.system(size: 14))
+                        Image(systemName: "gearshape")
+                            .font(.system(size: 15))
                             .foregroundStyle(Palette.marble)
                     }
                     // Зона нажатия больше самого кружка — 44pt по HIG.

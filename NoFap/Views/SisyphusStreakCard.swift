@@ -19,6 +19,7 @@ struct SisyphusStreakCard: View {
     @State private var showGoalLocked = false
     @State private var showPartner = false
     @State private var showSquad = false
+    @State private var showProgress = false
     @State private var goalDraft = 21
     @State private var pulse = false
 
@@ -109,6 +110,20 @@ struct SisyphusStreakCard: View {
             .overlay {
                 SquadOnImage { showPartner = true }
             }
+            // Статистика — календарь, неделя, рекорд, проценты.
+            .overlay(alignment: .topTrailing) {
+                Button { showProgress = true } label: {
+                    Image(systemName: "chart.bar.fill")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.goldFill)
+                        .frame(width: 38, height: 38)
+                        .background(Circle().fill(Palette.obsidian.opacity(0.7)))
+                        .overlay { Circle().strokeBorder(Palette.gold.opacity(0.4), lineWidth: 1) }
+                }
+                .buttonStyle(.plain)
+                .padding(10)
+                .accessibilityLabel("Прогресс")
+            }
 
             // Пустых мест на картинке нет — позвать людей отсюда можно
             // одной скромной кнопкой, пока в скваде есть свободные места.
@@ -133,6 +148,10 @@ struct SisyphusStreakCard: View {
         }
         // Сразу сквад, без экрана напарника сверху — иначе до приглашения
         // пришлось бы листать.
+        .sheet(isPresented: $showProgress) {
+            NavigationStack { ProgressTabView() }
+                .presentationDragIndicator(.visible)
+        }
         .sheet(isPresented: $showSquad) {
             SquadSheet()
         }

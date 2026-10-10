@@ -50,21 +50,10 @@ struct RootView: View {
             }
             .tabItem { Label("Знания", systemImage: "text.book.closed.fill") }
 
-            // Временно в «Ещё»: место прогресса на виду заняли челленджи.
-            NavigationStack {
-                ProgressTabView()
-            }
-            .tabItem { Label("Прогресс", systemImage: "chart.bar.fill") }
-
             NavigationStack {
                 AvatarScreen()
             }
             .tabItem { Label("Аватар", systemImage: "figure.strengthtraining.traditional") }
-
-            NavigationStack {
-                PartnerView()
-            }
-            .tabItem { Label("Напарник", systemImage: "person.2.fill") }
         }
         .tint(Palette.gold)
         // Всё, что следит за состоянием (приглашения, пейвол, тур,

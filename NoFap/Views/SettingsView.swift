@@ -18,7 +18,6 @@ struct SettingsView: View {
     @Environment(JournalManager.self) private var journal
     @Environment(CheckInManager.self) private var checkIns
     @Environment(\.openURL) private var openURL
-    @Environment(ThemeManager.self) private var theme
 
     @AppStorage("onboardingDone") private var onboardingDone = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
@@ -33,19 +32,20 @@ struct SettingsView: View {
 
     var body: some View {
         List {
-            Section("Внешний вид") {
-                Picker("Тема", selection: Bindable(theme).theme) {
-                    ForEach(AppTheme.allCases) { item in
-                        Label(item.title, systemImage: item.symbol).tag(item)
-                    }
+            Section {
+                NavigationLink {
+                    PartnerView()
+                } label: {
+                    Label { Text("Напарник и сквад").foregroundStyle(Palette.marbleHigh) } icon: { Image(systemName: "person.2.fill").foregroundStyle(Palette.gold) }
                 }
-                .pickerStyle(.inline)
-                .onChange(of: theme.theme) { _, _ in
-                    UISelectionFeedbackGenerator().selectionChanged()
+                NavigationLink {
+                    ProgressTabView()
+                } label: {
+                    Label { Text("Прогресс").foregroundStyle(Palette.marbleHigh) } icon: { Image(systemName: "chart.bar.fill").foregroundStyle(Palette.gold) }
                 }
             }
 
-            Section("Данные и прогресс") {
+            Section("Данные") {
                 Button("Сбросить текущий стрик") {
                     confirmReset = true
                 }
@@ -72,10 +72,12 @@ struct SettingsView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .contentMargins(.top, 4, for: .scrollContent)
         .scrollContentBackground(.hidden)
         .background(Palette.obsidian.ignoresSafeArea())
         .navigationTitle("Настройки")
-        .navigationBarTitleDisplayMode(.large)
+        // Компактный заголовок — без пустой полосы над списком.
+        .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(
             "Сбросить текущий стрик?",
             isPresented: $confirmReset,
