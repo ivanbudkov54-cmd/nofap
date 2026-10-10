@@ -124,11 +124,16 @@ struct DeepDiveView: View {
                 }
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(Palette.gold)
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
                 .padding(.top, 2)
-            }
 
-            if [.neuroscience, .science].contains(article.category) && !subscriptions.isPro {
-                ProLockBadge()
+                // Замок — отдельной строкой под мета: справа от заголовка он
+                // сжимал текст, и слова рвались по слогам.
+                if [.neuroscience, .science].contains(article.category) && !subscriptions.isPro {
+                    ProLockBadge()
+                        .padding(.top, 4)
+                }
             }
 
             Spacer(minLength: 0)

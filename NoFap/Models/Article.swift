@@ -166,9 +166,9 @@ enum ArticleLibrary {
             Что дает воздержание:
             Через 14–21 день воздержания плотность рецепторов восстанавливается. Мир снова обретает краски, возвращается интерес к реальным действиям и глубокой работе.
             """,
-            sourceName: "Разбор базы знаний",
+            sourceName: "Kühn & Gallinat, Институт Макса Планка, 2014",
             sourceDetail: "Дофамин, D2-рецепторы и восстановление чувствительности",
-            url: URL(string: "https://www.ncbi.nlm.nih.gov/")!,
+            url: URL(string: "https://doi.org/10.1001/jamapsychiatry.2014.93")!,
             category: .science,
             icon: "brain.head.profile",
             readTime: "5 мин чтения",
@@ -190,9 +190,9 @@ enum ArticleLibrary {
             Выход из ловушки:
             Отказ от искусственной стимуляции возвращает естественную чувствительность. Реальная девушка снова становится главным источником притяжения.
             """,
-            sourceName: "Разбор базы знаний",
+            sourceName: "Park et al., Behavioral Sciences, 2016",
             sourceDetail: "Эффект Кулиджа и новизна стимула",
-            url: URL(string: "https://www.ncbi.nlm.nih.gov/")!,
+            url: URL(string: "https://doi.org/10.3390/bs6030017")!,
             category: .science,
             icon: "person.2.fill",
             readTime: "4 мин чтения",
@@ -217,9 +217,9 @@ enum ArticleLibrary {
             • Повышение басовитости голоса за счет плотности связок.
             • Исчезновение апатии и появление твердости в принятии решений.
             """,
-            sourceName: "Разбор базы знаний",
+            sourceName: "Jiang et al., Чжэцзянский университет, 2003",
             sourceDetail: "Чжэцзянский университет: пик свободного тестостерона на 7-й день",
-            url: URL(string: "https://www.ncbi.nlm.nih.gov/")!,
+            url: URL(string: "https://pubmed.ncbi.nlm.nih.gov/12659241/")!,
             category: .science,
             icon: "waveform.path.ecg",
             readTime: "6 мин чтения",
@@ -241,9 +241,9 @@ enum ArticleLibrary {
             Как помогает стрик:
             Сохраняя семя, вы держите дофамин на ровной высоте, избегая резких эмоциональных качелей и сохраняя лидерский голод.
             """,
-            sourceName: "Разбор базы знаний",
+            sourceName: "Brody & Krüger, Biological Psychology, 2006",
             sourceDetail: "Пролактин, дофамин и посткоитальная дисфория",
-            url: URL(string: "https://www.ncbi.nlm.nih.gov/")!,
+            url: URL(string: "https://pubmed.ncbi.nlm.nih.gov/16095799/")!,
             category: .science,
             icon: "arrow.down.heart",
             readTime: "4 мин чтения",
@@ -265,9 +265,9 @@ enum ArticleLibrary {
 
             Вы тренируете не просто отказ от привычки, вы тренируете способность сказать «нет» слабости в любых сферах жизни.
             """,
-            sourceName: "Разбор базы знаний",
+            sourceName: "Brand et al., модель I-PACE, 2016",
             sourceDetail: "Префронтальная кора и лимбическая система",
-            url: URL(string: "https://www.ncbi.nlm.nih.gov/")!,
+            url: URL(string: "https://doi.org/10.1016/j.neubiorev.2016.08.033")!,
             category: .science,
             icon: "bolt.shield",
             readTime: "5 мин чтения",

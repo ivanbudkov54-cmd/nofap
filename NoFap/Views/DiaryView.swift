@@ -18,6 +18,7 @@ struct DiaryView: View {
     @Environment(AppRouter.self) private var router
 
     @State private var showEditor = false
+    @State private var pendingDelete: PendingDelete?
     @State private var showCheckIn = false
     @State private var draft = ""
     @State private var currentPrompt = ""
@@ -99,6 +100,23 @@ struct DiaryView: View {
         // Своя шапка вместо панели навигации — у всех вкладок одна высота.
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $showEditor) { editor }
+        // Удаление необратимо — запись стирается и на сервере.
+        .alert("Удалить запись?", isPresented: Binding(
+            get: { pendingDelete != nil },
+            set: { if !$0 { pendingDelete = nil } }
+        )) {
+            Button("Удалить", role: .destructive) {
+                switch pendingDelete {
+                case .note(let entry):    journal.deleteEntry(entry)
+                case .checkIn(let entry): checkIns.deleteEntry(entry)
+                case nil: break
+                }
+                pendingDelete = nil
+            }
+            Button("Отмена", role: .cancel) { pendingDelete = nil }
+        } message: {
+            Text("Её нельзя будет вернуть.")
+        }
         .onAppear { openShieldNoteIfNeeded() }
         .onChange(of: router.openRelapseReview) { _, open in
             if open { openShieldNoteIfNeeded() }
@@ -239,7 +257,7 @@ struct DiaryView: View {
                 Spacer()
 
                 Button {
-                    journal.deleteEntry(entry)
+                    pendingDelete = .note(entry)
                 } label: {
                     Image(systemName: "trash")
                         .font(.system(size: 13))
@@ -308,7 +326,7 @@ struct DiaryView: View {
                 Spacer()
 
                 Button {
-                    checkIns.deleteEntry(entry)
+                    pendingDelete = .checkIn(entry)
                 } label: {
                     Image(systemName: "trash")
                         .font(.system(size: 13))
@@ -527,4 +545,9 @@ private struct TagFlowLayout: Layout {
             rowHeight = max(rowHeight, size.height)
         }
     }
+}
+
+private enum PendingDelete {
+    case note(JournalEntry)
+    case checkIn(CheckInEntry)
 }
