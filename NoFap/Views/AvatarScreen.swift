@@ -25,8 +25,9 @@ struct AvatarScreen: View {
                     .font(Face.display(28, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
                     .frame(maxWidth: .infinity, alignment: .center)
-                    // На уровень кнопки «назад» — по центру она не мешает.
-                    .padding(.top, -44)
+                    // Теперь это вкладка — кнопки «назад» нет, поднимать
+                    // заголовок к ней незачем: под ним только Dynamic Island.
+                    .padding(.top, 8)
                     .accessibilityAddTraits(.isHeader)
 
                 scene
@@ -38,10 +39,7 @@ struct AvatarScreen: View {
             .padding(.bottom, 28)
         }
         .background(Palette.obsidian.ignoresSafeArea())
-        // Без заголовка в панели (iOS 17 не умеет убирать его иначе) —
-        // остаётся только кнопка «назад».
-        .navigationTitle("")
-        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .navigationBar)
         .sheet(item: $detailRank) { rank in
             SpartanDetailSheet(rank: rank, progress: progress)
         }
