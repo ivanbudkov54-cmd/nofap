@@ -86,11 +86,11 @@ struct AvatarScreen: View {
                     .animation(.easeInOut(duration: 0.8), value: progress.levelProgress)
                     // Главный стоит по центру; следующий — справа за его
                     // плечом, у самого края экрана.
-                    .offset(x: 140, y: -45)
+                    .offset(x: 150, y: -70)
                     .accessibilityLabel(Text("Следующий ранг: \(Text(next.title))"))
                 }
 
-                SpartanFigure(rank: rank, size: 240, breathing: true, reactsToTap: true, shining: true)
+                SpartanFigure(rank: rank, size: 330, breathing: true, reactsToTap: true, shining: true)
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 12)
@@ -107,6 +107,10 @@ struct AvatarScreen: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 12)
         }
+        // Сцена — весь первый экран: воин в центре внимания, опыт и зал
+        // славы — ниже, при прокрутке.
+        .frame(maxHeight: .infinity)
+        .containerRelativeFrame(.vertical) { height, _ in height * 0.66 }
     }
 
     // MARK: - Опыт
