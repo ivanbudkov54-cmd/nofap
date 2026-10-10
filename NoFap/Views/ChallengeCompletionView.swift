@@ -20,9 +20,7 @@ struct ChallengeCompletionView: View {
                 .allowsHitTesting(false)
 
             VStack(spacing: 18) {
-                Image(systemName: "trophy.fill")
-                    .font(.system(size: 64))
-                    .foregroundStyle(.goldFill)
+                Image("TrophyIcon")
                     .scaleEffect(burst ? 1 : 0.6)
                     .padding(.top, 28)
 
