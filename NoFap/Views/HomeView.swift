@@ -617,11 +617,10 @@ struct HomeView: View {
                     Group {
                         if custom {
                             // Своя иконка — шаблон, красится как системная.
+                            // Готовая картинка ровно нужного размера (@1x/@2x/@3x)
+                            // — без растягивания, края остаются чёткими.
                             Image(icon)
                                 .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: size * 0.4)
                         } else {
                             Image(systemName: icon)
                                 .font(.system(size: size * 0.33, weight: .medium))
