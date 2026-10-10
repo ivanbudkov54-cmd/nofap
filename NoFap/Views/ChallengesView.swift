@@ -50,7 +50,7 @@ struct ChallengesView: View {
             Button("Да, выполнил") { completeChallenge() }
             Button("Ещё нет", role: .cancel) {}
         } message: {
-            Text("«\(challenges.current.title)». Отмечай только то, что сделал на самом деле — аватар растёт от реальных поступков.")
+            Text("«\(challenges.current.title)». Отмечай только то, что сделал на самом деле. Меняют тебя поступки, а не галочки.")
         }
         .sheet(isPresented: Bindable(challenges).showCompletion) {
             ChallengeCompletionView(gain: completionGain) {
