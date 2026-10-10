@@ -11,6 +11,7 @@ struct ChallengesView: View {
     @Environment(AvatarManager.self) private var avatar
     @Environment(AvatarProgressManager.self) private var xp
     @State private var completionGain: XPGain?
+    @State private var confirmComplete = false
 
     @Environment(AppTourManager.self) private var tour
 
@@ -42,6 +43,14 @@ struct ChallengesView: View {
             withAnimation(.easeInOut(duration: 0.35)) {
                 proxy.scrollTo("tour-challenge", anchor: .center)
             }
+        }
+        // Честный вопрос перед наградой — чтобы опыт не набивали нажатиями.
+        // .alert, а не confirmationDialog: без стрелки-«хвостика», по центру.
+        .alert("Точно выполнил?", isPresented: $confirmComplete) {
+            Button("Да, выполнил") { completeChallenge() }
+            Button("Ещё нет", role: .cancel) {}
+        } message: {
+            Text("«\(challenges.current.title)». Отмечай только то, что сделал на самом деле — аватар растёт от реальных поступков.")
         }
         .sheet(isPresented: Bindable(challenges).showCompletion) {
             ChallengeCompletionView(gain: completionGain) {
@@ -102,10 +111,8 @@ struct ChallengesView: View {
                 .foregroundStyle(Palette.ash)
                 .fixedSize(horizontal: false, vertical: true)
 
-            // Одно нажатие — без «вы уверены?»: это не необратимое действие,
-            // а отметка о победе.
             Button {
-                completeChallenge()
+                confirmComplete = true
             } label: {
                 Text("Выполнил вызов")
                     .font(.system(size: 16, weight: .semibold))
