@@ -16,6 +16,7 @@ struct ContentView: View {
     @Environment(JournalManager.self) private var journal
     @Environment(CloudSync.self) private var cloud
     @Environment(AvatarProgressManager.self) private var xp
+    @Environment(AppBackup.self) private var backup
     @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -34,6 +35,10 @@ struct ContentView: View {
         }
         .task {
             blocking.refresh()
+            if backup.needsProtection {
+                backup.needsProtection = false
+                if !blocking.isActive { await blocking.enableProtection() }
+            }
             await reminder.refresh()
             await partner.refresh()
             await squad.refresh()
@@ -45,6 +50,7 @@ struct ContentView: View {
             // Опыт — копия на сервере; менеджер о сети не знает.
             xp.onTotalChanged = { total in Task { await cloud.pushXP(total) } }
             await cloud.pushXP(xp.totalXP)
+            await backup.upload()
         }
         .alert(cloud.notice ?? "", isPresented: Binding(
             get: { cloud.notice != nil },
@@ -73,6 +79,8 @@ struct ContentView: View {
             Task { await squad.push(from: streak, nickname: partner.nickname) }
         }
         .onChange(of: scenePhase) { _, phase in
+            // Уход в фон — последний надёжный момент сохранить копию.
+            if phase == .background { Task { await backup.upload(force: true) } }
             guard phase == .active else { return }
             Task { await partner.refresh() }
             Task { await squad.refresh() }

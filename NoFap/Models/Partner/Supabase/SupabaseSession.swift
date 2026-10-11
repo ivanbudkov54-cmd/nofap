@@ -36,6 +36,8 @@ final class SupabaseSession {
     }
 
     private init() {
+        // Аккаунты, заведённые до синхронизации, переезжают в связку iCloud.
+        Keychain.moveToICloud([Key.uid, Key.refreshToken])
         uid = Keychain.read(Key.uid)
     }
 
@@ -85,6 +87,17 @@ final class SupabaseSession {
                 // Только явный отказ сервера ведёт к новому аккаунту. Сетевая
                 // ошибка пробрасывается дальше: заводить новый идентификатор
                 // из-за пропавшего Wi-Fi значило бы молча разорвать связь.
+                //
+                // Токен одноразовый и общий для телефонов с одним Apple ID:
+                // другой телефон мог уже обменять его и положить в связку
+                // свежий. Пробуем свежий, прежде чем сдаться.
+                if let fresher = Keychain.read(Key.refreshToken), fresher != refresh {
+                    try? await Task.sleep(for: .seconds(1))
+                    if let token = try? await exchange(path: "token?grant_type=refresh_token",
+                                                       body: ["refresh_token": fresher]) {
+                        return token
+                    }
+                }
             }
         }
         return try await exchange(path: "signup", body: [:])

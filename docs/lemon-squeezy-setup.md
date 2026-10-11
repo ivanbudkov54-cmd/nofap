@@ -45,6 +45,9 @@
 **Таблица**
 1. SQL Editor → New query → вставить весь `supabase/04_web_premium.sql` → Run.
 
+1б. Так же запустить `supabase/05_app_backup.sql` — копия прогресса (нужна и без
+    Lemon Squeezy: по ней прогресс возвращается после переустановки).
+
 **Функция**
 2. Edge Functions → Deploy a new function → Via Editor.
 3. Имя: `lemon-webhook` (ровно так).
