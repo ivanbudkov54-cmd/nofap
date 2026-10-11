@@ -37,6 +37,7 @@ struct PaywallView: View {
 
     @State private var selectedID = PremiumStore.ProductID.yearly
     @State private var notice: Notice?
+    @State private var showKeyEntry = false
 
     private enum Notice: String, Identifiable {
         case pending, failed, nothingToRestore
@@ -55,6 +56,7 @@ struct PaywallView: View {
                     benefits
                     plans
                     purchaseButton
+                    if store.web.offersWebCheckout { webCheckout }
                     fineprint
                 }
                 .padding(.horizontal, 22)
@@ -80,6 +82,9 @@ struct PaywallView: View {
         }
         .onChange(of: store.isPremium) { _, premium in
             if premium { dismiss() }
+        }
+        .sheet(isPresented: $showKeyEntry) {
+            WebKeyEntryView()
         }
         .alert(item: $notice) { notice in
             switch notice {
@@ -257,6 +262,36 @@ struct PaywallView: View {
         .opacity(selected == nil ? 0.5 : 1)
     }
 
+    /// Оплата на сайте — только в американском App Store. Там же дешевле:
+    /// Apple не берёт комиссию.
+    private var webCheckout: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 10) {
+                Rectangle().fill(Palette.vein).frame(height: 1)
+                Text("или")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(Palette.ash)
+                Rectangle().fill(Palette.vein).frame(height: 1)
+            }
+
+            Button {
+                Task { openURL(await store.web.checkoutURL()) }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "safari")
+                    Text("На сайте — \(LemonSqueezyConfig.yearlyPrice) в год")
+                }
+            }
+            .buttonStyle(StoneButton())
+
+            Text("Оплата через Lemon Squeezy. Premium включится сам, когда вернёшься в приложение.")
+                .font(.system(size: 12))
+                .foregroundStyle(Palette.ash)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
     /// Apple требует показать цену, период и условия продления до покупки.
     private var fineprint: some View {
         VStack(spacing: 14) {
@@ -273,6 +308,9 @@ struct PaywallView: View {
                     Task {
                         if !(await store.restore()) { notice = .nothingToRestore }
                     }
+                }
+                if store.web.offersWebCheckout {
+                    Button("Ввести ключ") { showKeyEntry = true }
                 }
                 Button("Условия") {
                     openURL(URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)

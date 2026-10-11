@@ -30,7 +30,13 @@ final class PremiumStore {
     /// Сколько дней «Моего пути» открыто без подписки.
     static let freeJourneyDays = 7
 
-    private(set) var isPremium = false
+    /// Подписка в App Store.
+    private(set) var hasStoreSubscription = false
+
+    /// Premium, оплаченный на сайте (только американский App Store).
+    let web = WebPremium()
+
+    var isPremium: Bool { hasStoreSubscription || web.isActive || debugOverride }
 
     /// Пейвол по требованию экрана: `checkProAccess` поднимает флаг, RootView
     /// показывает PaywallView. Причина — короткая строка над тарифами.
@@ -97,7 +103,9 @@ final class PremiumStore {
                 active = true
             }
         }
-        isPremium = active || debugOverride
+        hasStoreSubscription = active
+        // Не ждём: проверка сайта ходит в сеть и не должна тормозить покупку.
+        Task { await web.refresh() }
     }
 
     func purchase(_ product: Product) async -> PurchaseOutcome {
