@@ -198,8 +198,15 @@ struct AvatarScreen: View {
 
 // MARK: - Фигура
 
-/// Картинка ранга. Пока нарисованы не все — до появления арта показываем
-/// ближайший нарисованный ранг ниже, а если нет и его, силуэт.
+/// Вертикальная полоса по центру — где на картинке сама фигура.
+private struct CentralBand: Shape {
+    let widthFraction: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        Path(rect.insetBy(dx: rect.width * (1 - widthFraction) / 2, dy: 0))
+    }
+}
+
 /// Поза фигуры на нажатие: приседает, подпрыгивает, пружинит обратно.
 private struct TapPose {
     var squashX: CGFloat = 1
@@ -207,6 +214,8 @@ private struct TapPose {
     var lift: CGFloat = 0
 }
 
+/// Картинка ранга. Пока нарисованы не все — до появления арта показываем
+/// ближайший нарисованный ранг ниже, а если нет и его, силуэт.
 struct SpartanFigure: View {
     let rank: SpartanRank
     let size: CGFloat
@@ -266,6 +275,10 @@ struct SpartanFigure: View {
                 .offset(y: lifted ? -size * 0.04 : 0)
         }
         .frame(width: size, height: size * 1.04)
+        // Главная фигура отзывается только на нажатие по себе, а не по
+        // прозрачным краям картинки: справа за ней стоит следующий ранг,
+        // и нажатие туда должно доставаться ему.
+        .contentShape(reactsToTap ? AnyShape(CentralBand(widthFraction: 0.56)) : AnyShape(Rectangle()))
         // Жест только у главной фигуры: внутри кнопок (зал славы, фоновый
         // воин) он перехватывал бы нажатие.
         .simultaneousGesture(TapGesture().onEnded {
