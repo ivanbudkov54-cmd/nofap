@@ -25,7 +25,4 @@ enum RegionHelper {
         if Locale.current.region?.identifier == "RU" { return true }
         return Locale.current.language.languageCode?.identifier == "ru"
     }
-
-    /// Страница оплаты картами РФ и СБП. Замените на боевой адрес сайта.
-    static let russianPaymentURL = URL(string: "https://nofap.app/pay")!
 }

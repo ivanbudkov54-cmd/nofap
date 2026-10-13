@@ -13,13 +13,16 @@ import SwiftUI
 struct DiaryView: View {
 
     @Environment(JournalManager.self) private var journal
+    @Environment(ManifestManager.self) private var manifestStore
     @Environment(CheckInManager.self) private var checkIns
+    @Environment(SubscriptionManager.self) private var subscriptions
     @Environment(Backend.self) private var backend
     @Environment(AppRouter.self) private var router
 
     @State private var showEditor = false
     @State private var showCheckIn = false
     @State private var openedManifest: JournalEntry?
+    @State private var editManifest = false
     @State private var draft = ""
     @State private var currentPrompt = ""
 
@@ -77,7 +80,11 @@ struct DiaryView: View {
                     header
                 }
                 checkInEntry
-                if let manifest {
+                if let current = manifestStore.currentManifest {
+                    painManifestCard(current)
+                        .tourTarget(.journal)
+                }
+                if manifestStore.currentManifest == nil, let manifest {
                     manifestEntry(manifest)
                         .tourTarget(.journal)
                 }
@@ -122,6 +129,7 @@ struct DiaryView: View {
             NavigationStack { CheckInView() }
                 .preferredColorScheme(.dark)
         }
+        .sheet(isPresented: $editManifest) { manifestEditor }
         .sheet(item: $openedManifest) { entry in
             manifestSheet(entry)
         }
@@ -158,7 +166,9 @@ struct DiaryView: View {
 
     private var checkInEntry: some View {
         Button {
-            showCheckIn = true
+            subscriptions.checkProAccess(for: "Экспресс-чекин целиком доступен в Pro") {
+                showCheckIn = true
+            }
         } label: {
             HStack(spacing: 14) {
                 Image(systemName: "gauge.with.dots.needle.50percent")
@@ -178,14 +188,48 @@ struct DiaryView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Palette.ash)
+                if subscriptions.isPro {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Palette.ash)
+                } else {
+                    ProLockBadge()
+                }
             }
             .padding(14)
             .cardSurface()
         }
         .buttonStyle(.plain)
+    }
+
+    private func painManifestCard(_ item: UserPainManifest) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("📌 МОЙ МАНИФЕСТ • ТОЧКА А")
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .foregroundStyle(Palette.gold)
+            Text("После срыва я чувствую: \(item.postRelapseFeeling.joined(separator: ", "))")
+            Text("Я уже потерял: \(item.pastYearLosses.joined(separator: ", "))")
+            Text("Если я сдамся, через 5 лет я стану: \(item.fiveYearFutureVision)")
+            Button("Редактировать / Дополнить") { editManifest = true }
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Palette.gold)
+        }
+        .font(.system(size: 15))
+        .foregroundStyle(Palette.marble)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color(hex: 0x17171C), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Palette.gold.opacity(0.7), lineWidth: 1)
+        }
+    }
+
+    private var manifestEditor: some View {
+        NavigationStack {
+            ManifestEditView()
+        }
+        .presentationDetents([.large])
     }
 
     private func manifestEntry(_ entry: JournalEntry) -> some View {
@@ -534,6 +578,59 @@ struct DiaryView: View {
         .background(Color(hex: 0x17171C), in: .rect(cornerRadius: 14))
         .overlay {
             RoundedRectangle(cornerRadius: 14).strokeBorder(Palette.gold.opacity(0.35), lineWidth: 1)
+        }
+    }
+}
+
+private struct ManifestEditView: View {
+    @Environment(ManifestManager.self) private var manifestStore
+    @Environment(JournalManager.self) private var journal
+    @Environment(\.dismiss) private var dismiss
+    @State private var feelings = ""
+    @State private var losses = ""
+    @State private var future = ""
+    @State private var notes = ""
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                field("После срыва я чувствую", text: $feelings)
+                field("Я уже потерял", text: $losses)
+                field("Через 5 лет я стану", text: $future)
+                field("Дополнительно", text: $notes)
+                Button("Сохранить") {
+                    manifestStore.saveManifest(
+                        postRelapse: feelings.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
+                        losses: losses.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
+                        future: future,
+                        notes: notes,
+                        journal: journal
+                    )
+                    dismiss()
+                }
+                .buttonStyle(GoldButton())
+            }
+            .padding(20)
+        }
+        .background(Palette.obsidian.ignoresSafeArea())
+        .navigationTitle("Манифест")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            guard let item = manifestStore.currentManifest else { return }
+            feelings = item.postRelapseFeeling.joined(separator: ", ")
+            losses = item.pastYearLosses.joined(separator: ", ")
+            future = item.fiveYearFutureVision
+            notes = item.customNotes ?? ""
+        }
+    }
+
+    private func field(_ title: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(Palette.ash)
+            TextField(title, text: text, axis: .vertical)
+                .textFieldStyle(.roundedBorder)
         }
     }
 }

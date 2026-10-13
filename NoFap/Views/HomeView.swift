@@ -18,6 +18,7 @@ struct HomeView: View {
     @Environment(SubscriptionManager.self) private var subscriptions
     @Environment(StreakGoalManager.self) private var goals
     @Environment(JournalManager.self) private var journal
+    @Environment(ManifestManager.self) private var manifestStore
 
     @State private var showRelapse = false
     @State private var showPartner = false
@@ -431,6 +432,9 @@ struct HomeView: View {
     private var sosMenu: some View {
         ScrollView {
         VStack(spacing: 22) {
+            if let item = manifestStore.currentManifest {
+                sosManifest(item)
+            }
             Image(systemName: "hand.raised.fill")
                 .font(.system(size: 34))
                 .foregroundStyle(.red)
@@ -468,6 +472,35 @@ struct HomeView: View {
         }
         .padding(.horizontal, 24)
         .padding(.bottom, 24)
+        }
+    }
+
+    private func sosManifest(_ item: UserPainManifest) -> some View {
+        let date = item.createdAt.formatted(date: .abbreviated, time: .omitted)
+        return VStack(alignment: .leading, spacing: 10) {
+            Label("ТВОЙ ЛИЧНЫЙ РАЗГОВОР С СОБОЙ", systemImage: "exclamationmark.triangle.fill")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(Color(hex: 0xFF6B3D))
+            Text("Вспомни, ради чего ты начал")
+                .font(Face.display(20, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+            Text(item.sosQuote)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(Palette.marble)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("— Твои слова из Дневника от \(date)")
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.ash)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(
+            LinearGradient(colors: [Color(hex: 0x3A1212), Color(hex: 0x1A1405)], startPoint: .topLeading, endPoint: .bottomTrailing),
+            in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Color(hex: 0xE05A45), lineWidth: 1)
         }
     }
 

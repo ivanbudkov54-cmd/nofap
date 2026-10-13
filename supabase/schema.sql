@@ -23,6 +23,9 @@ alter table public.profiles add column if not exists best_streak_days int not nu
 alter table public.profiles add column if not exists last_relapse_at timestamptz;
 alter table public.profiles add column if not exists last_streak_freeze_date timestamptz;
 alter table public.profiles add column if not exists updated_at timestamptz not null default now();
+alter table public.profiles add column if not exists email text;
+alter table public.profiles add column if not exists is_pro boolean not null default false;
+alter table public.profiles add column if not exists pro_expires_at timestamptz;
 
 -- Старые имена streak_days / best_streak остаются, чтобы не ломать уже
 -- созданную таблицу. Новые поля заполняются из них один раз.
@@ -96,6 +99,31 @@ create policy "profiles_update_own"
     to authenticated
     using (id = auth.uid())
     with check (id = auth.uid());
+
+-- Клиент читает is_pro, но не может выдать себе Pro: колонки меняет только service_role (вебхук).
+create or replace function public.protect_pro_columns()
+returns trigger
+language plpgsql
+as $$
+begin
+    if coalesce(auth.role(), '') is distinct from 'service_role' then
+        if tg_op = 'INSERT' then
+            new.is_pro := false;
+            new.pro_expires_at := null;
+        else
+            new.is_pro := old.is_pro;
+            new.pro_expires_at := old.pro_expires_at;
+        end if;
+    end if;
+    return new;
+end;
+$$;
+
+drop trigger if exists profiles_protect_pro_columns on public.profiles;
+create trigger profiles_protect_pro_columns
+    before insert or update on public.profiles
+    for each row
+    execute function public.protect_pro_columns();
 
 create policy "journal_select_own"
     on public.journal_entries for select
@@ -439,6 +467,7 @@ alter table public.profiles add column if not exists buddy_id uuid;
 alter table public.profiles add column if not exists squad_id uuid;
 alter table public.profiles add column if not exists last_checkin_at timestamptz;
 alter table public.profiles add column if not exists total_xp int not null default 0;
+alter table public.profiles add column if not exists user_manifest jsonb;
 create unique index if not exists profiles_invite_code_key on public.profiles (invite_code);
 
 create table if not exists public.buddy_pairs (

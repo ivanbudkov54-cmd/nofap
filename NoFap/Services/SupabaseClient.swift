@@ -15,6 +15,76 @@ func supabaseLog(_ message: String) {
     fflush(stdout)
 }
 
+enum LinkedAccount {
+    static let emailKey = "linkedAccountEmail"
+
+    static var email: String? {
+        let stored = UserDefaults.standard.string(forKey: emailKey)
+        guard let stored, !stored.isEmpty else { return nil }
+        return stored
+    }
+}
+
+enum EmailLinkError: LocalizedError {
+    case invalidCode
+    case tooManyAttempts
+    case network
+    case profile
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidCode:
+            "Неверный код. Проверьте письмо и введите его ещё раз."
+        case .tooManyAttempts:
+            "Слишком много попыток. Подождите минуту и запросите код снова."
+        case .network:
+            "Нет подключения к сети. Проверьте интернет и попробуйте ещё раз."
+        case .profile:
+            "Аккаунт подтверждён, но прогресс не записался на сервер. Попробуйте ещё раз."
+        }
+    }
+
+    static func sendFailure(_ error: Error) -> EmailLinkError {
+        guard let supabase = error as? SupabaseError else { return .network }
+        if case .offline = supabase { return .network }
+        if case .server(let message) = supabase {
+            let lower = message.lowercased()
+            if lower.contains("rate") || lower.contains("429") || lower.contains("over_email") || lower.contains("too many") {
+                return .tooManyAttempts
+            }
+        }
+        return .network
+    }
+
+    static func verifyFailure(_ error: Error) -> EmailLinkError {
+        classified(error, invalidAs: .invalidCode)
+    }
+
+    static func profileFailure(_ error: Error) -> EmailLinkError {
+        if let supabase = error as? SupabaseError, case .offline = supabase { return .network }
+        return .profile
+    }
+
+    private static func classified(_ error: Error, invalidAs: EmailLinkError) -> EmailLinkError {
+        guard let supabase = error as? SupabaseError else { return .network }
+        switch supabase {
+        case .offline:
+            return .network
+        case .server(let message):
+            let lower = message.lowercased()
+            if lower.contains("rate") || lower.contains("429") || lower.contains("over_email") || lower.contains("too many") {
+                return .tooManyAttempts
+            }
+            if lower.contains("otp") || lower.contains("token") || lower.contains("invalid") || lower.contains("expired") {
+                return invalidAs
+            }
+            return .network
+        default:
+            return .network
+        }
+    }
+}
+
 struct SupabaseSession: Codable, Equatable {
     let accessToken: String
     let refreshToken: String
@@ -96,6 +166,18 @@ struct KnowledgeArticle: Codable, Identifiable, Equatable, Hashable {
     let orderIndex: Int
 }
 
+struct ProProfile: Equatable {
+    var isPro: Bool
+    var expiresAt: Date?
+    var email: String?
+}
+
+private struct ProProfileRow: Decodable {
+    let email: String?
+    let isPro: Bool
+    let proExpiresAt: Date?
+}
+
 struct RemoteProfile: Decodable {
     let currentStreakDays: Int
     let bestStreakDays: Int
@@ -134,6 +216,84 @@ final class SupabaseClient {
 
     func currentUserId() -> UUID? {
         sessionBox.session?.userId
+    }
+
+    func currentAccessToken() -> String? {
+        sessionBox.session?.accessToken
+    }
+
+    func fetchProProfile() async throws -> ProProfile {
+        guard let userId = currentUserId() else { throw SupabaseError.notSignedIn }
+        let data = try await restData(
+            path: "profiles?id=eq.\(userId.uuidString)&select=email,is_pro,pro_expires_at&limit=1",
+            method: "GET",
+            body: nil
+        )
+        let rows = try decoder.decode([ProProfileRow].self, from: data)
+        let row = rows.first
+        return ProProfile(isPro: row?.isPro ?? false, expiresAt: row?.proExpiresAt, email: row?.email)
+    }
+
+    func sendEmailCode(to email: String) async throws {
+        let body = try JSONSerialization.data(withJSONObject: [
+            "email": email,
+            "create_user": true
+        ])
+        do {
+            _ = try await auth(path: "otp", method: "POST", body: body, authorized: false)
+        } catch {
+            throw EmailLinkError.sendFailure(error)
+        }
+    }
+
+    /// Подтверждает OTP и заменяет анонимную сессию на аккаунт с этим email.
+    func verifyEmailCode(email: String, code: String) async throws -> UUID {
+        let body = try JSONSerialization.data(withJSONObject: [
+            "email": email,
+            "token": code,
+            "type": "email"
+        ])
+        let data: Data
+        do {
+            data = try await auth(path: "verify", method: "POST", body: body, authorized: false)
+        } catch {
+            throw EmailLinkError.verifyFailure(error)
+        }
+        let session = try decodeSession(data)
+        sessionBox.session = session
+        UserDefaults.standard.set(email, forKey: LinkedAccount.emailKey)
+        supabaseLog("email linked user_id=\(session.userId.uuidString)")
+        return session.userId
+    }
+
+    /// Переносит локальный стрик на профиль нового auth user id.
+    func adoptLocalStreak(email: String, streakDays: Int, bestStreak: Int, streakStart: Date?) async throws {
+        guard let userId = currentUserId() else { throw SupabaseError.notSignedIn }
+        guard let url = Self.endpoint("rest/v1/profiles?on_conflict=id") else { throw SupabaseError.notConfigured }
+        var payload: [String: Any] = [
+            "id": userId.uuidString,
+            "email": email,
+            "current_streak_days": streakDays,
+            "streak_days": streakDays,
+            "best_streak_days": bestStreak,
+            "best_streak": bestStreak,
+            "updated_at": Self.iso.string(from: Date())
+        ]
+        if let streakStart {
+            payload["streak_start_date"] = Self.iso.string(from: streakStart)
+        }
+        let body = try JSONSerialization.data(withJSONObject: payload)
+        do {
+            _ = try await send(
+                url: url,
+                method: "POST",
+                body: body,
+                authorized: true,
+                prefer: "resolution=merge-duplicates,return=minimal"
+            )
+        } catch {
+            throw EmailLinkError.profileFailure(error)
+        }
     }
 
     func ensureSession() async throws {
@@ -378,6 +538,15 @@ final class SupabaseClient {
         return rows.first ?? RemoteProfile(currentStreakDays: 0, bestStreakDays: 0, streakStartDate: nil, lastRelapseAt: nil, lastStreakFreezeDate: nil)
     }
 
+    func pushManifest(_ manifest: UserPainManifest) async {
+        guard let userId = currentUserId() else { return }
+        try? await ensureSession()
+        guard let encoded = try? JSONEncoder().encode(manifest),
+              let object = try? JSONSerialization.jsonObject(with: encoded) else { return }
+        guard let body = try? JSONSerialization.data(withJSONObject: ["user_manifest": object]) else { return }
+        _ = try? await rest(path: "profiles?id=eq.\(userId.uuidString)", method: "PATCH", body: body)
+    }
+
     func pushTotalXP(_ xp: Int) async {
         guard let userId = currentUserId() else { return }
         try? await ensureSession()
@@ -487,14 +656,14 @@ final class SupabaseClient {
         return URL(string: "\(root)/\(path)")
     }
 
-    private func send(url: URL, method: String, body: Data?, authorized: Bool) async throws -> (data: Data, status: Int) {
+    private func send(url: URL, method: String, body: Data?, authorized: Bool, prefer: String = "return=representation") async throws -> (data: Data, status: Int) {
         var request = URLRequest(url: url, timeoutInterval: 20)
         request.httpMethod = method
         request.httpBody = body
         request.assumesHTTP3Capable = false
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(SupabaseConfig.anonKey, forHTTPHeaderField: "apikey")
-        request.setValue("return=representation", forHTTPHeaderField: "Prefer")
+        request.setValue(prefer, forHTTPHeaderField: "Prefer")
         if authorized, let token = sessionBox.session?.accessToken {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         } else {

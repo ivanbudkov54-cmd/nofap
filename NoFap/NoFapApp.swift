@@ -29,6 +29,7 @@ struct NoFapApp: App {
     @State private var buddies = BuddyManager()
     @State private var squads = SquadManager()
     @State private var goals = StreakGoalManager()
+    @State private var manifest = ManifestManager()
 
     init() {
         Face.register()
@@ -59,6 +60,7 @@ struct NoFapApp: App {
                 .environment(buddies)
                 .environment(squads)
                 .environment(goals)
+                .environment(manifest)
                 .preferredColorScheme(theme.theme.colorScheme)
                 .onOpenURL { url in
                     buddies.handleIncomingURL(url)

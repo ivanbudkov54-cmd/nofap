@@ -7490,6 +7490,438 @@
           }
         }
       }
+    },
+    "Первые 10 минут после импульса": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Первые 10 минут после импульса"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The first 10 minutes after the impulse"
+          }
+        }
+      }
+    },
+    "Будь предельно честен перед собой. Что ты чувствовал в тот момент?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Будь предельно честен перед собой. Что ты чувствовал в тот момент?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Be completely honest with yourself. What did you feel in that moment?"
+          }
+        }
+      }
+    },
+    "Цена минутной слабости": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Цена минутной слабости"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The price of a minute of weakness"
+          }
+        }
+      }
+    },
+    "Чем ты уже заплатил за экранный фастфуд за последние 12 месяцев?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Чем ты уже заплатил за экранный фастфуд за последние 12 месяцев?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What have you already paid for screen junk food over the last 12 months?"
+          }
+        }
+      }
+    },
+    "Твой худший кошмар": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Твой худший кошмар"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your worst nightmare"
+          }
+        }
+      }
+    },
+    "Кем ты станешь через 5 лет, если оставишь всё как есть и продолжишь сдаваться импульсу?": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Кем ты станешь через 5 лет, если оставишь всё как есть и продолжишь сдаваться импульсу?"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Who will you become in 5 years if you leave everything as it is and keep giving in?"
+          }
+        }
+      }
+    },
+    "Напиши прямо и без прикрас...": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Напиши прямо и без прикрас..."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write it straight, with no softening..."
+          }
+        }
+      }
+    },
+    "Свой вариант": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Свой вариант"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your own answer"
+          }
+        }
+      }
+    },
+    "Зафиксировать этот договор ⚔️": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Зафиксировать этот договор ⚔️"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seal this contract ⚔️"
+          }
+        }
+      }
+    },
+    "🌫️ Ватный туман в голове": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌫️ Ватный туман в голове"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌫️ A cotton fog in the head"
+          }
+        }
+      }
+    },
+    "🕳️ Полная душевная пустота": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🕳️ Полная душевная пустота"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🕳️ Complete inner emptiness"
+          }
+        }
+      }
+    },
+    "📉 Резкая физическая слабость": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📉 Резкая физическая слабость"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📉 A sharp physical weakness"
+          }
+        }
+      }
+    },
+    "💔 Отвращение к себе и стыд": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💔 Отвращение к себе и стыд"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💔 Self-disgust and shame"
+          }
+        }
+      }
+    },
+    "⏳ Осознание слитого впустую времени": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏳ Осознание слитого впустую времени"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏳ The sense of time poured away"
+          }
+        }
+      }
+    },
+    "🥀 Уверенность и раскованность с девушками": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🥀 Уверенность и раскованность с девушками"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🥀 Confidence and ease with women"
+          }
+        }
+      }
+    },
+    "⚡ Драйв и энергия для бизнеса / учебы": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡ Драйв и энергия для бизнеса / учебы"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚡ Drive and energy for work or study"
+          }
+        }
+      }
+    },
+    "⏳ Сотни часов вычеркнутой жизни": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏳ Сотни часов вычеркнутой жизни"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏳ Hundreds of hours crossed out of life"
+          }
+        }
+      }
+    },
+    "🧬 Тестостерон, выносливость и форма": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🧬 Тестостерон, выносливость и форма"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🧬 Testosterone, stamina, and form"
+          }
+        }
+      }
+    },
+    "🎯 Глубокий фокус и память": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎯 Глубокий фокус и память"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🎯 Deep focus and memory"
+          }
+        }
+      }
+    },
+    "Сломленным человеком без воли, амбиций и мужского стержня.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сломленным человеком без воли, амбиций и мужского стержня."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A broken man without will, ambition, or a spine."
+          }
+        }
+      }
+    },
+    "Одиноким наблюдателем чужих побед, зависящим от пикселей на экране.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Одиноким наблюдателем чужих побед, зависящим от пикселей на экране."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A lonely watcher of other people's wins, dependent on pixels."
+          }
+        }
+      }
+    },
+    "Уставшим неудачником с хронической тревогой и упущенным потенциалом.": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Уставшим неудачником с хронической тревогой и упущенным потенциалом."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A tired failure with chronic anxiety and wasted potential."
+          }
+        }
+      }
+    },
+    "📌 МОЙ МАНИФЕСТ • ТОЧКА А": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📌 МОЙ МАНИФЕСТ • ТОЧКА А"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📌 MY MANIFEST • POINT A"
+          }
+        }
+      }
+    },
+    "Редактировать / Дополнить": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Редактировать / Дополнить"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit / Add"
+          }
+        }
+      }
+    },
+    "ТВОЙ ЛИЧНЫЙ РАЗГОВОР С СОБОЙ": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ТВОЙ ЛИЧНЫЙ РАЗГОВОР С СОБОЙ"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YOUR PRIVATE TALK WITH YOURSELF"
+          }
+        }
+      }
+    },
+    "Вспомни, ради чего ты начал": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вспомни, ради чего ты начал"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remember why you started"
+          }
+        }
+      }
+    },
+    "Экспресс-чекин целиком доступен в Pro": {
+      "localizations": {
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Экспресс-чекин целиком доступен в Pro"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The full express check-in is part of Pro"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

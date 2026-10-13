@@ -48,6 +48,20 @@ final class Backend {
         client.currentUserId()
     }
 
+    func currentAccessToken() -> String? {
+        client.currentAccessToken()
+    }
+
+    func fetchProProfile() async -> ProProfile? {
+        guard SupabaseConfig.isConfigured else { return nil }
+        do {
+            try await client.ensureSession()
+            return try await client.fetchProProfile()
+        } catch {
+            return nil
+        }
+    }
+
     /// Анонимная сессия, затем стрик и статьи. Без ключей ничего не делает.
     func bootstrap(streak: StreakManager, journal: JournalManager) async {
         guard SupabaseConfig.isConfigured else { return }
@@ -83,6 +97,23 @@ final class Backend {
             }
             log.error("bootstrap failed: \(message, privacy: .public)")
         }
+    }
+
+    func sendEmailCode(to email: String) async throws {
+        try await client.ensureSession()
+        try await client.sendEmailCode(to: email)
+    }
+
+    /// Подтверждает код и записывает локальный стрик в профиль нового пользователя.
+    func confirmEmailCode(_ code: String, email: String, streak: StreakManager) async throws -> UUID {
+        let userId = try await client.verifyEmailCode(email: email, code: code)
+        try await client.adoptLocalStreak(
+            email: email,
+            streakDays: streak.currentStreak,
+            bestStreak: streak.bestStreak,
+            streakStart: streak.streakAnchor
+        )
+        return userId
     }
 
     func pushStreak(from streak: StreakManager) async {

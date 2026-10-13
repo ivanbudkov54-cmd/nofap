@@ -11,9 +11,12 @@ import Foundation
 
 struct JournalEntry: Identifiable, Codable, Equatable {
     static let shieldBadge = "Разбор срыва (Щит стрика)"
-    static let manifestBadge = "📌 Моя точка А: Манифест старта"
+    static let manifestBadge = "📍 Точка А: Почему я здесь"
+    static let legacyManifestBadge = "📌 Моя точка А: Манифест старта"
 
-    var isManifest: Bool { promptQuestion == Self.manifestBadge }
+    var isManifest: Bool {
+        promptQuestion == Self.manifestBadge || promptQuestion == Self.legacyManifestBadge
+    }
     let id: UUID
     let date: Date
     var text: String
@@ -60,6 +63,24 @@ final class JournalManager {
 
     func addManifest(_ text: String, on date: Date = Date()) {
         addEntry(text, promptQuestion: JournalEntry.manifestBadge, on: date)
+    }
+
+    func upsertManifest(_ text: String, on date: Date = Date()) {
+        if let index = entries.firstIndex(where: \.isManifest) {
+            let old = entries[index]
+            entries[index] = JournalEntry(
+                id: old.id,
+                date: old.date,
+                text: text,
+                promptQuestion: JournalEntry.manifestBadge,
+                moodScore: old.moodScore,
+                urgeScore: old.urgeScore,
+                isShieldReview: old.isShieldReview
+            )
+            persist()
+        } else {
+            addManifest(text, on: date)
+        }
     }
 
     func addEntry(_ text: String, promptQuestion: String? = nil, moodScore: Int? = nil, urgeScore: Int? = nil, isShieldReview: Bool? = nil, on date: Date = Date()) {

@@ -19,8 +19,32 @@ final class SubscriptionManager {
     static let monthlyProductID = "stopfap_monthly_pro"
     static let lifetimeProductID = "stopfap_lifetime_pro"
 
+    enum SubscriptionRefresh {
+        case active
+        case inactive
+        case unavailable
+    }
+
+    private enum CacheKey {
+        static let webPro = "webProActive"
+        static let expiresAt = "webProExpiresAt"
+    }
+
+    static let websiteBase = "https://spartan-pro.ru"
+
     private(set) var isPro = false
+    private(set) var expiresAt: Date? = UserDefaults.standard.object(forKey: CacheKey.expiresAt) as? Date
+    private(set) var accountEmail: String? = LinkedAccount.email
+    var hasLinkedEmail: Bool { accountEmail?.isEmpty == false }
     var isProUser: Bool { isPro }
+    private var storePro = false
+    private var webPro = UserDefaults.standard.bool(forKey: CacheKey.webPro)
+    private var accountUserId: UUID?
+
+    init() {
+        publishAccess()
+    }
+    private let realtime = ProfileRealtime()
     var shouldShowPaywall = false
     var paywallContextReason = ""
     private(set) var yearly: Package?
@@ -31,13 +55,13 @@ final class SubscriptionManager {
     var yearlyPriceText: String {
         yearly?.storeProduct.localizedPriceString
             ?? yearlyProduct?.localizedPriceString
-            ?? "$29.99/год"
+            ?? ""
     }
 
     var monthlyPriceText: String {
         monthly?.storeProduct.localizedPriceString
             ?? monthlyProduct?.localizedPriceString
-            ?? "$4.99/месяц"
+            ?? ""
     }
 
     var lastError: String?
@@ -176,7 +200,177 @@ final class SubscriptionManager {
         }
     }
 
+    /// Читает is_pro и pro_expires_at текущего профиля, в том числе анонимного:
+    /// сайт получает user_id из приложения и вебхук пишет доступ на этот id.
+    @discardableResult
+    func checkSubscription(backend: Backend) async -> SubscriptionRefresh {
+        guard let profile = await backend.fetchProProfile() else { return .unavailable }
+        accountUserId = backend.currentUserId()
+        if let email = profile.email, !email.isEmpty {
+            accountEmail = email
+            UserDefaults.standard.set(email, forKey: LinkedAccount.emailKey)
+        }
+        applyWeb(isPro: profile.isPro, expiresAt: profile.expiresAt)
+        if let accountUserId, let token = backend.currentAccessToken() {
+            realtime.start(userId: accountUserId, accessToken: token) { [weak self] isPro, expires in
+                self?.applyWeb(isPro: isPro, expiresAt: expires)
+            }
+        }
+        let webActive = profile.isPro && (profile.expiresAt.map { $0 > Date() } ?? true)
+        return webActive ? .active : .inactive
+    }
+
+    func noteLinkedAccount(userId: UUID, email: String) {
+        accountUserId = userId
+        accountEmail = email
+        UserDefaults.standard.set(email, forKey: LinkedAccount.emailKey)
+    }
+
+    /// Системный браузер: https://spartan-pro.ru{path}?user_id=…&email=…
+    func openExternalWebsite(backend: Backend, targetPath: String = "") {
+        guard var components = URLComponents(string: Self.websiteBase + targetPath) else { return }
+        var items = [URLQueryItem]()
+        if let userId = accountUserId ?? backend.currentUserId() {
+            items.append(URLQueryItem(name: "user_id", value: userId.uuidString))
+        }
+        if let accountEmail, !accountEmail.isEmpty {
+            items.append(URLQueryItem(name: "email", value: accountEmail))
+        }
+        if !items.isEmpty {
+            components.queryItems = items
+        }
+        guard let url = components.url else { return }
+        UIApplication.shared.open(url)
+    }
+
     private func apply(_ info: CustomerInfo) {
-        isPro = info.entitlements[Self.entitlementID]?.isActive == true
+        storePro = info.entitlements[Self.entitlementID]?.isActive == true
+        publishAccess()
+    }
+
+    private func applyWeb(isPro: Bool, expiresAt: Date?) {
+        webPro = isPro
+        self.expiresAt = expiresAt
+        let defaults = UserDefaults.standard
+        defaults.set(isPro, forKey: CacheKey.webPro)
+        if let expiresAt {
+            defaults.set(expiresAt, forKey: CacheKey.expiresAt)
+        } else {
+            defaults.removeObject(forKey: CacheKey.expiresAt)
+        }
+        publishAccess()
+    }
+
+    private func publishAccess() {
+        let webActive = webPro && (expiresAt.map { $0 > Date() } ?? true)
+        isPro = storePro || webActive
+        if isPro {
+            shouldShowPaywall = false
+        }
+    }
+}
+
+/// Слушает postgres changes по public.profiles для текущего пользователя.
+@MainActor
+private final class ProfileRealtime {
+    private var socket: URLSessionWebSocketTask?
+    private var heartbeat: Task<Void, Never>?
+    private var receiveLoop: Task<Void, Never>?
+    private var onUpdate: ((Bool, Date?) -> Void)?
+
+    func start(userId: UUID, accessToken: String, onUpdate: @escaping (Bool, Date?) -> Void) {
+        stop()
+        self.onUpdate = onUpdate
+        guard var components = URLComponents(string: SupabaseConfig.url) else { return }
+        components.scheme = "wss"
+        components.path = "/realtime/v1/websocket"
+        components.queryItems = [
+            URLQueryItem(name: "apikey", value: SupabaseConfig.anonKey),
+            URLQueryItem(name: "vsn", value: "1.0.0")
+        ]
+        guard let url = components.url else { return }
+        let task = URLSession.shared.webSocketTask(with: url)
+        socket = task
+        task.resume()
+        send([
+            "topic": "realtime:public:profiles",
+            "event": "phx_join",
+            "payload": [
+                "access_token": accessToken,
+                "config": [
+                    "postgres_changes": [[
+                        "event": "*",
+                        "schema": "public",
+                        "table": "profiles",
+                        "filter": "id=eq.\(userId.uuidString)"
+                    ]]
+                ]
+            ],
+            "ref": "1"
+        ])
+        heartbeat = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(25))
+                self?.send(["topic": "phoenix", "event": "heartbeat", "payload": [String: String](), "ref": "hb"])
+            }
+        }
+        receiveLoop = Task { [weak self] in
+            while !Task.isCancelled {
+                await self?.receiveOnce()
+            }
+        }
+    }
+
+    private func receiveOnce() async {
+        guard let socket else { return }
+        guard let message = try? await socket.receive() else {
+            stop()
+            return
+        }
+        let text: String
+        switch message {
+        case .string(let value):
+            text = value
+        case .data(let data):
+            text = String(decoding: data, as: UTF8.self)
+        @unknown default:
+            return
+        }
+        guard
+            let data = text.data(using: .utf8),
+            let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let payload = json["payload"] as? [String: Any],
+            let dataNode = payload["data"] as? [String: Any],
+            let record = dataNode["record"] as? [String: Any]
+        else { return }
+        let flag = record["is_pro"] as? Bool ?? false
+        let raw = record["pro_expires_at"] as? String
+        onUpdate?(flag, raw.flatMap(Self.parseDate))
+    }
+
+    private func send(_ object: [String: Any]) {
+        guard
+            let data = try? JSONSerialization.data(withJSONObject: object),
+            let text = String(data: data, encoding: .utf8)
+        else { return }
+        socket?.send(.string(text)) { _ in }
+    }
+
+    private func stop() {
+        heartbeat?.cancel()
+        receiveLoop?.cancel()
+        socket?.cancel(with: .goingAway, reason: nil)
+        heartbeat = nil
+        receiveLoop = nil
+        socket = nil
+    }
+
+    private static func parseDate(_ raw: String) -> Date? {
+        let fractional = ISO8601DateFormatter()
+        fractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = fractional.date(from: raw) { return date }
+        let plain = ISO8601DateFormatter()
+        plain.formatOptions = [.withInternetDateTime]
+        return plain.date(from: raw)
     }
 }

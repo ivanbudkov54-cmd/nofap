@@ -63,6 +63,11 @@ struct CheckInView: View {
         }
         .toolbarBackground(Ink.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
+        .onAppear {
+            guard !subscriptions.isPro else { return }
+            subscriptions.checkProAccess(for: "Экспресс-чекин целиком доступен в Pro") {}
+            dismiss()
+        }
         .alert("Запись сохранена", isPresented: $showSaved) {
             Button("Ок") { dismiss() }
         } message: {
@@ -89,55 +94,25 @@ struct CheckInView: View {
     // MARK: - Ползунки
 
     private var energySlider: some View {
-        lockedSlider(
-            sliderCard(
-                title: "Уровень энергии",
-                value: energy,
-                tint: Ink.accent
-            ) {
-                Slider(value: $energy, in: 1...10, step: 1)
-                    .tint(Ink.accent)
-                    .disabled(!subscriptions.isPro)
-            }
-        )
+        sliderCard(
+            title: "Уровень энергии",
+            value: energy,
+            tint: Ink.accent
+        ) {
+            Slider(value: $energy, in: 1...10, step: 1)
+                .tint(Ink.accent)
+        }
     }
 
     private var libidoSlider: some View {
-        lockedSlider(
-            sliderCard(
-                title: "Уровень либидо / тяги",
-                value: libido,
-                tint: Ink.urge
-            ) {
-                Slider(value: $libido, in: 1...10, step: 1)
-                    .tint(Ink.urge)
-                    .disabled(!subscriptions.isPro)
-            }
-        )
-    }
-
-    private func lockedSlider<Content: View>(_ content: Content) -> some View {
-        content
-            .overlay {
-                if !subscriptions.isPro {
-                    Button {
-                        subscriptions.checkProAccess(for: "Отслеживание уровня энергии и физического тонуса входит в Pro") {}
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(.ultraThinMaterial)
-                            VStack(spacing: 8) {
-                                Image(systemName: "lock.fill")
-                                    .foregroundStyle(Palette.gold)
-                                Text("Доступно в Pro")
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .foregroundStyle(Ink.textPrimary)
-                            }
-                        }
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
+        sliderCard(
+            title: "Уровень либидо / тяги",
+            value: libido,
+            tint: Ink.urge
+        ) {
+            Slider(value: $libido, in: 1...10, step: 1)
+                .tint(Ink.urge)
+        }
     }
 
     private func sliderCard(
@@ -280,27 +255,26 @@ struct CheckInView: View {
     }
 
     private func save() {
-        // Фиксируем дату и точный ISO-таймштамп в момент нажатия — не
-        // после закрытия лоадера, чтобы отметка совпадала с реальным
-        // моментом чекина, а не с его отображением.
+        guard subscriptions.isPro else {
+            subscriptions.checkProAccess(for: "Экспресс-чекин целиком доступен в Pro") {}
+            return
+        }
         let date = Date()
-        let energyValue = subscriptions.isPro ? Int(energy) : nil
-        let libidoValue = subscriptions.isPro ? Int(libido) : nil
+        let energyValue = Int(energy)
+        let libidoValue = Int(libido)
         let tags = Array(selectedTags)
         let noteText = note
 
         Task {
             isSaving = true
             journal.addEntry(noteText, moodScore: energyValue, urgeScore: libidoValue, on: date)
-            if let energyValue, let libidoValue {
-                checkIns.addEntry(
-                    energyLevel: energyValue,
-                    libidoLevel: libidoValue,
-                    triggers: tags,
-                    note: noteText,
-                    on: date
-                )
-            }
+            checkIns.addEntry(
+                energyLevel: energyValue,
+                libidoLevel: libidoValue,
+                triggers: tags,
+                note: noteText,
+                on: date
+            )
             await backend.saveJournal(
                 mood: energyValue,
                 urge: libidoValue,

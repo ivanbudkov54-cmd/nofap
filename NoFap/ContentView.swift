@@ -48,6 +48,9 @@ struct ContentView: View {
             } else {
                 await subscriptions.checkSubscriptionStatus()
             }
+            if backend.currentUserId() != nil {
+                await subscriptions.checkSubscription(backend: backend)
+            }
         }
         .alert(backend.notice ?? "", isPresented: Binding(
             get: { backend.notice != nil },
@@ -69,6 +72,9 @@ struct ContentView: View {
             guard phase == .active else { return }
             streak.checkStreakStatus()
             Task {
+                if backend.currentUserId() != nil {
+                    await subscriptions.checkSubscription(backend: backend)
+                }
                 await partner.refresh()
                 await syncStreakWarnings()
             }

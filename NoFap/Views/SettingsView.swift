@@ -8,7 +8,6 @@
 
 import SwiftUI
 import UIKit
-import WebKit
 
 struct SettingsView: View {
 
@@ -21,6 +20,7 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @Environment(ThemeManager.self) private var theme
     @Environment(BuddyManager.self) private var buddies
+    @Environment(SubscriptionManager.self) private var subscriptions
 
     @AppStorage("onboardingDone") private var onboardingDone = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
@@ -31,11 +31,43 @@ struct SettingsView: View {
     @State private var isDeleting = false
     @State private var failure: String?
     @State private var linkCopied = false
+    @State private var showEmailLink = false
 
-    private let supportURL = URL(string: "mailto:support@example.com")!
+    private let supportURL = URL(string: "mailto:\(LegalDocs.supportEmail)")!
 
     var body: some View {
         List {
+            Section {
+                if let email = subscriptions.accountEmail, !email.isEmpty {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Email привязан")
+                            .foregroundStyle(Palette.marbleHigh)
+                        Text(email)
+                            .font(.system(size: 13))
+                            .foregroundStyle(Palette.ash)
+                    }
+                } else {
+                    Button {
+                        showEmailLink = true
+                    } label: {
+                        HStack {
+                            Text("Привязать Email / Резервная копия")
+                                .foregroundStyle(Palette.marbleHigh)
+                            Spacer()
+                            Image(systemName: "envelope")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(Palette.ash)
+                        }
+                    }
+                }
+            }
+
+            Section("Управление подпиской") {
+                NavigationLink("Управление подпиской") {
+                    SubscriptionStatusView()
+                }
+            }
+
             Section("Внешний вид") {
                 Picker("Тема", selection: Bindable(theme).theme) {
                     ForEach(AppTheme.allCases) { item in
@@ -100,17 +132,20 @@ struct SettingsView: View {
             }
 
             Section("Правовая информация и поддержка") {
-                NavigationLink("Политика конфиденциальности") {
-                    SettingsView.LegalDocumentView(title: "Политика конфиденциальности", resource: "privacy")
+                NavigationLink("Privacy Policy") {
+                    SettingsView.LegalDocumentView(title: "Privacy Policy", resource: "privacy")
                 }
-                NavigationLink("Условия использования") {
-                    SettingsView.LegalDocumentView(title: "Условия использования", resource: "terms")
+                NavigationLink("Terms of Use") {
+                    SettingsView.LegalDocumentView(title: "Terms of Use", resource: "terms")
+                }
+                if let eula = URL(string: LegalDocs.appleStandardEULAURL) {
+                    linkRow("Apple Standard EULA", url: eula)
                 }
                 linkRow("Служба поддержки", url: supportURL)
             }
 
             Section {
-                Button("Удалить аккаунт и данные", role: .destructive) {
+                Button("Delete Account and Data", role: .destructive) {
                     confirmDelete = true
                 }
                 .disabled(isDeleting || !SupabaseConfig.isConfigured)
@@ -123,6 +158,9 @@ struct SettingsView: View {
         .background(Palette.obsidian.ignoresSafeArea())
         .navigationTitle("Настройки")
         .navigationBarTitleDisplayMode(.large)
+        .sheet(isPresented: $showEmailLink) {
+            EmailLinkSheet(purpose: .backup)
+        }
         .confirmationDialog(
             "Сбросить текущий стрик?",
             isPresented: $confirmReset,
@@ -194,31 +232,17 @@ struct LegalDocumentView: View {
     let resource: String
 
     var body: some View {
-        Group {
-            if let url = Bundle.main.url(forResource: resource, withExtension: "html")
-                ?? Bundle.main.url(forResource: resource, withExtension: "html", subdirectory: "Legal")
-                ?? Bundle.main.url(forResource: resource, withExtension: "html", subdirectory: "Resources/Legal") {
-                LegalWebView(url: url)
-            } else {
-                ContentUnavailableView("Документ не найден", systemImage: "doc")
-            }
+        ScrollView {
+            Text(LegalDocs.text(for: resource))
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.marble)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(20)
         }
+        .background(Palette.obsidian.ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color.white.ignoresSafeArea())
     }
-}
-
-private struct LegalWebView: UIViewRepresentable {
-    let url: URL
-
-    func makeUIView(context: Context) -> WKWebView {
-        let view = WKWebView()
-        view.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
-        return view
-    }
-
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
 }
 
     private func removeAccount() async {
