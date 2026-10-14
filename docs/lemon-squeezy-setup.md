@@ -26,7 +26,7 @@
 
 **Вебхук**
 7. Settings → Webhooks → +:
-   - Callback URL: `https://jgshclcqetzfwoydrnmj.supabase.co/functions/v1/lemon-webhook`
+   - Callback URL: `https://gmmwfxpoidtpwbtxgjbk.supabase.co/functions/v1/lemon-webhook`
    - Signing secret: придумать длинный случайный пароль (30+ символов);
    - события: `subscription_created`, `subscription_updated`, `subscription_cancelled`,
      `subscription_resumed`, `subscription_expired`, `subscription_paused`,
@@ -40,7 +40,7 @@
 10. Всё сработало — Activate store. Описание: «Self-help app for breaking a compulsive
     habit», без откровенных слов.
 
-## 2. Друг с Supabase (проект jgshclcqetzfwoydrnmj)
+## 2. Друг с Supabase (проект gmmwfxpoidtpwbtxgjbk)
 
 **Таблица**
 1. SQL Editor → New query → вставить весь `supabase/04_web_premium.sql` → Run.
