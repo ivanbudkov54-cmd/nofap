@@ -208,7 +208,7 @@ struct OnboardingQuizView: View {
         Button(action: advance) {
             Text(buttonTitle)
                 .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(canAdvance ? Color(hex: 0x1A1405) : Palette.ash)
+                .foregroundStyle(canAdvance ? Palette.onGold : Palette.ash)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(
@@ -291,11 +291,11 @@ struct OnboardingQuizView: View {
             HStack {
                 Text(title)
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(on ? Color(hex: 0x1A1405) : Palette.marbleHigh)
+                    .foregroundStyle(on ? Palette.onGold : Palette.marbleHigh)
                     .multilineTextAlignment(.leading)
                 Spacer(minLength: 8)
                 Image(systemName: on ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(on ? Color(hex: 0x1A1405) : Palette.ash)
+                    .foregroundStyle(on ? Palette.onGold : Palette.ash)
             }
             .padding(14)
             .background(on ? AnyShapeStyle(Palette.gold) : AnyShapeStyle(Palette.basalt), in: RoundedRectangle(cornerRadius: 14, style: .continuous))

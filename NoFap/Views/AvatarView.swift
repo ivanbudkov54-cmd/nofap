@@ -309,8 +309,8 @@ struct AvatarFigureView: View {
                 .offset(y: stage == .exhausted ? -62 : -84)
                 .overlay {
                     HStack(spacing: 10) {
-                        Circle().fill(Color(hex: 0x1A1405).opacity(0.75)).frame(width: 5, height: 5)
-                        Circle().fill(Color(hex: 0x1A1405).opacity(0.75)).frame(width: 5, height: 5)
+                        Circle().fill(Palette.onGold.opacity(0.75)).frame(width: 5, height: 5)
+                        Circle().fill(Palette.onGold.opacity(0.75)).frame(width: 5, height: 5)
                     }
                     .offset(y: stage == .exhausted ? -58 : -82)
                 }
@@ -384,10 +384,10 @@ struct AvatarEvolutionView: View {
                 Button(action: onClose) {
                     Text("Продолжить")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .foregroundStyle(Palette.onGold)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(.goldFill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
                 .padding(.top, 8)
             }
@@ -415,7 +415,7 @@ struct ArticleStudiedBar: View {
         } label: {
             Text(studied ? "Уже изучена" : "Статья изучена")
                 .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(studied ? Palette.ash : Color(hex: 0x1A1405))
+                .foregroundStyle(studied ? Palette.ash : Palette.onGold)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(

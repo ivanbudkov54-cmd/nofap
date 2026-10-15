@@ -82,10 +82,10 @@ struct TriggerAnalyticsCard: View {
                     Image(systemName: "lock.open.fill")
                 }
                 .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(Color(hex: 0x1A1405))
+                .foregroundStyle(Palette.onGold)
                 .padding(.horizontal, 18)
                 .padding(.vertical, 10)
-                .background(Capsule().fill(.goldFill))
+                .background(Capsule().fill(.goldSurface))
             }
             .buttonStyle(.plain)
         }

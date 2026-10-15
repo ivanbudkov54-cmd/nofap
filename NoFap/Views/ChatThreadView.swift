@@ -141,13 +141,13 @@ struct ChatThreadView: View {
                 } else {
                     Text(message.text)
                         .font(.system(size: 15))
-                        .foregroundStyle(message.isMine ? Color(hex: 0x1A1405) : Palette.marbleHigh)
+                        .foregroundStyle(message.isMine ? Palette.onGold : Palette.marbleHigh)
                 }
 
                 Text(message.sentAt, style: .time)
                     .font(.system(size: 11))
                     .foregroundStyle(message.isMine && !message.isSignal
-                                     ? Color(hex: 0x1A1405).opacity(0.6)
+                                     ? Palette.onGold.opacity(0.6)
                                      : Palette.ash)
             }
             .padding(.horizontal, 14)
@@ -171,7 +171,7 @@ struct ChatThreadView: View {
         if message.isSignal {
             RoundedRectangle(cornerRadius: 16).fill(Palette.gold.opacity(0.14))
         } else if message.isMine {
-            RoundedRectangle(cornerRadius: 16).fill(.goldFill)
+            RoundedRectangle(cornerRadius: 16).fill(.goldSurface)
         } else {
             RoundedRectangle(cornerRadius: 16).fill(Palette.basalt)
         }
@@ -187,10 +187,10 @@ struct ChatThreadView: View {
                 } label: {
                     Label(ChatPresets.sos, systemImage: "hand.raised.fill")
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .foregroundStyle(Palette.onGold)
                         .padding(.horizontal, 16)
                         .frame(height: 40)
-                        .background(Capsule().fill(.goldFill))
+                        .background(Capsule().fill(.goldSurface))
                 }
 
                 ForEach(ChatPresets.support, id: \.self) { text in
@@ -234,9 +234,9 @@ struct ChatThreadView: View {
             } label: {
                 Image(systemName: "arrow.up")
                     .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(Color(hex: 0x1A1405))
+                    .foregroundStyle(Palette.onGold)
                     .frame(width: 40, height: 40)
-                    .background(Circle().fill(.goldFill))
+                    .background(Circle().fill(.goldSurface))
             }
             .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSending)
             .opacity(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.4 : 1)

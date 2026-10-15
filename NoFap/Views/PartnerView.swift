@@ -187,10 +187,10 @@ struct PartnerView: View {
             } label: {
                 Label("Написать", systemImage: "bubble.left.and.bubble.right.fill")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Color(hex: 0x1A1405))
+                    .foregroundStyle(Palette.onGold)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
-                    .background(Capsule().fill(.goldFill))
+                    .background(Capsule().fill(.goldSurface))
                     .shadow(color: Palette.gold.opacity(0.28), radius: 14, y: 4)
             }
 

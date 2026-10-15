@@ -44,12 +44,12 @@ struct ChallengeCompletionView: View {
                 Button(action: onClaim) {
                     Text("Получить следующий челлендж")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .foregroundStyle(Palette.onGold)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .padding(.horizontal, 8)
-                        .background(.goldFill, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .background(.goldSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
                 .padding(.top, 8)
             }

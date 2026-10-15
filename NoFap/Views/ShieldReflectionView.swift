@@ -88,12 +88,12 @@ struct ShieldReflectionView: View {
         return Button { trigger = item } label: {
             Text(item.title)
                 .font(.system(size: 14, weight: .medium))
-                .foregroundStyle(selected ? Color(hex: 0x1A1405) : Palette.marbleHigh)
+                .foregroundStyle(selected ? Palette.onGold : Palette.marbleHigh)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 8)
                 .background {
                     if selected {
-                        Capsule().fill(.goldFill)
+                        Capsule().fill(.goldSurface)
                     } else {
                         Capsule().strokeBorder(Palette.vein, lineWidth: 1)
                     }

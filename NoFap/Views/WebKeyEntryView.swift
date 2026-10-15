@@ -58,7 +58,7 @@ struct WebKeyEntryView: View {
             VStack(spacing: 12) {
                 Button(action: activate) {
                     if isChecking {
-                        ProgressView().tint(Color(hex: 0x1A1405))
+                        ProgressView().tint(Palette.onGold)
                     } else {
                         Text("Восстановить Premium")
                     }

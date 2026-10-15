@@ -68,12 +68,12 @@ struct XPGainCard: View {
 
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        Capsule().fill(Color(hex: 0x24242B))
+                        Capsule().fill(Palette.vein)
                         Capsule()
-                            .fill(LinearGradient(colors: [Palette.goldLight, Palette.gold],
+                            .fill(LinearGradient(colors: [Palette.goldSurfaceLight, Palette.goldSurface],
                                                  startPoint: .leading, endPoint: .trailing))
                             .frame(width: max(geo.size.width * fill, 8))
-                            .shadow(color: Palette.gold.opacity(0.5), radius: 6)
+                            .shadow(color: Palette.goldSurface.opacity(0.5), radius: 6)
                     }
                 }
                 .frame(height: 8)

@@ -15,7 +15,6 @@ struct NoFapApp: App {
     var body: some Scene {
         WindowGroup {
             RestoreGate()
-                .preferredColorScheme(.dark)
         }
     }
 }

@@ -101,10 +101,10 @@ struct MyJourneyView: View {
                 Image(systemName: symbol)
             }
             .font(.system(size: 14, weight: .semibold))
-            .foregroundStyle(Color(hex: 0x1A1405))
+            .foregroundStyle(Palette.onGold)
             .padding(.horizontal, 18)
             .padding(.vertical, 10)
-            .background(Capsule().fill(.goldFill))
+            .background(Capsule().fill(.goldSurface))
             .padding(.top, 2)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -179,10 +179,10 @@ struct MyJourneyView: View {
             case .premium:
                 Text("Premium")
                     .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(Color(hex: 0x1A1405))
+                    .foregroundStyle(Palette.onGold)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .background(Capsule().fill(.goldFill))
+                    .background(Capsule().fill(.goldSurface))
             }
         }
         .padding(14)
@@ -211,10 +211,10 @@ struct JourneyDayDetailView: View {
                     .foregroundStyle(Palette.marbleHigh)
                     .fixedSize(horizontal: false, vertical: true)
 
-                section("Биохимия", symbol: "brain.head.profile", tint: Color(hex: 0x3DDCB0), text: day.biochemistry)
-                section("В реальности", symbol: "bolt.heart.fill", tint: Color(hex: 0xFF6B3D), text: day.realFeel)
-                section("Ловушка дня", symbol: "exclamationmark.shield.fill", tint: Color(hex: 0xF0BC4F), text: day.trapWarning)
-                section("Действие", symbol: "checkmark.seal.fill", tint: Color(hex: 0x3DDC97), text: day.tacticalAction)
+                section("Биохимия", symbol: "brain.head.profile", tint: Palette.adaptive(dark: 0x3DDCB0, light: 0x0E7C62), text: day.biochemistry)
+                section("В реальности", symbol: "bolt.heart.fill", tint: Palette.adaptive(dark: 0xFF6B3D, light: 0xC2410C), text: day.realFeel)
+                section("Ловушка дня", symbol: "exclamationmark.shield.fill", tint: Palette.gold, text: day.trapWarning)
+                section("Действие", symbol: "checkmark.seal.fill", tint: Palette.adaptive(dark: 0x3DDC97, light: 0x15784A), text: day.tacticalAction)
 
                 // Статья дня — +20 XP аватару, один раз.
                 ArticleStudiedBar(articleID: "journey_day_\(day.day)", isScience: false)

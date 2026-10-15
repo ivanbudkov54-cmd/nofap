@@ -272,7 +272,7 @@ struct OnboardingView: View {
                     .fill(Palette.vein)
 
                 Capsule()
-                    .fill(.goldFill)
+                    .fill(.goldSurface)
                     .frame(width: geometry.size.width * Double(page + 1) / Double(steps.count))
                     // Лёгкое свечение поверх заливки — то самое ощущение
                     // «живой» полосы, а не просто закрашенного прямоугольника.

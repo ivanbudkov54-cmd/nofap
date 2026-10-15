@@ -173,7 +173,7 @@ struct UrgeScenarioPlayerView: View {
     }
 
     private func outcomeView(_ choice: UrgeChoice) -> some View {
-        let tint: Color = choice.isFailure ? Color(hex: 0xE05A45) : Palette.gold
+        let tint: Color = choice.isFailure ? Palette.adaptive(dark: 0xE05A45, light: 0xC23A31) : Palette.gold
 
         return VStack(alignment: .leading, spacing: 18) {
             HStack(spacing: 10) {

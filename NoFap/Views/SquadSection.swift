@@ -107,10 +107,10 @@ struct SquadSection: View {
             } label: {
                 Label("Чат сквада", systemImage: "bubble.left.and.bubble.right.fill")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Color(hex: 0x1A1405))
+                    .foregroundStyle(Palette.onGold)
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)
-                    .background(Capsule().fill(.goldFill))
+                    .background(Capsule().fill(.goldSurface))
             }
 
             Button("Выйти из сквада") { showLeaveConfirm = true }

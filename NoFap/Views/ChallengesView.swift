@@ -116,10 +116,10 @@ struct ChallengesView: View {
             } label: {
                 Text("Выполнил вызов")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Color(hex: 0x1A1405))
+                    .foregroundStyle(Palette.onGold)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(.goldFill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
             .padding(.top, 4)
         }

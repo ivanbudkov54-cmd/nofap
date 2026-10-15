@@ -13,13 +13,13 @@ import SwiftUI
 /// Локальная тёмная палитра только для этого экрана. Не трогает Palette
 /// из Theme.swift — остальное приложение светлое, и не должно меняться.
 private enum Ink {
-    static let background = Color(hex: 0x0A0A0D)
-    static let card        = Color(hex: 0x17171C)
-    static let border      = Color(hex: 0x2B2B33)
-    static let textPrimary = Color(hex: 0xF2F2F5)
-    static let textSecondary = Color(hex: 0x8C8C97)
+    static let background = Palette.obsidian
+    static let card        = Palette.adaptive(dark: 0x17171C, light: 0xFFFFFF)
+    static let border      = Palette.adaptive(dark: 0x2B2B33, light: 0xE4DED2)
+    static let textPrimary = Palette.adaptive(dark: 0xF2F2F5, light: 0x1C1A16)
+    static let textSecondary = Palette.adaptive(dark: 0x8C8C97, light: 0x6A655C)
     static let accent      = Palette.gold
-    static let urge        = Color(hex: 0xE05A45)
+    static let urge        = Palette.adaptive(dark: 0xE05A45, light: 0xC23A31)
 }
 
 struct CheckInView: View {
@@ -163,9 +163,10 @@ struct CheckInView: View {
 
                 Text("\(Int(value))")
                     .font(Face.display(15, .semibold))
-                    .foregroundStyle(Color(hex: 0x0A0A0D))
+                    // Золото как заливка — яркое в обеих темах; на красном — белая цифра.
+                    .foregroundStyle(tint == Ink.accent ? Palette.onGold : .white)
                     .frame(width: 30, height: 30)
-                    .background(tint, in: .circle)
+                    .background(tint == Ink.accent ? Palette.goldSurface : tint, in: .circle)
             }
 
             slider()
@@ -202,10 +203,10 @@ struct CheckInView: View {
         } label: {
             Text(tag.label)
                 .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(isSelected ? Color(hex: 0x0A0A0D) : Ink.textPrimary)
+                .foregroundStyle(isSelected ? Palette.onGold : Ink.textPrimary)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 9)
-                .background(isSelected ? Ink.accent : Ink.card, in: .capsule)
+                .background(isSelected ? Palette.goldSurface : Ink.card, in: .capsule)
                 .overlay {
                     Capsule().strokeBorder(isSelected ? .clear : Ink.border, lineWidth: 1)
                 }
@@ -268,17 +269,17 @@ struct CheckInView: View {
             ZStack {
                 if isSaving {
                     ProgressView()
-                        .tint(Color(hex: 0x1A1405))
+                        .tint(Palette.onGold)
                 } else {
                     Text("Сохранить запись")
                 }
             }
             .font(.system(size: 17, weight: .bold))
             .tracking(1.2)
-            .foregroundStyle(Color(hex: 0x1A1405))
+            .foregroundStyle(Palette.onGold)
             .frame(maxWidth: .infinity)
             .frame(height: 56)
-            .background(Capsule().fill(.goldFill))
+            .background(Capsule().fill(.goldSurface))
         }
         .disabled(isSaving)
         .opacity(isSaving ? 0.85 : 1)

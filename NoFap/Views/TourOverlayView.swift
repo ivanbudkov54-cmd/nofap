@@ -103,10 +103,10 @@ private struct TourTooltipCard: View {
                 Button(action: onNext) {
                     Text("В бой!")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .foregroundStyle(Palette.onGold)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(.goldFill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 }
             } else {
                 HStack {
@@ -120,10 +120,10 @@ private struct TourTooltipCard: View {
                             Image(systemName: "arrow.right")
                         }
                         .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .foregroundStyle(Palette.onGold)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
-                        .background(.goldFill, in: Capsule())
+                        .background(.goldSurface, in: Capsule())
                     }
                 }
             }

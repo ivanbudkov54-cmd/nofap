@@ -13,6 +13,9 @@ import SwiftUI
 struct RestoreGate: View {
 
     @Environment(\.scenePhase) private var scenePhase
+    /// Тот же ключ, что у ThemeManager: тема применяется ко всему окну,
+    /// включая экран восстановления.
+    @AppStorage("app_theme") private var themeRaw = AppTheme.dark.rawValue
 
     @State private var backup = AppBackup()
     /// Меняется после восстановления — AppRoot пересоздаётся с новыми данными.
@@ -33,6 +36,7 @@ struct RestoreGate: View {
             }
         }
         .environment(backup)
+        .preferredColorScheme(AppTheme(rawValue: themeRaw)?.colorScheme)
         .task { await firstLaunch() }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active, !isChecking { Task { await lookForBackup() } }

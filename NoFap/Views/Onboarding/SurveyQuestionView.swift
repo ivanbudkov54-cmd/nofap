@@ -80,7 +80,7 @@ struct SurveyQuestionView<Option: SurveyOption>: View {
         } label: {
             Text(option.label)
                 .font(Face.display(16, .medium))
-                .foregroundStyle(selected ? Color(hex: 0x1A1405) : Palette.marbleHigh)
+                .foregroundStyle(selected ? Palette.onGold : Palette.marbleHigh)
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -88,7 +88,7 @@ struct SurveyQuestionView<Option: SurveyOption>: View {
                 .padding(.vertical, 16)
                 .background {
                     if selected {
-                        RoundedRectangle(cornerRadius: 14).fill(.goldFill)
+                        RoundedRectangle(cornerRadius: 14).fill(.goldSurface)
                     } else {
                         RoundedRectangle(cornerRadius: 14).fill(Palette.basalt)
                     }

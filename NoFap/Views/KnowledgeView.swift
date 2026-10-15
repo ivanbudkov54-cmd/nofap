@@ -77,13 +77,13 @@ struct KnowledgeView: View {
                 .font(.system(size: 12, weight: .semibold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
-                .foregroundStyle(isSelected ? Color(hex: 0x1A1405) : Palette.ash)
+                .foregroundStyle(isSelected ? Palette.onGold : Palette.ash)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 9)
                 .background {
                     if isSelected {
                         Capsule()
-                            .fill(.goldFill)
+                            .fill(.goldSurface)
                             .matchedGeometryEffect(id: "knowledgeTabHighlight", in: tabAnimation)
                     }
                 }

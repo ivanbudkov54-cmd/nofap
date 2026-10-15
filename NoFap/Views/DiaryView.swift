@@ -123,7 +123,6 @@ struct DiaryView: View {
         }
         .fullScreenCover(isPresented: $showCheckIn) {
             NavigationStack { CheckInView() }
-                .preferredColorScheme(.dark)
         }
     }
 
@@ -239,19 +238,19 @@ struct DiaryView: View {
                 if entry.isShieldReview == true {
                     Text(JournalEntry.shieldBadge)
                         .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .foregroundStyle(Palette.onGold)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Capsule().fill(.goldFill))
+                        .background(Capsule().fill(.goldSurface))
                 }
 
                 if entry.isManifest {
                     Text("#ТочкаА")
                         .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .foregroundStyle(Palette.onGold)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Capsule().fill(.goldFill))
+                        .background(Capsule().fill(.goldSurface))
                 }
 
                 Spacer()
@@ -371,9 +370,9 @@ struct DiaryView: View {
         HStack(spacing: 8) {
             Text("\(value)")
                 .font(Face.display(14, .semibold))
-                .foregroundStyle(Color(hex: 0x1A1405))
+                .foregroundStyle(Palette.onGold)
                 .frame(width: 26, height: 26)
-                .background(.goldFill, in: .circle)
+                .background(.goldSurface, in: .circle)
 
             Text(title)
                 .font(.system(size: 13))
@@ -497,6 +496,8 @@ struct DiaryView: View {
         }
         .padding(16)
         .background(Color(hex: 0x17171C), in: .rect(cornerRadius: 14))
+        // Карточка тёмная в обеих темах — и золото на ней яркое, а не бронза.
+        .environment(\.colorScheme, .dark)
         .overlay {
             RoundedRectangle(cornerRadius: 14).strokeBorder(Palette.gold.opacity(0.35), lineWidth: 1)
         }

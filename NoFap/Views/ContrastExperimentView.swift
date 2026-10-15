@@ -10,10 +10,11 @@ struct ContrastExperimentView: View {
     @Environment(ContrastExperimentManager.self) private var experiment
     @Environment(JournalManager.self) private var journal
     @Environment(CloudSync.self) private var backend
+    @Environment(\.colorScheme) private var colorScheme
 
     @State private var showReview = false
 
-    private let accent = Color(hex: 0x8B7CFF)
+    private let accent = Palette.adaptive(dark: 0x8B7CFF, light: 0x6B5BEF)
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 30)) { context in
@@ -152,7 +153,11 @@ struct ContrastExperimentView: View {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [accent.opacity(0.28), Color(hex: 0x2A3148).opacity(0.35)],
+                            // Тёмно-синий низ на светлом фоне даёт грязно-серый —
+                            // там градиент уходит в чистый фиолетовый тон.
+                            colors: colorScheme == .dark
+                                ? [accent.opacity(0.28), Color(hex: 0x2A3148).opacity(0.35)]
+                                : [accent.opacity(0.18), accent.opacity(0.06)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -175,10 +180,10 @@ private struct ContrastTimerRing: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(Color(hex: 0x8B7CFF).opacity(0.2), lineWidth: 6)
+                .stroke(Palette.adaptive(dark: 0x8B7CFF, light: 0x6B5BEF).opacity(0.2), lineWidth: 6)
             Circle()
                 .trim(from: 0, to: progress)
-                .stroke(Color(hex: 0x8B7CFF), style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                .stroke(Palette.adaptive(dark: 0x8B7CFF, light: 0x6B5BEF), style: StrokeStyle(lineWidth: 6, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             Text(label)
                 .font(.system(size: 12, weight: .semibold, design: .rounded))
@@ -216,7 +221,7 @@ struct ContrastReflectionSheet: View {
                         .foregroundStyle(Palette.ash)
                         Text("\(Int(energy)) из 10")
                             .font(.system(size: 14, weight: .semibold))
-                            .foregroundStyle(Color(hex: 0x8B7CFF))
+                            .foregroundStyle(Palette.adaptive(dark: 0x8B7CFF, light: 0x6B5BEF))
                     }
 
                     VStack(alignment: .leading, spacing: 10) {
@@ -249,10 +254,10 @@ struct ContrastReflectionSheet: View {
                     } label: {
                         Text("Зафиксировать вывод")
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Color(hex: 0x1A1405))
+                            .foregroundStyle(Palette.onGold)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .background(.goldFill, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                     .disabled(comparison.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .opacity(comparison.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1)
@@ -289,7 +294,7 @@ private struct FlowFeelings: View {
                 } label: {
                     HStack {
                         Image(systemName: on ? "checkmark.circle.fill" : "circle")
-                            .foregroundStyle(on ? Color(hex: 0x8B7CFF) : Palette.ash)
+                            .foregroundStyle(on ? Palette.adaptive(dark: 0x8B7CFF, light: 0x6B5BEF) : Palette.ash)
                         Text(option)
                             .font(.system(size: 15))
                             .foregroundStyle(Palette.marbleHigh)

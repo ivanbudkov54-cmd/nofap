@@ -18,10 +18,10 @@ struct ProLockBadge: View {
             Text("Premium")
         }
         .font(.system(size: 11, weight: .bold))
-        .foregroundStyle(Color(hex: 0x1A1405))
+        .foregroundStyle(Palette.onGold)
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .background(Capsule().fill(.goldFill))
+        .background(Capsule().fill(.goldSurface))
         .accessibilityLabel("Доступно в Premium")
     }
 }
@@ -210,10 +210,10 @@ struct PaywallView: View {
                         if product.isYearly, let saving = yearlySaving {
                             Text("−\(saving)%")
                                 .font(.system(size: 11, weight: .bold))
-                                .foregroundStyle(Color(hex: 0x1A1405))
+                                .foregroundStyle(Palette.onGold)
                                 .padding(.horizontal, 7)
                                 .padding(.vertical, 3)
-                                .background(Capsule().fill(.goldFill))
+                                .background(Capsule().fill(.goldSurface))
                         }
                     }
                     if product.isYearly, let monthly = perMonth(product) {
@@ -252,7 +252,7 @@ struct PaywallView: View {
             }
         } label: {
             if store.purchasingID != nil {
-                ProgressView().tint(Color(hex: 0x1A1405))
+                ProgressView().tint(Palette.onGold)
             } else {
                 Text(store.isTrialEligible ? "Попробовать 7 дней бесплатно" : "Оформить Premium")
             }

@@ -62,15 +62,22 @@ final class ThemeManager {
 }
 
 enum Palette {
-    /// Фон, карточки, границы и текст меняются вместе со схемой,
-    /// золото остаётся наградой в обеих темах.
-    static let obsidian   = Color(uiColor: dynamic(dark: 0x0A0A0D, light: 0xFFFFFF))
-    static let basalt     = Color(uiColor: dynamic(dark: 0x141418, light: 0xF4F4F7))
-    static let vein       = Color(uiColor: dynamic(dark: 0x2C2C34, light: 0xDDDFE5))
-    static let marbleHigh = Color(uiColor: dynamic(dark: 0xE4E7EF, light: 0x1C1C22))
-    static let marble     = Color(uiColor: dynamic(dark: 0xB8BECD, light: 0x3D3D45))
-    static let ash        = Color(uiColor: dynamic(dark: 0x7A7A87, light: 0x6B6B78))
+    /// Тёмная тема — «золото в мраморе»: почти чёрный камень. Светлая —
+    /// «мрамор днём»: тёплая слоновая кость вместо чистого белого (на нём
+    /// золото выглядит дёшево), белые карточки, тёплые серые.
+    static let obsidian   = Color(uiColor: dynamic(dark: 0x0A0A0D, light: 0xF6F3EC))
+    static let basalt     = Color(uiColor: dynamic(dark: 0x141418, light: 0xFFFFFF))
+    static let vein       = Color(uiColor: dynamic(dark: 0x2C2C34, light: 0xE4DED2))
+    static let marbleHigh = Color(uiColor: dynamic(dark: 0xE4E7EF, light: 0x1C1A16))
+    static let marble     = Color(uiColor: dynamic(dark: 0xB8BECD, light: 0x3D3A34))
+    static let ash        = Color(uiColor: dynamic(dark: 0x7A7A87, light: 0x6A655C))
     static let tabBar     = dynamic(dark: 0x0A0A0D, light: 0xFFFFFF)
+
+    /// Свой цвет для каждой темы — для акцентов вне палитры (цвета разделов
+    /// «Моего пути» и т. п.): яркие под тёмный фон, глубже — под светлый.
+    static func adaptive(dark: UInt32, light: UInt32) -> Color {
+        Color(uiColor: dynamic(dark: dark, light: light))
+    }
 
     /// UIKit вызывает этот блок с фонового потока отрисовки.
     /// При изоляции MainActor по умолчанию такой вызов обрывает приложение.
@@ -80,15 +87,28 @@ enum Palette {
             return UIColor(hex: hex)
         }
     }
-    // Тон и насыщенность взяты из свечения на фото «Твой стрик» (#F5BE4E) —
-    // раньше goldLight терял насыщенность и уходил в бледно-жёлтый, поэтому
-    // общий золотой на экране читался холоднее и менее оранжевым, чем на фото.
-    static let gold       = Color(hex: 0xF0BC4F)
-    static let goldLight  = Color(hex: 0xF7CF7C)
+
+    // Золото в двух ролях. Яркое #F0BC4F на светлом фоне даёт контраст
+    // 1.8 : 1 — текст не читается. Поэтому:
+    //
+    // `gold` — золото-чернила: текст, цифры, иконки, контуры. В светлой теме
+    // это бронза #8A5E12 (5.1 : 1 на слоновой кости).
+    //
+    // `goldSurface` — золото-заливка: кнопки, бейджи, полосы прогресса. На нём
+    // всегда тёмный текст #1A1405, поэтому в обеих темах оно остаётся ярким.
+    //
+    // Тон тёмной темы взят из свечения на фото «Твой стрик» (#F5BE4E).
+    static let gold       = Color(uiColor: dynamic(dark: 0xF0BC4F, light: 0x8A5E12))
+    static let goldLight  = Color(uiColor: dynamic(dark: 0xF7CF7C, light: 0xA87A26))
+    static let goldSurface      = Color(uiColor: dynamic(dark: 0xF0BC4F, light: 0xE8B64A))
+    static let goldSurfaceLight = Color(uiColor: dynamic(dark: 0xF7CF7C, light: 0xF2C866))
+    /// Тёмный текст на золотой заливке — одинаковый в обеих темах.
+    static let onGold = Color(hex: 0x1A1405)
     // Приглушённый гранатовый, а не системный Color.red — тот же смысл
     // «тревога», но без ядовитой ноты чистого iOS-red на фоне тёплого золота.
-    static let garnet      = Color(hex: 0xE0524A)
-    static let garnetLight = Color(hex: 0xE87A70)
+    // На светлом фоне — темнее, иначе теряется.
+    static let garnet      = Color(uiColor: dynamic(dark: 0xE0524A, light: 0xC23A31))
+    static let garnetLight = Color(uiColor: dynamic(dark: 0xE87A70, light: 0xD4544A))
 }
 
 enum Face {
@@ -175,9 +195,19 @@ extension ShapeStyle where Self == LinearGradient {
         )
     }
 
+    /// Золото-чернила с бликом — для текста и иконок.
     static var goldFill: LinearGradient {
         LinearGradient(
             colors: [Palette.goldLight, Palette.gold],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+
+    /// Золото-заливка — для кнопок, бейджей и полос прогресса.
+    static var goldSurface: LinearGradient {
+        LinearGradient(
+            colors: [Palette.goldSurfaceLight, Palette.goldSurface],
             startPoint: .top,
             endPoint: .bottom
         )

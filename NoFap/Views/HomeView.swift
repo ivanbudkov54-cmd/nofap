@@ -606,15 +606,17 @@ struct HomeView: View {
                 ZStack {
                     if glow {
                         Circle()
-                            .fill(tint)
+                            .fill(filled ? Palette.goldSurface : tint)
                             .frame(width: size * 1.15, height: size * 1.15)
                             .blur(radius: 16)
                             .opacity(0.3)
                     }
 
                     if filled {
-                        Circle().fill(tint.opacity(0.94))
-                            .shadow(color: tint.opacity(0.3), radius: 14, y: 4)
+                        // Залитый круг — всегда «золото-заливка»: в светлой
+                        // теме `tint` (Palette.gold) — бронза для текста.
+                        Circle().fill(Palette.goldSurface.opacity(0.94))
+                            .shadow(color: Palette.goldSurface.opacity(0.3), radius: 14, y: 4)
                     } else if boldOutline {
                         Circle().fill(Palette.obsidian)
                             .overlay { Circle().strokeBorder(tint, lineWidth: 2) }
@@ -637,7 +639,7 @@ struct HomeView: View {
                     }
                         // На залитом круге иконка «вырезана» фоном экрана,
                         // на пустом — светится самим цветом круга.
-                        .foregroundStyle(filled ? Color(hex: 0x1A1405) : tint)
+                        .foregroundStyle(filled ? Palette.onGold : tint)
                 }
                 .frame(width: size, height: size)
 
@@ -680,11 +682,11 @@ struct GoldButton: ButtonStyle {
         configuration.label
             .font(.system(size: compact ? 15 : 17, weight: .bold))
             .tracking(1.4)
-            .foregroundStyle(Color(hex: 0x1A1405))
+            .foregroundStyle(Palette.onGold)
             .frame(maxWidth: .infinity)
             .frame(height: compact ? 46 : 50)
-            .background(Capsule().fill(.goldFill))
-            .shadow(color: Palette.gold.opacity(0.28), radius: 14, y: 4)
+            .background(Capsule().fill(.goldSurface))
+            .shadow(color: Palette.goldSurface.opacity(0.28), radius: 14, y: 4)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
     }

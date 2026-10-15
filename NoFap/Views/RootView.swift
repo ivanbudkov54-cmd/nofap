@@ -20,7 +20,7 @@ struct RootView: View {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = Palette.tabBar
         appearance.shadowColor = UIColor { traits in
-            traits.userInterfaceStyle == .dark ? UIColor(hex: 0x2C2C34) : UIColor(hex: 0xDDDFE5)
+            traits.userInterfaceStyle == .dark ? UIColor(hex: 0x2C2C34) : UIColor(hex: 0xE4DED2)
         }
         // Системный шрифт таб-бара — засечки в 11pt читаются хуже, чем San Francisco.
         UITabBar.appearance().standardAppearance = appearance
@@ -106,11 +106,11 @@ private struct RootOverlays: ViewModifier {
                 if toastVisible, let toast = router.toast {
                     Text(toast)
                         .font(.system(size: 15, weight: .medium))
-                        .foregroundStyle(Color(hex: 0x1A1405))
+                        .foregroundStyle(Palette.onGold)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
-                        .background(Capsule().fill(.goldFill))
+                        .background(Capsule().fill(.goldSurface))
                         .padding(.top, 8)
                         .padding(.horizontal, 24)
                         .transition(.move(edge: .top).combined(with: .opacity))

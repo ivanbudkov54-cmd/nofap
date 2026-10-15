@@ -17,6 +17,7 @@ struct SettingsView: View {
     @Environment(AvatarProgressManager.self) private var xp
     @Environment(JournalManager.self) private var journal
     @Environment(CheckInManager.self) private var checkIns
+    @Environment(ThemeManager.self) private var themes
     @Environment(\.openURL) private var openURL
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -43,6 +44,19 @@ struct SettingsView: View {
                 } label: {
                     Label { Text("Прогресс").foregroundStyle(Palette.marbleHigh) } icon: { Image(systemName: "chart.bar.fill").foregroundStyle(Palette.gold) }
                 }
+            }
+
+            Section("Оформление") {
+                Picker(selection: Binding(get: { themes.theme }, set: { themes.theme = $0 })) {
+                    ForEach(AppTheme.allCases) { theme in
+                        Label(theme.title, systemImage: theme.symbol).tag(theme)
+                    }
+                } label: {
+                    Label { Text("Тема").foregroundStyle(Palette.marbleHigh) } icon: {
+                        Image(systemName: "circle.lefthalf.filled").foregroundStyle(Palette.gold)
+                    }
+                }
+                .tint(Palette.gold)
             }
 
             Section("Данные") {

@@ -86,12 +86,12 @@ struct GoalPicker: View {
         } label: {
             Text("\(days)")
                 .font(Face.display(20, .semibold))
-                .foregroundStyle(isSelected ? Color(hex: 0x1A1405) : Palette.marbleHigh)
+                .foregroundStyle(isSelected ? Palette.onGold : Palette.marbleHigh)
                 .frame(maxWidth: .infinity)
                 .frame(height: 56)
                 .background {
                     if isSelected {
-                        RoundedRectangle(cornerRadius: 14).fill(.goldFill)
+                        RoundedRectangle(cornerRadius: 14).fill(.goldSurface)
                     } else {
                         RoundedRectangle(cornerRadius: 14).fill(Palette.basalt)
                     }

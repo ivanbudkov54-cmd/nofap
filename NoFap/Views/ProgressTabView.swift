@@ -110,7 +110,7 @@ struct ProgressTabView: View {
                         // Начертание не анимируется — при смене regular↔semibold
                         // подпись прыгала. Активную выделяет плашка.
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(span == item ? Color(hex: 0x1A1405) : Palette.ash)
+                        .foregroundStyle(span == item ? Palette.onGold : Palette.ash)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 9)
                         .background {
@@ -119,7 +119,7 @@ struct ProgressTabView: View {
                             // не могла ничего сдвинуть, и она просто мигала.
                             if span == item {
                                 Capsule()
-                                    .fill(.goldFill)
+                                    .fill(.goldSurface)
                                     .matchedGeometryEffect(id: "span", in: spanNamespace)
                             }
                         }
@@ -422,7 +422,7 @@ private struct YearSpan: View {
                     GeometryReader { geo in
                         Capsule().fill(Palette.vein)
                             .overlay(alignment: .leading) {
-                                Capsule().fill(.goldFill)
+                                Capsule().fill(.goldSurface)
                                     .frame(width: month.total == 0 ? 0 : geo.size.width * CGFloat(month.clean) / CGFloat(month.total))
                             }
                     }

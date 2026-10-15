@@ -83,12 +83,12 @@ struct DeepDiveView: View {
         Button(action: action) {
             Text(title)
                 .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(isSelected ? Color(hex: 0x1A1405) : Palette.marble)
+                .foregroundStyle(isSelected ? Palette.onGold : Palette.marble)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 8)
                 .background {
                     if isSelected {
-                        Capsule().fill(.goldFill)
+                        Capsule().fill(.goldSurface)
                     } else {
                         Capsule().fill(Palette.basalt)
                             .overlay { Capsule().strokeBorder(Palette.vein, lineWidth: 1) }
