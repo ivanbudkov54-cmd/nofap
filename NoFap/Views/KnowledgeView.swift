@@ -71,6 +71,7 @@ struct KnowledgeView: View {
     private func tabButton(_ tab: Tab) -> some View {
         let isSelected = selected == tab
         return Button {
+            Haptics.selection()
             withAnimation(.snappy(duration: 0.25)) { selected = tab }
         } label: {
             Text(tab.label)

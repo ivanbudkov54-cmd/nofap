@@ -195,6 +195,7 @@ struct PaywallView: View {
         let isSelected = product.id == selectedID
 
         return Button {
+            Haptics.selection()
             withAnimation(.snappy(duration: 0.2)) { selectedID = product.id }
         } label: {
             HStack(spacing: 14) {

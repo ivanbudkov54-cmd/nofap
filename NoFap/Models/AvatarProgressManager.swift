@@ -67,6 +67,16 @@ enum SpartanRank: Int, CaseIterable, Comparable, Identifiable {
 
     var assetName: String { "spartan_rank_\(rawValue)" }
 
+    /// Поправка размера под картинку: все воины одной высоты, но узкие
+    /// (ранги 3–6, около 45% ширины кадра) рядом с широкими выглядят мельче.
+    var visualScale: CGFloat {
+        switch self {
+        case .hoplite: 1.06
+        case .veteran, .polemarch, .hippeus: 1.08
+        default: 1
+        }
+    }
+
     /// Есть ли уже картинка этого ранга — пока нарисованы не все.
     var hasArtwork: Bool { UIImage(named: assetName) != nil }
 

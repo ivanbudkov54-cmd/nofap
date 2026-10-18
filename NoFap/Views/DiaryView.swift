@@ -107,8 +107,8 @@ struct DiaryView: View {
         )) {
             Button("Удалить", role: .destructive) {
                 switch pendingDelete {
-                case .note(let entry):    journal.deleteEntry(entry)
-                case .checkIn(let entry): checkIns.deleteEntry(entry)
+                case .note(let entry):    Haptics.warning(); journal.deleteEntry(entry)
+                case .checkIn(let entry): Haptics.warning(); checkIns.deleteEntry(entry)
                 case nil: break
                 }
                 pendingDelete = nil

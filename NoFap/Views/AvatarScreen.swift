@@ -60,11 +60,11 @@ struct AvatarScreen: View {
                             // Мягкий свет со стороны будущего ранга.
                             Circle()
                                 .fill(Palette.gold.opacity(0.12 + 0.2 * progress.levelProgress))
-                                .frame(width: 190, height: 190)
+                                .frame(width: 215, height: 215)
                                 .blur(radius: 50)
                             // Серый — пока недоступен. Цвет он получит, только
                             // когда станет твоим.
-                            SpartanFigure(rank: next, size: 185)
+                            SpartanFigure(rank: next, size: 215)
                                 .grayscale(1)
                                 .opacity(0.75)
                         }
@@ -86,7 +86,7 @@ struct AvatarScreen: View {
                     .animation(.easeInOut(duration: 0.8), value: progress.levelProgress)
                     // Главный стоит по центру; следующий — справа за его
                     // плечом, у самого края экрана.
-                    .offset(x: 150, y: -70)
+                    .offset(x: 140, y: -70)
                     .accessibilityLabel(Text("Следующий ранг: \(Text(next.title))"))
                 }
 
@@ -356,6 +356,10 @@ struct SpartanFigure: View {
                 .resizable()
                 .interpolation(.high)
                 .scaledToFit()
+                // Узкие воины (ранги 3–6) занимают по ширине почти вдвое
+                // меньше картинки, чем малыш, и рядом с ним кажутся мелкими.
+                // Чуть увеличиваем от ступней — ноги остаются на «полу».
+                .scaleEffect(art.visualScale, anchor: .bottom)
                 .foregroundStyle(Color(hex: 0x1C1C22))
         } else {
             Image(systemName: "figure.stand")

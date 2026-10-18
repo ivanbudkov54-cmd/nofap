@@ -62,6 +62,7 @@ struct GoalPicker: View {
                         let digits = newValue.filter(\.isNumber).prefix(3)
                         customText = String(digits)
                         if let value = Int(digits), value > 0 {
+                            Haptics.selection()
                             selected = value
                         }
                     }
@@ -80,6 +81,7 @@ struct GoalPicker: View {
         let isSelected = selected == days
 
         return Button {
+            Haptics.selection()
             selected = days
             customText = ""
             customFocused = false

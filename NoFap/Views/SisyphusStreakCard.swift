@@ -68,7 +68,7 @@ struct SisyphusStreakCard: View {
                                     .contentTransition(.numericText())
                             }
                             .scaleEffect(pulse ? 1.25 : 1)
-                            .sensoryFeedback(.success, trigger: streak.currentStreak)
+                            .sensoryFeedback(.success, trigger: streak.currentStreak) { old, new in new > old }
                             .onChange(of: streak.currentStreak) { _, _ in
                                 // Мягкий «вдох-выдох» цифры при новом дне.
                                 withAnimation(.spring(response: 0.45, dampingFraction: 0.75)) { pulse = true }

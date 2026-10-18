@@ -85,7 +85,10 @@ struct ShieldReflectionView: View {
 
     private func chip(_ item: ShieldTrigger) -> some View {
         let selected = trigger == item
-        return Button { trigger = item } label: {
+        return Button {
+            Haptics.selection()
+            trigger = item
+        } label: {
             Text(item.title)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(selected ? Palette.onGold : Palette.marbleHigh)

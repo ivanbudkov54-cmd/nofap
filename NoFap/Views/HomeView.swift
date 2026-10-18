@@ -556,7 +556,10 @@ struct HomeView: View {
             // такая же красная рука — холоднее и тревожнее сплошного гранта,
             // ближе к предупреждающему знаку, чем к обычной кнопке.
             circleAction(icon: "hand.raised.fill", title: "SOS",
-                         tint: Palette.garnet, filled: false, boldOutline: true) { showSOS = true }
+                         tint: Palette.garnet, filled: false, boldOutline: true) {
+                Haptics.heavy()
+                showSOS = true
+            }
                 .tourTarget(.homeSOS)
 
             if streak.hasCheckedInToday {
@@ -578,7 +581,10 @@ struct HomeView: View {
             }
 
             circleAction(icon: "exclamationmark.triangle", title: "Срыв",
-                         tint: Palette.ash, filled: false) { showRelapse = true }
+                         tint: Palette.ash, filled: false) {
+                Haptics.soft()
+                showRelapse = true
+            }
         }
         .frame(maxWidth: .infinity)
     }
@@ -689,6 +695,8 @@ struct GoldButton: ButtonStyle {
             .shadow(color: Palette.goldSurface.opacity(0.28), radius: 14, y: 4)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
+            // Отклик в момент касания, а не отпускания — как у системных кнопок.
+            .onChange(of: configuration.isPressed) { _, pressed in if pressed { Haptics.medium() } }
     }
 }
 
@@ -727,6 +735,8 @@ struct EngravedButton: ButtonStyle {
             // должны вести себя по-разному.
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
+            // Отклик в момент касания, а не отпускания — как у системных кнопок.
+            .onChange(of: configuration.isPressed) { _, pressed in if pressed { Haptics.light() } }
     }
 }
 
@@ -745,6 +755,8 @@ struct SOSButton: ButtonStyle {
             .background(Capsule().fill(Palette.garnet.opacity(configuration.isPressed ? 0.8 : 0.94)))
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
+            // Отклик в момент касания, а не отпускания — как у системных кнопок.
+            .onChange(of: configuration.isPressed) { _, pressed in if pressed { Haptics.heavy() } }
     }
 }
 
@@ -763,6 +775,8 @@ struct StoneButton: ButtonStyle {
             .opacity(configuration.isPressed ? 0.6 : 1)
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
+            // Отклик в момент касания, а не отпускания — как у системных кнопок.
+            .onChange(of: configuration.isPressed) { _, pressed in if pressed { Haptics.light() } }
     }
 }
 

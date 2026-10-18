@@ -112,6 +112,7 @@ struct SurveyQuestionView<Option: SurveyOption>: View {
     }
 
     private func toggle(_ option: Option) {
+        Haptics.selection()
         switch selection {
         case .single(let value):
             value.wrappedValue = option

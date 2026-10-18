@@ -217,6 +217,7 @@ struct CheckInView: View {
     /// "None" исключает остальные теги и наоборот — нельзя одновременно
     /// сказать "триггеров не было" и перечислить их.
     private func toggle(_ tag: CheckInTag) {
+        Haptics.selection()
         if tag == .none {
             selectedTags = selectedTags.contains(.none) ? [] : [.none]
         } else if selectedTags.contains(tag) {

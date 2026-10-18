@@ -66,10 +66,12 @@ struct DeepDiveView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 chip(title: "Все", isSelected: selectedCategory == nil) {
+                    Haptics.selection()
                     withAnimation(.snappy(duration: 0.2)) { selectedCategory = nil }
                 }
                 ForEach(DeepDiveCategory.allCases) { category in
                     chip(title: category.rawValue, isSelected: selectedCategory == category) {
+                        Haptics.selection()
                         withAnimation(.snappy(duration: 0.2)) { selectedCategory = category }
                     }
                 }

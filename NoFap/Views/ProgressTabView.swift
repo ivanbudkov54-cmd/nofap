@@ -103,6 +103,7 @@ struct ProgressTabView: View {
             ForEach(Span.allCases, id: \.self) { item in
                 Button {
                     withAnimation(reduceMotion ? .easeOut(duration: 0.15) : .snappy(duration: 0.25)) {
+                        Haptics.selection()
                         span = item
                     }
                 } label: {
