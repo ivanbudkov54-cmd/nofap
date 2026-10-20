@@ -37,7 +37,7 @@ struct ContentView: View {
             blocking.refresh()
             if backup.needsProtection {
                 backup.needsProtection = false
-                if !blocking.isActive { await blocking.enableProtection() }
+                if BlockingManager.isAvailable, !blocking.isActive { await blocking.enableProtection() }
             }
             await reminder.refresh()
             await partner.refresh()

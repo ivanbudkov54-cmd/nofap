@@ -24,6 +24,13 @@ final class BlockingManager {
         case failed(String)   // ошибка при включении
     }
 
+    /// Блокировке нужно разрешение Apple на Family Controls (подаётся
+    /// отдельно в аккаунте разработчика). Пока его нет, запрос доступа к
+    /// Экранному времени всегда падает — поэтому шаг включения защиты и
+    /// обещания блокировки в онбординге скрыты. Получили разрешение —
+    /// добавить entitlement и поставить true.
+    static let isAvailable = false
+
     private let store = ManagedSettingsStore()
 
     private(set) var state: State = .unknown
@@ -36,6 +43,7 @@ final class BlockingManager {
     /// Проверяет статус при запуске: если разрешение уже выдано, просто
     /// переустанавливает фильтр — настройки могли сброситься после обновления iOS.
     func refresh() {
+        guard Self.isAvailable else { return }
         switch AuthorizationCenter.shared.authorizationStatus {
         case .denied:
             state = .denied

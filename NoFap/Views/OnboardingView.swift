@@ -43,14 +43,18 @@ struct OnboardingView: View {
         ("Не сила воли, а устройство",
          "Фильтр работает на уровне системы, через встроенное Экранное время. Он действует и в Safari, и в других браузерах, и его не обходит приватная вкладка."),
         ("Ничего не уходит без спроса",
-         "Ни аккаунта, ни истории посещений. Счётчик и календарь живут только на этом телефоне. Захочешь позвать напарника — он увидит лишь счёт дней и отметился ли ты сегодня. Ни календаря, ни срывов, ни имени.")
+         "Ни имени, ни почты, ни истории посещений. Прогресс хранится под анонимным аккаунтом — чтобы не потерять его при смене телефона. Захочешь позвать напарника — он увидит лишь счёт дней и отметился ли ты сегодня. Ни календаря, ни срывов.")
     ]
 
+    /// Без разрешения на Family Controls блокировка не работает — тогда нет
+    /// ни слайдов про фильтр, ни шага «Включить защиту»: обещать то, чего
+    /// приложение пока не делает, нельзя.
     private var steps: [Step] {
-        (0..<Self.questionCount).map(Step.question)
-        + [.track]
-        + slides.indices.map(Step.thesis)
-        + [.goal, .consent]
+        let theses = BlockingManager.isAvailable ? Array(slides.indices) : [slides.count - 1]
+        return (0..<Self.questionCount).map(Step.question)
+            + [.track]
+            + theses.map(Step.thesis)
+            + (BlockingManager.isAvailable ? [.goal, .consent] : [.goal])
     }
 
     var body: some View {
@@ -94,6 +98,9 @@ struct OnboardingView: View {
             }
             .padding(.bottom, 24)
         }
+        // Клавиатура не поднимает полосу прогресса и кнопку: иначе они
+        // наезжали на поле «своими словами» и закрывали его.
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 
     // MARK: - Страницы
@@ -256,6 +263,14 @@ struct OnboardingView: View {
                 }
             }
             .disabled(isRequesting)
+        } else if page == steps.count - 1 {
+            // Последний шаг без защиты — сразу в приложение.
+            Button("НАЧАТЬ") {
+                advance()
+                Task { await finish() }
+            }
+            .disabled(!isAnswered(steps[page]))
+            .opacity(isAnswered(steps[page]) ? 1 : 0.35)
         } else {
             Button("ДАЛЕЕ") { advance() }
                 .disabled(!isAnswered(steps[page]))
@@ -330,6 +345,7 @@ struct OnboardingView: View {
         // Явная кривая вместо безымянного withAnimation (он даёт easeInOut
         // ~0.35с). Переход страницы — это движение всего экрана, именно его
         // отключают в режиме уменьшенной анимации.
+        guard page < steps.count - 1 else { return }
         withAnimation(reduceMotion ? .easeOut(duration: 0.15) : .snappy(duration: 0.3)) {
             page += 1
         }
@@ -342,14 +358,18 @@ struct OnboardingView: View {
 
         if blocking.isActive {
             streak.markProtectionStart()
-            // Второй системный запрос сразу за первым — обычная практика:
-            // человек уже в режиме «выдаю разрешения». Отказ не блокирует
-            // выход из онбординга — напоминание просто не ставится.
-            if let window = survey.answers.urgeWindow {
-                await reminder.enable(peakHour: window.peakHour)
-            }
-            onFinish()
+            await finish()
         }
+    }
+
+    /// Второй системный запрос (уведомления) сразу за первым — обычная
+    /// практика. Отказ не блокирует выход из онбординга — напоминание
+    /// просто не ставится.
+    private func finish() async {
+        if let window = survey.answers.urgeWindow {
+            await reminder.enable(peakHour: window.peakHour)
+        }
+        onFinish()
     }
 }
 
