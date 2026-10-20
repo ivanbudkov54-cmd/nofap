@@ -25,7 +25,10 @@ struct PartnerChatView: View {
                 partner.startWatchingChat()
             },
             stop: { partner.stopWatchingChat() },
-            send: { text, kind in await partner.send(text, kind: kind) }
+            send: { text, kind in await partner.send(text, kind: kind) },
+            chat: .partner,
+            // Заблокировать напарника — значит и разорвать пару.
+            afterBlock: { await partner.unpair() }
         )
     }
 }
@@ -46,7 +49,8 @@ struct SquadChatView: View {
                 squad.startWatchingChat()
             },
             stop: { squad.stopWatchingChat() },
-            send: { text, kind in await squad.send(text, kind: kind) }
+            send: { text, kind in await squad.send(text, kind: kind) },
+            chat: .squad
         )
     }
 }
@@ -62,9 +66,17 @@ struct ChatThreadView: View {
     let start: () async -> Void
     let stop: () -> Void
     let send: (String, PartnerMessage.Kind) async -> Void
+    let chat: ChatSafety.Chat
+    var afterBlock: (() async -> Void)? = nil
 
     @State private var draft = ""
     @FocusState private var inputFocused: Bool
+
+    @State private var safety = ChatSafety.shared
+    @State private var reportTarget: PartnerMessage?
+    @State private var blockTarget: PartnerMessage?
+    @State private var pendingSend: (text: String, kind: PartnerMessage.Kind)?
+    @State private var notice: String?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -77,6 +89,70 @@ struct ChatThreadView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task { await start() }
         .onDisappear { stop() }
+        .confirmationDialog("Пожаловаться на сообщение", isPresented: Binding(
+            get: { reportTarget != nil }, set: { if !$0 { reportTarget = nil } }
+        ), titleVisibility: .visible, presenting: reportTarget) { message in
+            ForEach(ChatSafety.Reason.allCases) { reason in
+                Button(reason.title) {
+                    Task {
+                        let sent = await safety.report(message, reason: reason, in: chat)
+                        notice = sent
+                            ? String(localized: "Жалоба отправлена. Мы разберём её в течение 24 часов.")
+                            : String(localized: "Не получилось отправить жалобу. Проверь интернет и попробуй ещё раз.")
+                    }
+                }
+            }
+            Button("Отмена", role: .cancel) {}
+        } message: { _ in
+            Text("Что не так с этим сообщением?")
+        }
+        .alert(chat == .partner ? "Заблокировать напарника?" : "Заблокировать участника?",
+               isPresented: Binding(get: { blockTarget != nil }, set: { if !$0 { blockTarget = nil } }),
+               presenting: blockTarget) { message in
+            Button("Заблокировать", role: .destructive) {
+                guard let id = message.senderID else { return }
+                Task {
+                    Haptics.warning()
+                    await safety.block(id)
+                    await afterBlock?()
+                }
+            }
+            Button("Отмена", role: .cancel) {}
+        } message: { _ in
+            Text(chat == .partner
+                 ? "Пара будет разорвана, его сообщения больше не будут видны."
+                 : "Его сообщения больше не будут видны тебе в этом чате.")
+        }
+        .alert("Правила общения", isPresented: Binding(
+            get: { pendingSend != nil }, set: { if !$0 { pendingSend = nil } }
+        )) {
+            Button("Принимаю") {
+                safety.acceptRules()
+                if let pending = pendingSend {
+                    pendingSend = nil
+                    Task { await send(pending.text, pending.kind) }
+                }
+            }
+            Button("Отмена", role: .cancel) {}
+        } message: {
+            Text("Здесь поддерживают друг друга. Без оскорблений, угроз, откровенного контента и рекламы. Нарушителей блокируем; на любое сообщение можно пожаловаться, удержав его пальцем.")
+        }
+        .alert(notice ?? "", isPresented: Binding(get: { notice != nil }, set: { if !$0 { notice = nil } })) {
+            Button("Хорошо", role: .cancel) {}
+        }
+    }
+
+    /// Все отправки идут через правила и фильтр.
+    private func submit(_ text: String, _ kind: PartnerMessage.Kind) {
+        if kind == .text, !safety.isAllowed(text) {
+            notice = String(localized: "Сообщение не отправлено: в нём ссылка или грубые слова.")
+            return
+        }
+        guard safety.rulesAccepted else {
+            pendingSend = (text, kind)
+            return
+        }
+        Task { await send(text, kind) }
     }
 
     // MARK: - Лента
@@ -87,7 +163,7 @@ struct ChatThreadView: View {
                 LazyVStack(spacing: 10) {
                     if messages.isEmpty { placeholder }
 
-                    ForEach(messages) { message in
+                    ForEach(messages.filter { !safety.isBlocked($0) }) { message in
                         bubble(message)
                             .id(message.id)
                     }
@@ -159,6 +235,19 @@ struct ChatThreadView: View {
                         .strokeBorder(Palette.gold.opacity(0.6), lineWidth: 1)
                 }
             }
+            // Удержать чужое сообщение — пожаловаться или заблокировать автора.
+            .contextMenu {
+                if !message.isMine {
+                    Button(role: .destructive) { reportTarget = message } label: {
+                        Label("Пожаловаться", systemImage: "exclamationmark.bubble")
+                    }
+                    if message.senderID != nil {
+                        Button(role: .destructive) { blockTarget = message } label: {
+                            Label("Заблокировать", systemImage: "hand.raised.slash")
+                        }
+                    }
+                }
+            }
 
             if !message.isMine { Spacer(minLength: 50) }
         }
@@ -183,7 +272,7 @@ struct ChatThreadView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 Button {
-                    Task { await send(ChatPresets.sos, .sos) }
+                    submit(ChatPresets.sos, .sos)
                 } label: {
                     Label(ChatPresets.sos, systemImage: "hand.raised.fill")
                         .font(.system(size: 14, weight: .semibold))
@@ -195,7 +284,7 @@ struct ChatThreadView: View {
 
                 ForEach(ChatPresets.support, id: \.self) { text in
                     Button {
-                        Task { await send(text, .support) }
+                        submit(text, .support)
                     } label: {
                         Text(text)
                             .font(.system(size: 14))
@@ -229,8 +318,12 @@ struct ChatThreadView: View {
 
             Button {
                 let text = draft
+                guard safety.isAllowed(text) else {
+                    notice = String(localized: "Сообщение не отправлено: в нём ссылка или грубые слова.")
+                    return
+                }
                 draft = ""
-                Task { await send(text, .text) }
+                submit(text, .text)
             } label: {
                 Image(systemName: "arrow.up")
                     .font(.system(size: 16, weight: .bold))

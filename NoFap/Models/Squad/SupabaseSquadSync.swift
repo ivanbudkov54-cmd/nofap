@@ -141,7 +141,8 @@ final class SupabaseSquadSync: SquadSyncing {
             id: row.id, kind: kind, text: row.body, isMine: isMine, sentAt: row.sentAt,
             // Вышедший из сквада участник: имя уже не прочитать, а сообщение
             // остаётся в истории.
-            senderName: isMine ? nil : row.senderId.flatMap { names[$0] } ?? String(localized: "Бывший участник")
+            senderName: isMine ? nil : row.senderId.flatMap { names[$0] } ?? String(localized: "Бывший участник"),
+            senderID: row.senderId
         )
     }
 

@@ -192,6 +192,7 @@ private struct MessageRow: Decodable {
 
     func message(me: String) -> PartnerMessage? {
         guard let kind = PartnerMessage.Kind(rawValue: kind) else { return nil }
-        return PartnerMessage(id: id, kind: kind, text: body, isMine: senderId == me, sentAt: sentAt)
+        return PartnerMessage(id: id, kind: kind, text: body, isMine: senderId == me, sentAt: sentAt,
+                              senderID: senderId)
     }
 }

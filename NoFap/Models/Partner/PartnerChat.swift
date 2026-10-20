@@ -30,6 +30,9 @@ struct PartnerMessage: Codable, Sendable, Equatable, Identifiable {
     /// Имя автора — только в групповом чате сквада. В переписке с
     /// напарником собеседник один, подписывать его незачем.
     var senderName: String? = nil
+
+    /// Кто написал — нужно для жалобы и блокировки. Для своих сообщений не важно.
+    var senderID: String? = nil
 }
 
 extension PartnerMessage {
