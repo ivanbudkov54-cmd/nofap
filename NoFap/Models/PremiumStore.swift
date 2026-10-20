@@ -36,7 +36,12 @@ final class PremiumStore {
     /// Premium, оплаченный на сайте (только американский App Store).
     let web = WebPremium()
 
-    var isPremium: Bool { hasStoreSubscription || web.isActive || debugOverride }
+    /// Версия 1.0 выходит полностью бесплатной: подписок в App Store Connect
+    /// ещё нет, а пейвол без товаров Apple отклоняет. Premium включим
+    /// обновлением — поставить false, когда подписки будут созданы.
+    static let freeLaunch = true
+
+    var isPremium: Bool { Self.freeLaunch || hasStoreSubscription || web.isActive || debugOverride }
 
     /// Пейвол по требованию экрана: `checkProAccess` поднимает флаг, RootView
     /// показывает PaywallView. Причина — короткая строка над тарифами.
@@ -75,6 +80,7 @@ final class PremiumStore {
     }
 
     func start() async {
+        guard !Self.freeLaunch else { return }
         await refreshEntitlements()
         await loadProducts()
     }

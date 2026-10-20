@@ -29,7 +29,7 @@ struct SettingsView: View {
     @State private var isDeleting = false
     @State private var failure: String?
 
-    private let supportURL = URL(string: "mailto:support@example.com")!
+    private let supportURL = AppInfo.supportURL
 
     var body: some View {
         List {
