@@ -41,7 +41,6 @@ struct HomeView: View {
                 VStack(spacing: 12) {
                     greeting
                     summitCard
-                        .tourTarget(.homeTimer)
                     quoteCard
                     BuddyCard()
                     if !subscriptions.isPro {
@@ -231,11 +230,18 @@ struct HomeView: View {
         VStack(spacing: 14) {
             GeometryReader { geo in
                 let w = geo.size.width
+                let h = w * (515.0 / 493.0)
                 ZStack {
                     Image("SisyphusPhoto")
                         .resizable()
                         .scaledToFit()
                         .frame(width: w)
+
+                    Color.clear
+                        .frame(width: w * 0.56, height: h * 0.74)
+                        .tourPulseTarget()
+                        .position(x: w * 0.70, y: h * 0.49)
+                        .allowsHitTesting(false)
 
                     VStack(spacing: 0) {
                         ZStack {
@@ -267,12 +273,15 @@ struct HomeView: View {
                                 .underline()
                         }
                     }
-                    .position(x: w * 0.70, y: w * (515.0 / 493.0) * 0.354)
+                    .padding(.horizontal, 6)
+                    .tourTarget(.homeTimer)
+                    .position(x: w * 0.70, y: h * 0.354)
                 }
             }
             .aspectRatio(493.0 / 515.0, contentMode: .fit)
             .clipShape(.rect(cornerRadius: 18))
             .cardSurface()
+            .tourTarget(.sisyphus)
             .overlay(alignment: .bottomLeading) {
                 PartnerBadge(width: 130)
                     .contentShape(.rect)
@@ -363,7 +372,6 @@ struct HomeView: View {
                     }
                 }
             }
-            .tourTarget(.homeTimer)
 
             Button("SOS") { showSOS = true }
                 .buttonStyle(SOSButton())

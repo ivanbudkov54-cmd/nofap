@@ -8,6 +8,7 @@ import UIKit
 
 enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
     case homeTimer
+    case sisyphus
     case homeSOS
     case avatar
     case challenges
@@ -16,9 +17,11 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
 
     var id: Int { rawValue }
 
+    static let spotlightCount = allCases.count - 1
+
     var tab: Int? {
         switch self {
-        case .homeTimer, .homeSOS: 0
+        case .homeTimer, .sisyphus, .homeSOS: 0
         case .journal: AppRouter.diaryTab
         case .challenges: 3
         case .avatar: 5
@@ -29,6 +32,7 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
     var title: String {
         switch self {
         case .homeTimer: "Твой главный бастион"
+        case .sisyphus: "Разорви замкнутый круг"
         case .homeSOS: "Кнопка паники (SOS)"
         case .avatar: "Твоя трансформация"
         case .challenges: "Испытания воли"
@@ -40,9 +44,11 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
     var detail: String {
         switch self {
         case .homeTimer:
-            "Здесь тикает твой стрик. Каждый вечер нажимай «Я держусь», подтверждая победу над слабостью. Если сорвешься — 1 раз в месяц доступна заморозка без потери дней."
+            "Это твоя текущая серия дней без срывов. Каждый вечер нажимай «Я держусь», подтверждая победу над слабостью. Если сорвешься — 1 раз в месяц доступна заморозка без потери дней."
+        case .sisyphus:
+            "Это Сизиф. Он обречён бесконечно катить камень на гору, срываться и начинать с нуля. Каждый срыв откатывает тебя к подножию. Твоя цель со Spartan — дойти до вершины и сломать этот цикл навсегда."
         case .homeSOS:
-            "Если накатила сильная тяга — не думай, сразу жми сюда. Мы включим пошаговую технику заземления и дыхания, чтобы снять импульс за 2 минуты."
+            "Если накроет импульс — жми сюда. Мы включим пошаговую технику заземления и дыхания, чтобы снять импульс за 2 минуты."
         case .avatar:
             "Этот аватар растет вместе с тобой. Каждый день стрика, прочитанная статья и выполненный вызов дают ему силу и мускулы. Прокачай его до ранга Титана."
         case .challenges:
@@ -54,9 +60,22 @@ enum AppTourStep: Int, CaseIterable, Identifiable, Hashable {
         }
     }
 
-    /// Пять рабочих шагов, финал считается отдельно.
+    var nextLabel: String {
+        self == .sisyphus ? "Я готов дойти до конца" : "Далее"
+    }
+
+    /// Финал не подсвечивает элемент и в нумерацию шагов не входит.
     var spotlightIndex: Int? {
         self == .finish ? nil : rawValue + 1
+    }
+}
+
+/// Область, вокруг которой пульсирует кольцо на шаге про Сизифа: камень и сам Сизиф.
+struct TourPulseKey: PreferenceKey {
+    static var defaultValue: CGRect? = nil
+
+    static func reduce(value: inout CGRect?, nextValue: () -> CGRect?) {
+        value = nextValue() ?? value
     }
 }
 
@@ -87,11 +106,25 @@ extension View {
             }
         }
     }
+
+    func tourPulseTarget() -> some View {
+        background {
+            GeometryReader { geo in
+                Color.clear.preference(
+                    key: TourPulseKey.self,
+                    value: geo.frame(in: .named(TourSpaceName.name))
+                )
+            }
+        }
+    }
 }
 
 @MainActor
 @Observable
 final class AppTourManager {
+
+    static let seenKey = "has_seen_onboarding_tour"
+    private static let legacySeenKey = "hasCompletedAppTour"
 
     private(set) var isTourActive = false
     private(set) var currentStepIndex = 0
@@ -99,19 +132,33 @@ final class AppTourManager {
     var spotlightVisible = true
     private var advancing = false
     var frames: [AppTourStep: [CGRect]] = [:]
+    private(set) var pulseFrame: CGRect?
 
     var step: AppTourStep {
         let steps = AppTourStep.allCases
         return steps[min(currentStepIndex, steps.count - 1)]
     }
 
-    func startTourIfNeeded() {
+    /// Пауза даёт главному экрану разложиться: иначе первая подсветка
+    /// встаёт по кадрам ещё не отрисованных карточек.
+    func startTourIfNeeded() async {
         let defaults = UserDefaults.standard
-        let quizDone = defaults.bool(forKey: "hasCompletedOnboarding")
-        let tourDone = defaults.bool(forKey: "hasCompletedAppTour")
-        guard quizDone, !tourDone, !isTourActive else { return }
+        if defaults.bool(forKey: Self.legacySeenKey) {
+            defaults.set(true, forKey: Self.seenKey)
+            defaults.removeObject(forKey: Self.legacySeenKey)
+        }
+        guard defaults.bool(forKey: "hasCompletedOnboarding"),
+              !defaults.bool(forKey: Self.seenKey),
+              !isTourActive else { return }
+
+        try? await Task.sleep(for: .milliseconds(500))
+        guard !Task.isCancelled, !isTourActive else { return }
         currentStepIndex = 0
+        spotlightVisible = false
         isTourActive = true
+        withAnimation(.spring(duration: 0.45, bounce: 0.18)) {
+            spotlightVisible = true
+        }
     }
 
     func nextStep() {
@@ -143,12 +190,17 @@ final class AppTourManager {
 
     func skipTour() {
         isTourActive = false
-        UserDefaults.standard.set(true, forKey: "hasCompletedAppTour")
+        UserDefaults.standard.set(true, forKey: Self.seenKey)
     }
 
     func setFrames(_ incoming: [AppTourStep: [CGRect]]) {
         guard !Self.same(frames, incoming) else { return }
         frames = incoming
+    }
+
+    func setPulseFrame(_ incoming: CGRect?) {
+        guard pulseFrame != incoming else { return }
+        pulseFrame = incoming
     }
 
     private static func same(_ lhs: [AppTourStep: [CGRect]], _ rhs: [AppTourStep: [CGRect]]) -> Bool {

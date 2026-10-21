@@ -24,7 +24,7 @@ struct SettingsView: View {
 
     @AppStorage("onboardingDone") private var onboardingDone = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
-    @AppStorage("hasCompletedAppTour") private var hasCompletedAppTour = false
+    @AppStorage(AppTourManager.seenKey) private var hasCompletedAppTour = false
 
     @State private var confirmReset = false
     @State private var confirmDelete = false

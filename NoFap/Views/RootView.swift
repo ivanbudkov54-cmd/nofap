@@ -71,7 +71,8 @@ struct RootView: View {
         .tint(Palette.gold)
         .coordinateSpace(name: TourSpaceName.name)
         .onPreferenceChange(TourFramesKey.self) { tour.setFrames($0) }
-        .task { tour.startTourIfNeeded() }
+        .onPreferenceChange(TourPulseKey.self) { tour.setPulseFrame($0) }
+        .task { await tour.startTourIfNeeded() }
         .fullScreenCover(isPresented: Bindable(progress).showLevelUpModal) {
             SpartanLevelUpView(rank: progress.unlockedRank) {
                 progress.showLevelUpModal = false

@@ -30,6 +30,7 @@ struct OnboardingQuizView: View {
     @State private var generating = false
     @State private var generated = false
     @State private var statusLine = "Анализ твоих триггеров..."
+    @State private var showDecision = false
 
     private let durations = ["Меньше 1 года", "1–3 года", "3–7 лет", "Более 7 лет"]
     private let triggerOptions = ["Поздно вечером в кровати", "Стресс и выгорание", "От скуки", "Бесцельный скроллинг соцсетей", "Одиночество"]
@@ -112,6 +113,13 @@ struct OnboardingQuizView: View {
         .background(Palette.obsidian.ignoresSafeArea())
         .onChange(of: page) { _, newValue in
             if newValue == finale { startGeneration() }
+        }
+        .fullScreenCover(isPresented: $showDecision) {
+            ManifestDecisionView {
+                UserDefaults.standard.set(true, forKey: "has_completed_quiz")
+                showDecision = false
+                saveAndEnter()
+            }
         }
     }
 
@@ -345,7 +353,7 @@ struct OnboardingQuizView: View {
 
     private func advance() {
         if page == finale {
-            saveAndEnter()
+            showDecision = true
             return
         }
         if page == contractPage {
