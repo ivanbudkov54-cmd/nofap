@@ -9,10 +9,44 @@ import UIKit
 struct AvatarView: View {
 
     @Environment(AvatarProgressManager.self) private var progress
+    @Environment(SubscriptionManager.self) private var subscriptions
+    @Environment(AppTourManager.self) private var tour
     @State private var breathe = false
+
+    private var showsLock: Bool {
+        !subscriptions.isPro && !tour.isTourActive
+    }
 
     var body: some View {
         unlocked
+            .overlay {
+                if showsLock {
+                    proLock
+                }
+            }
+    }
+
+    private var proLock: some View {
+        ZStack {
+            Palette.obsidian.opacity(0.72)
+            VStack(spacing: 16) {
+                ProLockBadge()
+                Text("Аватар прогресса")
+                    .font(Face.display(24, .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                Text("Рост ранга и зал спартанцев открываются в Spartan Pro.")
+                    .font(.system(size: 15))
+                    .foregroundStyle(Palette.marble)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                Button("Открыть доступ") {
+                    subscriptions.checkProAccess(for: "Аватар прогресса доступен в Spartan Pro") {}
+                }
+                .buttonStyle(GoldButton())
+            }
+            .padding(28)
+        }
+        .ignoresSafeArea()
     }
 
     private var unlocked: some View {

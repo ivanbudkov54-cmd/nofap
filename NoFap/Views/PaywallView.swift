@@ -34,9 +34,10 @@ struct PaywallView: View {
                         .fixedSize(horizontal: false, vertical: true)
 
                     VStack(alignment: .leading, spacing: 10) {
+                        benefit("Экспресс-чекин")
                         benefit("Аналитика триггеров")
-                        benefit("Расширенный дневник")
-                        benefit("SOS-режим")
+                        benefit("Аватар прогресса")
+                        benefit("Расширенная база знаний")
                     }
 
                     if subscriptions.hasLinkedEmail {

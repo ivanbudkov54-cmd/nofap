@@ -296,7 +296,7 @@ struct HomeView: View {
 
     private var weeklyReport: some View {
         Button {
-            subscriptions.checkProAccess(for: "Разблокируй детальную аналитику срывов и динамику недели") {}
+            subscriptions.checkProAccess(for: "Аналитика триггеров доступна в Spartan Pro") {}
         } label: {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Еженедельный отчет")

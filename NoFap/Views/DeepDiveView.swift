@@ -24,7 +24,10 @@ struct DeepDiveView: View {
         if remote.isEmpty {
             localBody
         } else {
-            RemoteArticleList(articles: remote)
+            RemoteArticleList(
+                articles: remote,
+                proReason: "Расширенная база знаний доступна в Spartan Pro"
+            )
         }
     }
 
@@ -54,15 +57,7 @@ struct DeepDiveView: View {
     }
 
     private func open(_ article: Article) {
-        if article.isProExclusive {
-            subscriptions.checkProAccess(for: "Научные разборы биохимии доступны в тарифе Pro") {
-                openedArticle = article
-            }
-        } else if article.category == .neuroscience {
-            subscriptions.checkProAccess(for: "Научные исследования и механизмы работы мозга доступны подписчикам Pro") {
-                openedArticle = article
-            }
-        } else {
+        subscriptions.checkProAccess(for: "Расширенная база знаний доступна в Spartan Pro") {
             openedArticle = article
         }
     }
@@ -128,7 +123,7 @@ struct DeepDiveView: View {
                     .padding(.top, 2)
             }
 
-            if (article.isProExclusive || article.category == .neuroscience) && !subscriptions.isPro {
+            if !subscriptions.isPro {
                 ProLockBadge()
             }
 
