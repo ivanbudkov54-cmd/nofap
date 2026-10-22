@@ -16,10 +16,13 @@ struct DiaryView: View {
     @Environment(CheckInManager.self) private var checkIns
     @Environment(CloudSync.self) private var backend
     @Environment(AppRouter.self) private var router
+    @Environment(ManifestManager.self) private var manifestStore
+    @Environment(PremiumStore.self) private var subscriptions
 
     @State private var showEditor = false
     @State private var pendingDelete: PendingDelete?
     @State private var showCheckIn = false
+    @State private var editManifest = false
     @State private var draft = ""
     @State private var currentPrompt = ""
 
@@ -56,7 +59,11 @@ struct DiaryView: View {
     }
 
     private var feed: [FeedItem] {
-        (journal.entries.map(FeedItem.note) + checkIns.entries.map(FeedItem.checkIn))
+        // Есть договор из опроса — он показан отдельной карточкой сверху.
+        let notes = manifestStore.currentManifest == nil
+            ? journal.entries
+            : journal.entries.filter { !$0.isManifest }
+        return (notes.map(FeedItem.note) + checkIns.entries.map(FeedItem.checkIn))
             .sorted { lhs, rhs in
                 if lhs.isPinned != rhs.isPinned { return lhs.isPinned }
                 return lhs.date > rhs.date
@@ -66,13 +73,17 @@ struct DiaryView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 22) {
-                if journal.entries.contains(where: \.isManifest) {
+                if journal.entries.contains(where: \.isManifest) || manifestStore.currentManifest != nil {
                     header
                 } else {
                     header
                         .tourTarget(.journal)
                 }
                 checkInEntry
+                if let current = manifestStore.currentManifest {
+                    painManifestCard(current)
+                        .tourTarget(.journal)
+                }
 
                 if feed.isEmpty {
                     empty
@@ -100,6 +111,10 @@ struct DiaryView: View {
         // Своя шапка вместо панели навигации — у всех вкладок одна высота.
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $showEditor) { editor }
+        .sheet(isPresented: $editManifest) {
+            NavigationStack { ManifestEditView() }
+                .presentationDetents([.large])
+        }
         // Удаление необратимо — запись стирается и на сервере.
         .alert("Удалить запись?", isPresented: Binding(
             get: { pendingDelete != nil },
@@ -174,7 +189,9 @@ struct DiaryView: View {
 
     private var checkInEntry: some View {
         Button {
-            showCheckIn = true
+            subscriptions.checkProAccess(for: "Экспресс-чекин целиком доступен в Pro") {
+                showCheckIn = true
+            }
         } label: {
             HStack(spacing: 14) {
                 Image(systemName: "gauge.with.dots.needle.50percent")
@@ -194,14 +211,44 @@ struct DiaryView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Palette.ash)
+                if subscriptions.isPro {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Palette.ash)
+                } else {
+                    ProLockBadge()
+                }
             }
             .padding(14)
             .cardSurface()
         }
         .buttonStyle(.plain)
+    }
+
+    // MARK: - Договор из опроса
+
+    private func painManifestCard(_ item: UserPainManifest) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("📌 МОЙ МАНИФЕСТ • ТОЧКА А")
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .foregroundStyle(Palette.gold)
+            Text("После срыва я чувствую: \(item.postRelapseFeeling.joined(separator: ", "))")
+            Text("Я уже потерял: \(item.pastYearLosses.joined(separator: ", "))")
+            Text("Если я сдамся, через 5 лет я стану: \(item.fiveYearFutureVision)")
+            Button("Редактировать / Дополнить") { editManifest = true }
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Palette.gold)
+        }
+        .font(.system(size: 15))
+        .foregroundStyle(Palette.marble)
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Palette.gold.opacity(0.7), lineWidth: 1)
+        }
     }
 
     // MARK: - Пусто
@@ -544,6 +591,66 @@ private struct TagFlowLayout: Layout {
             subview.place(at: CGPoint(x: x, y: y), anchor: .topLeading, proposal: .unspecified)
             x += size.width + spacing
             rowHeight = max(rowHeight, size.height)
+        }
+    }
+}
+
+private struct ManifestEditView: View {
+    @Environment(ManifestManager.self) private var manifestStore
+    @Environment(JournalManager.self) private var journal
+    @Environment(\.dismiss) private var dismiss
+    @State private var feelings = ""
+    @State private var losses = ""
+    @State private var future = ""
+    @State private var notes = ""
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                field("После срыва я чувствую", text: $feelings)
+                field("Я уже потерял", text: $losses)
+                field("Через 5 лет я стану", text: $future)
+                field("Дополнительно", text: $notes)
+                Button("Сохранить") {
+                    manifestStore.saveManifest(
+                        postRelapse: feelings.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
+                        losses: losses.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
+                        future: future,
+                        notes: notes,
+                        journal: journal
+                    )
+                    dismiss()
+                }
+                .buttonStyle(GoldButton())
+            }
+            .padding(20)
+        }
+        .background(Palette.obsidian.ignoresSafeArea())
+        .navigationTitle("Манифест")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            guard let item = manifestStore.currentManifest else { return }
+            feelings = item.postRelapseFeeling.joined(separator: ", ")
+            losses = item.pastYearLosses.joined(separator: ", ")
+            future = item.fiveYearFutureVision
+            notes = item.customNotes ?? ""
+        }
+    }
+
+    private func field(_ title: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(Palette.ash)
+            TextField(title, text: text, axis: .vertical)
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.marbleHigh)
+                .padding(12)
+                .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .strokeBorder(Palette.vein, lineWidth: 1)
+                }
         }
     }
 }

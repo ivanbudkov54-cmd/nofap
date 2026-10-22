@@ -11,6 +11,7 @@ struct OnboardingQuizView: View {
     @Environment(JournalManager.self) private var journal
     @Environment(StreakManager.self) private var streak
     @Environment(CloudSync.self) private var backend
+    @Environment(ManifestManager.self) private var manifest
 
     let onFinish: () -> Void
 
@@ -20,10 +21,16 @@ struct OnboardingQuizView: View {
     @State private var costs: [String] = []
     @State private var pastRecord: String?
     @State private var goals: [String] = []
+    @State private var relapseFeelings: [String] = []
+    @State private var customFeeling = ""
+    @State private var yearLosses: [String] = []
+    @State private var futureChoice: String?
+    @State private var futureNote = ""
     @State private var targetDays: Int?
     @State private var generating = false
     @State private var generated = false
     @State private var statusLine = "Анализ твоих триггеров..."
+    @State private var showDecision = false
 
     private let durations = ["Меньше 1 года", "1–3 года", "3–7 лет", "Более 7 лет"]
     private let triggerOptions = ["Поздно вечером в кровати", "Стресс и выгорание", "От скуки", "Бесцельный скроллинг соцсетей", "Одиночество"]
@@ -32,8 +39,27 @@ struct OnboardingQuizView: View {
     private let goalOptions = ["Чистый взгляд и здоровая сексуальная энергия", "Уверенность и знакомства с девушками", "Дисциплина в спорте и бизнесе", "Контроль над разумом и телом"]
     private let dayOptions = [7, 14, 30, 90]
 
-    private let lastQuestion = 6
-    private let finale = 7
+    private let feelingOptions = [
+        "🌫️ Ватный туман в голове",
+        "🕳️ Полная душевная пустота",
+        "📉 Резкая физическая слабость",
+        "💔 Отвращение к себе и стыд",
+        "⏳ Осознание слитого впустую времени"
+    ]
+    private let lossOptions = [
+        "🥀 Уверенность и раскованность с девушками",
+        "⚡ Драйв и энергия для бизнеса / учебы",
+        "⏳ Сотни часов вычеркнутой жизни",
+        "🧬 Тестостерон, выносливость и форма",
+        "🎯 Глубокий фокус и память"
+    ]
+    private let futureOptions = [
+        "Сломленным человеком без воли, амбиций и мужского стержня.",
+        "Одиноким наблюдателем чужих побед, зависящим от пикселей на экране.",
+        "Уставшим неудачником с хронической тревогой и упущенным потенциалом."
+    ]
+    private let contractPage = 8
+    private let finale = 10
 
     var body: some View {
         VStack(spacing: 0) {
@@ -75,8 +101,11 @@ struct OnboardingQuizView: View {
                     limit: 2
                 ) { toggle($0, in: &goals, limit: 2) }
                 .tag(5)
-                dayQuestion.tag(6)
-                finaleScreen.tag(7)
+                feelingStep.tag(6)
+                lossStep.tag(7)
+                futureStep.tag(8)
+                dayQuestion.tag(9)
+                finaleScreen.tag(10)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .scrollDisabled(true)
@@ -87,6 +116,13 @@ struct OnboardingQuizView: View {
         .background(Palette.obsidian.ignoresSafeArea())
         .onChange(of: page) { _, newValue in
             if newValue == finale { startGeneration() }
+        }
+        .fullScreenCover(isPresented: $showDecision) {
+            ManifestDecisionView {
+                UserDefaults.standard.set(true, forKey: "has_completed_quiz")
+                showDecision = false
+                saveAndEnter()
+            }
         }
     }
 
@@ -106,13 +142,13 @@ struct OnboardingQuizView: View {
                 }
                 Spacer()
                 if page > 0 {
-                    Text("\(min(page, 7))/7")
+                    Text("\(min(page, finale))/\(finale)")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(Palette.ash)
                 }
             }
             if page > 0 {
-                ProgressView(value: Double(min(page, 7)), total: 7)
+                ProgressView(value: Double(min(page, finale)), total: Double(finale))
                     .tint(Palette.gold)
             }
         }
@@ -164,6 +200,83 @@ struct OnboardingQuizView: View {
         }
     }
 
+    private var feelingStep: some View {
+        painStep(
+            title: "Первые 10 минут после импульса",
+            subtitle: "Будь предельно честен перед собой. Что ты чувствовал в тот момент?",
+            options: feelingOptions,
+            selected: relapseFeelings
+        ) { toggle($0, in: &relapseFeelings, limit: nil) }
+        extra: {
+            ownField("Свой вариант", text: $customFeeling, multiline: false)
+        }
+    }
+
+    private var lossStep: some View {
+        painStep(
+            title: "Цена минутной слабости",
+            subtitle: "Чем ты уже заплатил за экранный фастфуд за последние 12 месяцев?",
+            options: lossOptions,
+            selected: yearLosses
+        ) { toggle($0, in: &yearLosses, limit: nil) }
+    }
+
+    private var futureStep: some View {
+        painStep(
+            title: "Твой худший кошмар",
+            subtitle: "Кем ты станешь через 5 лет, если оставишь всё как есть и продолжишь сдаваться импульсу?",
+            options: futureOptions,
+            selected: futureChoice.map { [$0] } ?? []
+        ) { toggleSingle($0, into: &futureChoice) }
+        extra: {
+            Text("Напиши прямо и без прикрас...")
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.ash)
+            ownField("", text: $futureNote, multiline: true)
+        }
+    }
+
+    private func painStep(
+        title: String,
+        subtitle: String,
+        options: [String],
+        selected: [String],
+        onTap: @escaping (String) -> Void,
+        @ViewBuilder extra: () -> some View = { EmptyView() }
+    ) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(title)
+                    .font(Face.display(22, .semibold))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(subtitle)
+                    .font(.system(size: 15))
+                    .foregroundStyle(Palette.ash)
+                    .fixedSize(horizontal: false, vertical: true)
+                ForEach(options, id: \.self) { option in
+                    chip(option, on: selected.contains(option)) { onTap(option) }
+                }
+                extra()
+            }
+            .padding(24)
+        }
+        .scrollDismissesKeyboard(.interactively)
+    }
+
+    private func ownField(_ placeholder: String, text: Binding<String>, multiline: Bool) -> some View {
+        TextField(placeholder, text: text, axis: .vertical)
+            .lineLimit(multiline ? 3...6 : 1...2)
+            .font(.system(size: 16))
+            .foregroundStyle(Palette.marbleHigh)
+            .padding(14)
+            .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(Palette.vein, lineWidth: 1)
+            }
+    }
+
     private var dayQuestion: some View {
         question(
             title: "Сколько дней чистоты ты ставишь своей первой целью?",
@@ -212,7 +325,7 @@ struct OnboardingQuizView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(
-                    canAdvance ? AnyShapeStyle(Palette.gold) : AnyShapeStyle(Palette.vein),
+                    canAdvance ? AnyShapeStyle(.goldSurface) : AnyShapeStyle(Palette.vein),
                     in: RoundedRectangle(cornerRadius: 16, style: .continuous)
                 )
         }
@@ -224,6 +337,7 @@ struct OnboardingQuizView: View {
 
     private var buttonTitle: String {
         if page == 0 { return "Начать диагностику" }
+        if page == contractPage { return "Зафиксировать этот договор ⚔️" }
         if page == finale { return "Войти в приложение" }
         return "Далее"
     }
@@ -236,7 +350,10 @@ struct OnboardingQuizView: View {
         case 3: !costs.isEmpty
         case 4: pastRecord != nil
         case 5: !goals.isEmpty
-        case 6: targetDays != nil
+        case 6: !relapseFeelings.isEmpty || !customFeeling.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        case 7: !yearLosses.isEmpty
+        case 8: futureChoice != nil || !futureNote.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        case 9: targetDays != nil
         case finale: generated
         default: false
         }
@@ -244,8 +361,11 @@ struct OnboardingQuizView: View {
 
     private func advance() {
         if page == finale {
-            saveAndEnter()
+            showDecision = true
             return
+        }
+        if page == contractPage {
+            saveContract()
         }
         withAnimation(.easeInOut(duration: 0.35)) { page += 1 }
     }
@@ -262,8 +382,24 @@ struct OnboardingQuizView: View {
         }
     }
 
+    private func saveContract() {
+        var feelings = relapseFeelings
+        let own = customFeeling.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !own.isEmpty { feelings.append(own) }
+        let written = futureNote.trimmingCharacters(in: .whitespacesAndNewlines)
+        let future = written.isEmpty ? (futureChoice ?? "") : written
+        manifest.saveManifest(
+            postRelapse: feelings,
+            losses: yearLosses,
+            future: future,
+            notes: own.isEmpty ? nil : own,
+            journal: journal
+        )
+    }
+
     private func saveAndEnter() {
         guard let duration, let pastRecord, let targetDays else { return }
+        saveContract()
         let note = """
         #ТочкаА #Манифест
         Я начинаю свой путь освобождения. Вот моя честная диагностика на старте:
@@ -277,11 +413,12 @@ struct OnboardingQuizView: View {
 
         Я фиксирую это здесь, чтобы перечитывать эту запись в моменты слабости и помнить, почему я начал.
         """
-        journal.addManifest(note)
+        let fullNote = (manifest.currentManifest?.journalText ?? "") + "\n\n" + note
+        journal.upsertManifest(fullNote)
         streak.setGoal(targetDays)
         let prompt = JournalEntry.manifestBadge
         Task {
-            await backend.saveJournal(mood: nil, urge: nil, prompt: prompt, note: note, into: journal)
+            await backend.saveJournal(mood: nil, urge: nil, prompt: prompt, note: fullNote, into: journal)
         }
         onFinish()
     }
@@ -298,7 +435,7 @@ struct OnboardingQuizView: View {
                     .foregroundStyle(on ? Palette.onGold : Palette.ash)
             }
             .padding(14)
-            .background(on ? AnyShapeStyle(Palette.gold) : AnyShapeStyle(Palette.basalt), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .background(on ? AnyShapeStyle(.goldSurface) : AnyShapeStyle(Palette.basalt), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .strokeBorder(on ? Color.clear : Palette.vein, lineWidth: 1)

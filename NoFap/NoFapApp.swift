@@ -42,6 +42,7 @@ struct AppRoot: View {
     @State private var avatar = AvatarManager()
     @State private var tour = AppTourManager()
     @State private var xp = AvatarProgressManager()
+    @State private var manifest = ManifestManager()
 
     var body: some View {
         ContentView()
@@ -63,5 +64,6 @@ struct AppRoot: View {
             .environment(avatar)
             .environment(tour)
             .environment(xp)
+            .environment(manifest)
     }
 }

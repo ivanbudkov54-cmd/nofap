@@ -13,6 +13,7 @@ struct HomeView: View {
     @Environment(ReasonsStore.self) private var reasons
     @Environment(AvatarManager.self) private var avatar
     @Environment(AvatarProgressManager.self) private var xp
+    @Environment(ManifestManager.self) private var manifestStore
 
     @State private var showRelapse = false
     @State private var showShieldReview = false
@@ -40,7 +41,6 @@ struct HomeView: View {
                 // Сизиф с валуном — и стрик, и цель, и напарник со сквадом
                 // в одной картинке. Заменил «Твой стрик» и «Свободен от».
                 SisyphusStreakCard()
-                    .tourTarget(.homeTimer)
                     .padding(.top, 8)
                 quoteCard
                 actions
@@ -129,7 +129,8 @@ struct HomeView: View {
                     }
             }
             // С напарником в меню четыре пути — окну нужно чуть больше места.
-            .presentationDetents([.height(650), .large])
+            // Договор из опроса сверху добавляет высоты — тогда сразу во весь экран.
+            .presentationDetents(manifestStore.currentManifest == nil ? [.height(650), .large] : [.large])
             .presentationBackground(Palette.obsidian)
             .presentationDragIndicator(.visible)
         }
@@ -140,7 +141,12 @@ struct HomeView: View {
     /// Точка входа на случай острой тяги: три равноценных пути, а не один
     /// навязанный совет — то, что откликнется, у всех разное.
     private var sosMenu: some View {
+        ScrollView {
         VStack(spacing: 22) {
+            if let item = manifestStore.currentManifest {
+                sosManifest(item)
+                    .padding(.top, 12)
+            }
             Image(systemName: "hand.raised.fill")
                 .font(.system(size: 34))
                 .foregroundStyle(Palette.garnet)
@@ -191,6 +197,38 @@ struct HomeView: View {
         }
         .padding(.horizontal, 24)
         .padding(.bottom, 24)
+        }
+    }
+
+    private func sosManifest(_ item: UserPainManifest) -> some View {
+        let date = item.createdAt.formatted(date: .abbreviated, time: .omitted)
+        return VStack(alignment: .leading, spacing: 10) {
+            Label("ТВОЙ ЛИЧНЫЙ РАЗГОВОР С СОБОЙ", systemImage: "exclamationmark.triangle.fill")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(Palette.adaptive(dark: 0xFF6B3D, light: 0xC2410C))
+            Text("Вспомни, ради чего ты начал")
+                .font(Face.display(20, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+            Text(item.sosQuote)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(Palette.marble)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("— Твои слова из Дневника от \(date)")
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.ash)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(
+            LinearGradient(colors: [Palette.adaptive(dark: 0x3A1212, light: 0xFBE3DD),
+                                    Palette.adaptive(dark: 0x1A1405, light: 0xFFF6E8)],
+                           startPoint: .topLeading, endPoint: .bottomTrailing),
+            in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(Palette.adaptive(dark: 0xE05A45, light: 0xC23A31), lineWidth: 1)
+        }
     }
 
     private func sosRow(icon: String, title: LocalizedStringResource, subtitle: LocalizedStringResource,

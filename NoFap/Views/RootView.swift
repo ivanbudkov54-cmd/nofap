@@ -79,7 +79,8 @@ private struct RootOverlays: ViewModifier {
         content
             .coordinateSpace(name: TourSpaceName.name)
             .onPreferenceChange(TourFramesKey.self) { tour.setFrames($0) }
-            .task { tour.startTourIfNeeded() }
+            .onPreferenceChange(TourPulseKey.self) { tour.setPulseFrame($0) }
+            .task { await tour.startTourIfNeeded() }
             .sheet(isPresented: Bindable(premium).shouldShowPaywall) {
                 PaywallView(contextReason: premium.paywallContextReason)
             }

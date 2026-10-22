@@ -32,12 +32,20 @@ struct SisyphusStreakCard: View {
                 // где заканчивается сама картинка, без отступа снизу.
                 GeometryReader { geo in
                     let w = geo.size.width
+                    let h = w * (515.0 / 493.0)
 
                     ZStack {
                         Image("SisyphusPhoto")
                             .resizable()
                             .scaledToFit()
                             .frame(width: w)
+
+                        // Область пульса на шаге тура про Сизифа: камень и сам Сизиф.
+                        Color.clear
+                            .frame(width: w * 0.56, height: h * 0.74)
+                            .tourPulseTarget()
+                            .position(x: w * 0.70, y: h * 0.49)
+                            .allowsHitTesting(false)
 
                         // Центр валуна — константы вымерены по фото. Резкая
                         // тень — отдельный тёмный дубликат текста со сдвигом,
@@ -93,11 +101,14 @@ struct SisyphusStreakCard: View {
                                     .underline()
                             }
                         }
-                        .position(x: w * 0.70, y: w * (515.0 / 493.0) * 0.354)
+                        .padding(.horizontal, 6)
+                        .tourTarget(.homeTimer)
+                        .position(x: w * 0.70, y: h * 0.354)
                     }
                 }
                 .aspectRatio(493.0 / 515.0, contentMode: .fit)
             }
+            .tourTarget(.sisyphus)
             .clipShape(.rect(cornerRadius: 18))
             .cardSurface()
             // Бейджи — поверх границы этой карточки, не всего экрана: они
