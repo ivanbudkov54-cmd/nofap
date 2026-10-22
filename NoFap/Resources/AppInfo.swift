@@ -9,8 +9,8 @@
 import Foundation
 
 enum AppInfo {
-    /// Заменить на настоящую почту поддержки перед отправкой на проверку.
-    static let supportEmail = "support@example.com"
+    /// Почта поддержки — её видят пользователи и Apple.
+    static let supportEmail = "ivanbudkov4@gmail.com"
 
     static var supportURL: URL { URL(string: "mailto:\(supportEmail)")! }
 }
