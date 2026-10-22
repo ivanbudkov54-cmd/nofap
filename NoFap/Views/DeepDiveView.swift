@@ -24,7 +24,10 @@ struct DeepDiveView: View {
         if remote.isEmpty {
             localBody
         } else {
-            RemoteArticleList(articles: remote)
+            RemoteArticleList(
+                articles: remote,
+                proReason: "Расширенная база знаний доступна в Spartan Pro"
+            )
         }
     }
 
@@ -54,11 +57,8 @@ struct DeepDiveView: View {
     }
 
     private func open(_ article: Article) {
-        let reason = "Научные исследования и механизмы работы мозга доступны с Premium"
-        if ![.neuroscience, .science].contains(article.category) {
+        subscriptions.checkProAccess(for: "Расширенная база знаний доступна в Spartan Pro") {
             openedArticle = article
-        } else {
-            subscriptions.checkProAccess(for: reason) { openedArticle = article }
         }
     }
 
@@ -132,7 +132,7 @@ struct DeepDiveView: View {
 
                 // Замок — отдельной строкой под мета: справа от заголовка он
                 // сжимал текст, и слова рвались по слогам.
-                if [.neuroscience, .science].contains(article.category) && !subscriptions.isPro {
+                if !subscriptions.isPro {
                     ProLockBadge()
                         .padding(.top, 4)
                 }

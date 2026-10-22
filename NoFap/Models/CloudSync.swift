@@ -248,4 +248,13 @@ final class CloudSync {
         }
         notice = nil
     }
+
+    /// Вход в другой аккаунт (по почте): отметки «уже на сервере» относились
+    /// к старому аккаунту. Без сброса сверка дневника решила бы, что записи
+    /// удалены на сервере, и стёрла бы их здесь.
+    func forgetSyncState() {
+        for key in [Key.syncedJournal, Key.relapsesUploadedUntil] {
+            defaults.removeObject(forKey: key)
+        }
+    }
 }

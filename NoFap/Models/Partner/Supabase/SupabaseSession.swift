@@ -9,6 +9,28 @@
 
 import Foundation
 
+enum EmailLinkError: LocalizedError {
+    case invalidCode
+    case tooManyAttempts
+    case network
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidCode:     "Неверный код. Проверьте письмо и введите его ещё раз."
+        case .tooManyAttempts: "Слишком много попыток. Подождите минуту и запросите код снова."
+        case .network:         "Нет подключения к сети. Проверьте интернет и попробуйте ещё раз."
+        }
+    }
+
+    static func from(status: Int, body: Data) -> EmailLinkError {
+        let text = String(decoding: body, as: UTF8.self).lowercased()
+        if status == 429 || text.contains("rate") || text.contains("over_email") || text.contains("too many") {
+            return .tooManyAttempts
+        }
+        return .network
+    }
+}
+
 enum SupabaseAuthError: Error {
     /// Анонимный вход не включён в проекте или неверные ключи.
     case notConfigured
@@ -72,6 +94,38 @@ final class SupabaseSession {
     func invalidate() {
         accessToken = nil
         expiresAt = .distantPast
+    }
+
+    // MARK: - Вход по почте
+
+    /// Код из 6 цифр на почту. Если такого пользователя нет — Supabase его заведёт.
+    func sendEmailCode(to email: String) async throws {
+        var request = URLRequest(url: URL(string: "\(SupabaseConfig.url)/auth/v1/otp")!)
+        request.httpMethod = "POST"
+        request.setValue(SupabaseConfig.anonKey, forHTTPHeaderField: "apikey")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONSerialization.data(withJSONObject: ["email": email, "create_user": true])
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+        guard (200..<300).contains(status) else {
+            throw EmailLinkError.from(status: status, body: data)
+        }
+    }
+
+    /// Подтверждает код и переключает приложение на аккаунт с этой почтой.
+    /// Анонимный аккаунт остаётся на сервере, данные приложения переезжают
+    /// через копию прогресса и синхронизацию.
+    @discardableResult
+    func verifyEmailCode(email: String, code: String) async throws -> String {
+        do {
+            _ = try await exchange(path: "verify", body: ["email": email, "token": code, "type": "email"])
+        } catch SupabaseAuthError.notConfigured {
+            throw EmailLinkError.invalidCode
+        } catch {
+            throw EmailLinkError.network
+        }
+        guard let uid else { throw EmailLinkError.network }
+        return uid
     }
 
     // MARK: - Внутреннее

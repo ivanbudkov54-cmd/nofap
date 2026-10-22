@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Spartan Pro: доступ на 30 дней за 349 ₽. Оплата картой или через СБП.">
+  <meta name="theme-color" content="#0f1115">
+  <title>Spartan Pro</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: #0f1115;
+      color: #f5f5f4;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bar, .loader { transition: none; animation: none; }
+    }
+    :focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
+    .wrap { max-width: 28rem; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; padding: 0 1.25rem; }
+    header { display: flex; align-items: center; gap: .5rem; padding: 1.5rem 0; color: #f59e0b; font-weight: 650; letter-spacing: .04em; }
+    h1, h2 { margin: 0; line-height: 1.2; }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.45rem; }
+    p { line-height: 1.5; }
+    .muted { color: #a8a29e; }
+    .card { border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.05); border-radius: 1.25rem; padding: 1.1rem 1rem; }
+    .gold { color: #fbbf24; }
+    button, .btn {
+      appearance: none; border: 0; cursor: pointer; width: 100%;
+      border-radius: 999px; background: #f59e0b; color: #1c1917;
+      font: inherit; font-weight: 700; padding: .95rem 1rem;
+    }
+    button:disabled { cursor: not-allowed; background: rgba(255,255,255,.1); color: #78716c; }
+    .option {
+      width: 100%; text-align: left; border-radius: 1rem; background: rgba(255,255,255,.05);
+      color: #f5f5f4; border: 1px solid rgba(255,255,255,.1); padding: .95rem 1rem; font-weight: 500;
+    }
+    .stack { display: flex; flex-direction: column; gap: .75rem; }
+    .progress { height: 4px; background: rgba(255,255,255,.1); border-radius: 99px; overflow: hidden; margin-top: .75rem; }
+    .bar { height: 100%; background: #f59e0b; width: 0; transition: width .25s ease; }
+    label { display: block; font-size: .92rem; color: #d6d3d1; }
+    input[type="email"] {
+      width: 100%; margin-top: .45rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,.1);
+      background: rgba(0,0,0,.3); color: #fff; font: inherit; padding: .8rem .9rem;
+    }
+    .check { display: flex; gap: .7rem; align-items: flex-start; font-size: .9rem; }
+    .check input { margin-top: .2rem; accent-color: #f59e0b; }
+    a { color: #fbbf24; }
+    .error { color: #f43f5e; font-size: .9rem; min-height: 1.2em; }
+    .price { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 3rem; margin: .3rem 0 0; }
+    ul { margin: .8rem 0 0; padding-left: 1.1rem; }
+    li { margin: .35rem 0; }
+    footer { margin-top: auto; border-top: 1px solid rgba(255,255,255,.1); padding: 1.6rem 0 2rem; color: #a3a3a3; font-size: .78rem; line-height: 1.45; }
+    .legal {
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .25rem .5rem;
+      margin-top: .7rem; font-size: 12px; line-height: 1.5; color: rgba(251,191,36,.55);
+    }
+    .legal a {
+      color: rgba(251,191,36,.75); opacity: .7;
+      text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;
+      text-decoration-color: rgba(251,191,36,.3);
+      transition: opacity .2s ease, text-decoration-color .2s ease;
+    }
+    .legal a:hover, .legal a:focus-visible { opacity: .9; text-decoration-color: rgba(251,191,36,.6); }
+    .doc-page { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1.25rem 2.5rem; }
+    .doc-page h1 { font-size: 1.4rem; margin-bottom: 1rem; }
+    .doc-page pre { white-space: pre-wrap; font: inherit; font-size: .92rem; line-height: 1.55; color: #e7e5e4; margin: 0; }
+    .hidden { display: none; }
+    .loader { width: 1rem; height: 1rem; border: 2px solid #1c1917; border-right-color: transparent; border-radius: 50%; display: inline-block; vertical-align: -2px; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .step-kicker { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: .14em; font-size: .75rem; color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>Spartan Pro</header>
+
+    <main id="quiz" class="stack" style="flex:1">
+      <p class="step-kicker" id="kicker">ТОЧКА А · 1/3</p>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <h2 id="question"></h2>
+      <div class="stack" id="options"></div>
+    </main>
+
+    <main id="pay" class="stack" style="flex:1" hidden>
+      <h2>Диагностика зафиксирована. Доступ к Spartan Pro открыт.</h2>
+      <article class="card">
+        <p class="gold">Spartan Pro · 30 дней</p>
+        <p class="price">349 ₽</p>
+        <ul>
+          <li>Блокировщик триггеров</li>
+          <li>Расширенная аналитика</li>
+          <li>Экспресс чекин энергии</li>
+          <li>SOS-система</li>
+          <li>Полная база знаний</li>
+          <li>Аватары прогресса</li>
+        </ul>
+      </article>
+      <form id="form" class="stack" novalidate>
+        <label>Email для входа
+          <input id="email" type="email" lang="en" inputmode="email" autocapitalize="off" spellcheck="false" required placeholder="name@email.com" autocomplete="email">
+        </label>
+        <label class="check">
+          <input id="agree" type="checkbox">
+          <span>Я принимаю условия публичной оферты и политики конфиденциальности</span>
+        </label>
+        <p class="error" id="error"></p>
+        <button id="pay-btn" type="submit" disabled>Оплатить через СБП / Карту (349 ₽)</button>
+        <p class="muted" style="text-align:center;font-size:.78rem">Безопасный платёж через Robokassa</p>
+        <nav class="legal" aria-label="Юридические документы">
+          <a href="?doc=offer" target="_blank" rel="noopener noreferrer">Публичная оферта</a>
+          <span aria-hidden="true">•</span>
+          <a href="?doc=privacy" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a>
+        </nav>
+      </form>
+    </main>
+
+    <footer>
+      <div>Самозанятый Нехай Альберт</div>
+      <div>ИНН: 230811193453</div>
+      <div>Служба поддержки: <a href="mailto:stopfapsupport@gmail.com">stopfapsupport@gmail.com</a></div>
+      <nav class="legal" aria-label="Документы">
+        <a href="?doc=offer" target="_blank" rel="noopener noreferrer">Публичная оферта</a>
+        <span aria-hidden="true">•</span>
+        <a href="?doc=privacy" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a>
+        <span aria-hidden="true">•</span>
+        <a href="?doc=refund" target="_blank" rel="noopener noreferrer">Условия возврата</a>
+      </nav>
+    </footer>
+  </div>
+
+  <main id="doc-page" class="doc-page" hidden>
+    <h1 id="doc-title"></h1>
+    <pre id="doc-body"></pre>
+  </main>
+
+  <template id="doc-offer">ПУБЛИЧНАЯ ОФЕРТА
+о предоставлении доступа к цифровому сервису Spartan Pro
+
+Редакция от 21 октября 2026 г.
+
+1. Общие положения
+1.1. Настоящая оферта — официальное предложение самозанятого Нехая Альберта (плательщик налога на профессиональный доход, ИНН 230811193453, далее — «Исполнитель») любому дееспособному лицу (далее — «Пользователь») заключить договор о предоставлении доступа к цифровому сервису Spartan Pro на условиях ниже (п. 2 ст. 437 Гражданского кодекса РФ).
+1.2. Сайт Исполнителя: https://spartan-pro.ru. Приложение Spartan Pro — мобильное приложение Исполнителя для iOS.
+1.3. Акцептом оферты считается оплата доступа на Сайте. С момента оплаты договор считается заключённым, а Пользователь — принявшим все условия оферты полностью и без оговорок.
+
+2. Предмет договора
+2.1. Исполнитель предоставляет Пользователю доступ к расширенным функциям приложения Spartan Pro (далее — «Доступ Spartan Pro») на 30 календарных дней, а Пользователь оплачивает его.
+2.2. Состав Доступа Spartan Pro указан на Сайте на момент оплаты. Исполнитель вправе улучшать и изменять функции, не ухудшая их существенно в оплаченный период.
+2.3. Доступ Spartan Pro — информационный сервис для самоконтроля и поддержки привычек. Он не является медицинской или психологической помощью и не заменяет консультацию специалиста.
+
+3. Стоимость и оплата
+3.1. Стоимость Доступа Spartan Pro на 30 дней — 349 (триста сорок девять) рублей. НДС не облагается: Исполнитель применяет налог на профессиональный доход.
+3.2. Оплата проводится разово банковской картой или через СБП с помощью платёжного сервиса Robokassa. Автоматического продления и повторных списаний нет.
+3.3. После оплаты Пользователю на указанный email направляется электронный чек, сформированный в приложении «Мой налог».
+
+4. Предоставление доступа
+4.1. Доступ Spartan Pro открывается автоматически после подтверждения оплаты для аккаунта приложения, привязанного к email, указанному при оплате.
+4.2. Срок доступа — 30 календарных дней с момента активации.
+4.3. Если доступ не открылся в течение 24 часов после оплаты, Пользователь пишет на stopfapsupport@gmail.com, и Исполнитель восстанавливает доступ или возвращает оплату.
+
+5. Права и обязанности сторон
+5.1. Исполнитель обязуется предоставить доступ в оплаченном объёме и сроке, а также отвечать на обращения Пользователя в течение 3 рабочих дней.
+5.2. Исполнитель вправе временно ограничить работу сервиса для технических работ, по возможности заранее предупредив Пользователя.
+5.3. Пользователь обязуется указать достоверный email, не передавать доступ третьим лицам и не пытаться обойти технические ограничения сервиса.
+
+6. Возврат денежных средств
+6.1. Возврат проводится по Условиям возврата, размещённым на Сайте, которые являются частью настоящей оферты.
+
+7. Ответственность
+7.1. Стороны несут ответственность в соответствии с законодательством РФ.
+7.2. Исполнитель не отвечает за перерывы в работе, вызванные действиями третьих лиц, сбоями сетей связи, App Store или платёжных систем, а также обстоятельствами непреодолимой силы.
+7.3. Размер ответственности Исполнителя ограничен суммой, уплаченной Пользователем за текущий период доступа.
+
+8. Персональные данные
+8.1. Исполнитель обрабатывает персональные данные Пользователя по Политике конфиденциальности, размещённой на Сайте, и Федеральному закону № 152-ФЗ «О персональных данных».
+
+9. Заключительные положения
+9.1. Исполнитель вправе изменить оферту, опубликовав новую редакцию на Сайте. Изменения не затрагивают уже оплаченный период доступа.
+9.2. Споры решаются путём переговоров, а при недостижении согласия — в суде по законодательству РФ. Претензионный порядок обязателен, срок ответа на претензию — 10 рабочих дней.
+
+10. Реквизиты Исполнителя
+Нехай Альберт, самозанятый (налог на профессиональный доход)
+ИНН: 230811193453
+Телефон: +7 905 332-28-58
+Email: nealbert001@mail.ru
+Поддержка: stopfapsupport@gmail.com
+Сайт: https://spartan-pro.ru
+</template>
+  <template id="doc-privacy">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
+Spartan Pro
+
+1. Кто обрабатывает данные
+Самозанятый Нехай Альберт, ИНН 230811193453. Контакт: stopfapsupport@gmail.com.
+
+2. Какие данные собираются
+Адрес электронной почты для входа и чека. Ответы квиза используются только чтобы показать план на этом экране и не продаются. Данные карты обрабатывает Robokassa: номер карты и CVV на наш сервер не попадают.
+
+3. Зачем
+Чтобы открыть доступ к Spartan Pro на 30 дней, отправить чек и ответить на вопрос об оплате или возврате.
+
+4. Удаление
+Напишите на stopfapsupport@gmail.com с темой «Удаление данных».</template>
+  <template id="doc-refund">УСЛОВИЯ ВОЗВРАТА
+цифрового доступа Spartan Pro, 349 ₽ за 30 дней.
+
+Вы можете отказаться от доступа в любой момент в течение оплаченного срока и вернуть деньги за неиспользованные дни. Сумма считается пропорционально: 349 ₽ ÷ 30 × число оставшихся полных дней доступа.
+Если доступ так и не открылся по нашей вине, возвращаем полную сумму.
+
+Напишите на stopfapsupport@gmail.com с темой «Возврат», укажите email оплаты, дату и номер заказа Robokassa. Ответ — в течение 3 рабочих дней, возврат тем же способом — в течение 10 рабочих дней после одобрения.
+
+Самозанятый Нехай Альберт
+ИНН: 230811193453</template>
+
+  <script>
+    const INVOICE_URL = "https://gmmwfxpoidtpwbtxgjbk.supabase.co/functions/v1/create-robokassa-invoice";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtbXdmeHBvaWR0cHdidHhnamJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyODc2OTQsImV4cCI6MjEwMzg2MzY5NH0.qw8KEXu7q6I8FdwzNn2S1zqZnJ4tZ5IcBG7epVV-LGQ";
+    const AMOUNT = 349;
+    const steps = [
+      {
+        title: "Вспомни первые 10 минут после последнего срыва. Что ты чувствовал?",
+        options: ["Ватный туман в голове", "Душевная пустота", "Физическая слабость", "Отвращение к себе"]
+      },
+      {
+        title: "Чем ты уже заплатил за эту привычку за последний год?",
+        options: ["Уверенность с девушками", "Энергия для бизнеса/учебы", "Сотни часов времени", "Тестостерон и форма"]
+      },
+      {
+        title: "Готов ли ты дать себе ровно 3 дня на первую перезагрузку без компромиссов?",
+        options: ["Да, я принимаю вызов", "Нет, я пока не готов"]
+      }
+    ];
+
+    const question = document.getElementById("question");
+    const options = document.getElementById("options");
+    const kicker = document.getElementById("kicker");
+    const bar = document.getElementById("bar");
+    const answers = [];
+    let step = 0;
+
+    function renderStep() {
+      const current = steps[step];
+      kicker.textContent = "ТОЧКА А · " + (step + 1) + "/3";
+      bar.style.width = ((step + 1) / steps.length * 100) + "%";
+      question.textContent = current.title;
+      options.innerHTML = "";
+      current.options.forEach(function (label) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option";
+        button.textContent = label;
+        button.addEventListener("click", function () {
+          answers[step] = label;
+          if (step === steps.length - 1) {
+            document.getElementById("quiz").hidden = true;
+            document.getElementById("pay").hidden = false;
+            document.getElementById("email").focus();
+            return;
+          }
+          step += 1;
+          renderStep();
+        });
+        options.appendChild(button);
+      });
+    }
+
+    const email = document.getElementById("email");
+    const agree = document.getElementById("agree");
+    const payBtn = document.getElementById("pay-btn");
+    const error = document.getElementById("error");
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function refreshPayButton() {
+      payBtn.disabled = !(emailOk.test(email.value.trim()) && agree.checked) || payBtn.dataset.loading === "1";
+    }
+    email.addEventListener("input", refreshPayButton);
+    agree.addEventListener("change", refreshPayButton);
+
+    document.getElementById("form").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const userEmail = email.value.trim();
+      if (!emailOk.test(userEmail)) {
+        error.textContent = "Введите рабочий email: на него придёт доступ.";
+        return;
+      }
+      if (!agree.checked) {
+        error.textContent = "Нужно согласие с офертой и политикой конфиденциальности.";
+        return;
+      }
+      error.textContent = "";
+      payBtn.dataset.loading = "1";
+      payBtn.disabled = true;
+      payBtn.innerHTML = '<span class="loader"></span> Соединяем с банком…';
+      const controller = new AbortController();
+      const timer = setTimeout(function () { controller.abort(); }, 20000);
+      try {
+        const res = await fetch(INVOICE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY
+          },
+            body: JSON.stringify({
+            email: userEmail,
+            outSum: AMOUNT,
+            userId: localStorage.getItem("spartan_user_id") || ""
+          }),
+          signal: controller.signal
+        });
+        if (!res.ok) throw new Error("bad status");
+        const data = await res.json();
+        if (!data || typeof data.url !== "string" || !/^https:\/\//.test(data.url)) {
+          throw new Error("no url");
+        }
+        window.location.href = data.url;
+      } catch (e) {
+        error.textContent = "Не удалось соединиться с банком. Попробуйте еще раз через минуту";
+        payBtn.dataset.loading = "0";
+        payBtn.textContent = "Оплатить через СБП / Карту (349 ₽)";
+        refreshPayButton();
+      } finally {
+        clearTimeout(timer);
+      }
+    });
+
+    const launchParams = new URLSearchParams(window.location.search);
+    const titles = { offer: "Публичная оферта", privacy: "Политика конфиденциальности", refund: "Условия возврата" };
+    const docKey = launchParams.get("doc");
+    if (titles[docKey]) {
+      document.querySelector(".wrap").hidden = true;
+      document.getElementById("doc-page").hidden = false;
+      document.title = titles[docKey] + " · Spartan Pro";
+      document.getElementById("doc-title").textContent = titles[docKey];
+      document.getElementById("doc-body").textContent = document.getElementById("doc-" + docKey).content.textContent.trim();
+    }
+
+    const incomingUserId = launchParams.get("user_id");
+    const incomingEmail = launchParams.get("email");
+    if (incomingUserId) localStorage.setItem("spartan_user_id", incomingUserId);
+    if (incomingEmail) email.value = incomingEmail;
+    if (incomingUserId) {
+      document.getElementById("quiz").hidden = true;
+      document.getElementById("pay").hidden = false;
+      refreshPayButton();
+    } else {
+      renderStep();
+    }
+  </script>
+</body>
+</html>

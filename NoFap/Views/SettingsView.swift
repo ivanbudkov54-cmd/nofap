@@ -18,6 +18,7 @@ struct SettingsView: View {
     @Environment(JournalManager.self) private var journal
     @Environment(CheckInManager.self) private var checkIns
     @Environment(ThemeManager.self) private var themes
+    @Environment(PremiumStore.self) private var subscriptions
     @Environment(\.openURL) private var openURL
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -28,11 +29,45 @@ struct SettingsView: View {
     @State private var confirmDelete = false
     @State private var isDeleting = false
     @State private var failure: String?
+    @State private var showEmailLink = false
 
     private let supportURL = AppInfo.supportURL
 
     var body: some View {
         List {
+            Section {
+                if let email = subscriptions.accountEmail, !email.isEmpty {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Email привязан")
+                            .foregroundStyle(Palette.marbleHigh)
+                        Text(email)
+                            .font(.system(size: 13))
+                            .foregroundStyle(Palette.ash)
+                    }
+                } else {
+                    Button {
+                        showEmailLink = true
+                    } label: {
+                        HStack {
+                            Text("Привязать Email / Резервная копия")
+                                .foregroundStyle(Palette.marbleHigh)
+                            Spacer()
+                            Image(systemName: "envelope")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(Palette.ash)
+                        }
+                    }
+                }
+            }
+
+            Section("Управление подпиской") {
+                NavigationLink {
+                    SubscriptionStatusView()
+                } label: {
+                    Text("Управление подпиской").foregroundStyle(Palette.marbleHigh)
+                }
+            }
+
             Section {
                 NavigationLink {
                     PartnerView()
@@ -73,6 +108,7 @@ struct SettingsView: View {
                 NavigationLink("Условия использования") {
                     SettingsView.LegalDocumentView(title: "Условия использования", resource: "terms")
                 }
+                linkRow("Apple Standard EULA", url: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
                 linkRow("Служба поддержки", url: supportURL)
             }
 
@@ -89,6 +125,7 @@ struct SettingsView: View {
         .contentMargins(.top, 4, for: .scrollContent)
         .scrollContentBackground(.hidden)
         .background(Palette.obsidian.ignoresSafeArea())
+        .sheet(isPresented: $showEmailLink) { EmailLinkSheet(purpose: .backup) }
         .navigationTitle("Настройки")
         // Компактный заголовок — без пустой полосы над списком.
         .navigationBarTitleDisplayMode(.inline)
