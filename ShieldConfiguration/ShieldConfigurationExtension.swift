@@ -44,7 +44,7 @@ final class ShieldConfigurationExtension: ShieldConfigurationDataSource {
             icon: UIImage(named: "ShieldIcon"),
             title: .init(text: title, color: UIColor(red: 0.95, green: 0.93, blue: 0.88, alpha: 1)),
             subtitle: .init(text: subtitle, color: UIColor(red: 0.62, green: 0.60, blue: 0.56, alpha: 1)),
-            primaryButtonLabel: .init(text: "Открыть SOS", color: UIColor(red: 0.08, green: 0.07, blue: 0.05, alpha: 1)),
+            primaryButtonLabel: .init(text: "SOS", color: UIColor(red: 0.08, green: 0.07, blue: 0.05, alpha: 1)),
             primaryButtonBackgroundColor: UIColor(red: 0.85, green: 0.70, blue: 0.40, alpha: 1),
             secondaryButtonLabel: .init(text: "Я справлюсь", color: UIColor(red: 0.85, green: 0.70, blue: 0.40, alpha: 1))
         )

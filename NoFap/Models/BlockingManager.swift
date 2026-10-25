@@ -6,9 +6,11 @@
 //  1. Фильтр `.auto()` — встроенный классификатор Apple. Режет сайты 18+ во
 //     всех браузерах, но при срабатывании показывает системную страницу
 //     Safari: свой экран туда не подставить, и узнать о срабатывании нельзя.
-//  2. Щит на приложения и сайты, которые человек сам выбрал как триггеры.
-//     Вместо них iOS показывает наш экран (расширение ShieldConfiguration),
-//     а кнопка «Открыть SOS» на нём ведёт в приложение (ShieldAction).
+//  2. Щит на сайты, которые человек сам выбрал как триггеры. Вместо них
+//     iOS показывает наш экран (расширение ShieldConfiguration), а кнопка
+//     «SOS» на нём ведёт в приложение (ShieldAction). Приложения не
+//     закрываем никогда: в том же Telegram у человека вся переписка, а
+//     отдельные чаты и каналы Экранное время различать не умеет.
 //
 
 import Foundation
@@ -36,7 +38,7 @@ final class BlockingManager {
 
     private(set) var state: State = .unknown
 
-    /// Приложения, категории и сайты, которые человек сам закрыл щитом.
+    /// Сайты и категории сайтов, которые человек сам закрыл щитом.
     private(set) var triggers: FamilyActivitySelection
 
     /// Сколько раз человек нажал кнопку на экране блокировки — то есть
@@ -49,7 +51,7 @@ final class BlockingManager {
     }
 
     var triggerCount: Int {
-        triggers.applicationTokens.count + triggers.categoryTokens.count + triggers.webDomainTokens.count
+        triggers.categoryTokens.count + triggers.webDomainTokens.count
     }
 
     init() {
@@ -96,12 +98,16 @@ final class BlockingManager {
 
     /// Сохраняет выбор из FamilyActivityPicker и сразу ставит щит.
     func setTriggers(_ selection: FamilyActivitySelection) async {
+        // Пикер Apple не умеет показывать только сайты, поэтому выбранные в
+        // нём приложения просто отбрасываем.
+        var selection = selection
+        selection.applicationTokens = []
         triggers = selection
         if let data = try? JSONEncoder().encode(selection) {
             ShieldShared.defaults.set(data, forKey: ShieldShared.Key.selection)
         }
         if isActive { applyShield() }
-        // Без уведомлений кнопка «Открыть SOS» на щите ничего не откроет.
+        // Без уведомлений кнопка «SOS» на щите ничего не откроет.
         if triggerCount > 0 {
             _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
         }
@@ -128,9 +134,9 @@ final class BlockingManager {
     }
 
     private func applyShield() {
-        store.shield.applications = triggers.applicationTokens.isEmpty ? nil : triggers.applicationTokens
-        store.shield.applicationCategories = triggers.categoryTokens.isEmpty
-            ? nil : .specific(triggers.categoryTokens)
+        // Сброс на случай, если старая версия успела закрыть приложения.
+        store.shield.applications = nil
+        store.shield.applicationCategories = nil
         store.shield.webDomains = triggers.webDomainTokens.isEmpty ? nil : triggers.webDomainTokens
         store.shield.webDomainCategories = triggers.categoryTokens.isEmpty
             ? nil : .specific(triggers.categoryTokens)

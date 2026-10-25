@@ -204,7 +204,7 @@ struct SettingsView: View {
                     showTriggerPicker = true
                 } label: {
                     HStack {
-                        Text("Приложения-триггеры").foregroundStyle(Palette.marbleHigh)
+                        Text("Сайты-триггеры").foregroundStyle(Palette.marbleHigh)
                         Spacer()
                         Text(blocking.triggerCount > 0 ? "\(blocking.triggerCount)" : "Выбрать")
                             .foregroundStyle(Palette.ash)
@@ -232,7 +232,7 @@ struct SettingsView: View {
             Text("Защита")
         } footer: {
             Text(blocking.isActive
-                 ? "Выбери приложения и сайты, с которых обычно начинается срыв. Вместо них откроется экран со стриком и кнопкой SOS."
+                 ? "Выбери сайты, с которых обычно начинается срыв, — вместо них откроется экран со стриком и кнопкой SOS. В списке есть сайты, которые ты открывал в Safari. Приложения не блокируются, даже если отметить их: чаты остаются."
                  : "Фильтр Apple закрывает сайты 18+ во всех браузерах этого iPhone. Нужен доступ к Экранному времени.")
         }
     }
