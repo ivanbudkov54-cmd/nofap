@@ -20,3 +20,13 @@ final class AppRouter {
     static let diaryTab = 1
     static let shieldPrompt = "Что стало триггером и что ты сделаешь чтобы в дальнейшем избежать срыва?"
 }
+
+/// Просьба открыть SOS снаружи: с экрана блокировки через уведомление или по
+/// ссылке nofap://sos. Синглтон, потому что уведомление может прийти, пока
+/// RestoreGate ещё не создал менеджеры, и даже до первого окна.
+@MainActor
+@Observable
+final class SOSLaunch {
+    static let shared = SOSLaunch()
+    var requested = false
+}

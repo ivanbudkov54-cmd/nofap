@@ -10,6 +10,7 @@ struct NoFapApp: App {
 
     init() {
         Face.register()
+        NotificationRouter.shared.install()
     }
 
     var body: some Scene {

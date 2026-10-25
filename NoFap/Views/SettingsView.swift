@@ -8,6 +8,7 @@
 
 import SwiftUI
 import WebKit
+import FamilyControls
 
 struct SettingsView: View {
 
@@ -19,6 +20,7 @@ struct SettingsView: View {
     @Environment(CheckInManager.self) private var checkIns
     @Environment(ThemeManager.self) private var themes
     @Environment(PremiumStore.self) private var subscriptions
+    @Environment(BlockingManager.self) private var blocking
     @Environment(\.openURL) private var openURL
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -30,6 +32,8 @@ struct SettingsView: View {
     @State private var isDeleting = false
     @State private var failure: String?
     @State private var showEmailLink = false
+    @State private var showTriggerPicker = false
+    @State private var triggerDraft = FamilyActivitySelection()
 
     private let supportURL = AppInfo.supportURL
 
@@ -59,6 +63,8 @@ struct SettingsView: View {
                     }
                 }
             }
+
+            protectionSection
 
             Section("Управление подпиской") {
                 NavigationLink {
@@ -126,6 +132,10 @@ struct SettingsView: View {
         .scrollContentBackground(.hidden)
         .background(Palette.obsidian.ignoresSafeArea())
         .sheet(isPresented: $showEmailLink) { EmailLinkSheet(purpose: .backup) }
+        .familyActivityPicker(isPresented: $showTriggerPicker, selection: $triggerDraft)
+        .onChange(of: triggerDraft) { _, selection in
+            Task { await blocking.setTriggers(selection) }
+        }
         .navigationTitle("Настройки")
         // Компактный заголовок — без пустой полосы над списком.
         .navigationBarTitleDisplayMode(.inline)
@@ -176,6 +186,54 @@ struct SettingsView: View {
                 }
                 .allowsHitTesting(true)
             }
+        }
+    }
+
+    /// Фильтр 18+ и щит на приложения-триггеры.
+    private var protectionSection: some View {
+        Section {
+            if blocking.isActive {
+                Label {
+                    Text("Фильтр сайтов 18+ включён").foregroundStyle(Palette.marbleHigh)
+                } icon: {
+                    Image(systemName: "checkmark.shield.fill").foregroundStyle(Palette.gold)
+                }
+
+                Button {
+                    triggerDraft = blocking.triggers
+                    showTriggerPicker = true
+                } label: {
+                    HStack {
+                        Text("Приложения-триггеры").foregroundStyle(Palette.marbleHigh)
+                        Spacer()
+                        Text(blocking.triggerCount > 0 ? "\(blocking.triggerCount)" : "Выбрать")
+                            .foregroundStyle(Palette.ash)
+                    }
+                }
+
+                if blocking.stops > 0 {
+                    HStack {
+                        Text("Остановок на щите").foregroundStyle(Palette.marbleHigh)
+                        Spacer()
+                        Text("\(blocking.stops)").foregroundStyle(Palette.gold)
+                    }
+                }
+            } else if case .denied = blocking.state {
+                Text("Доступ к Экранному времени не выдан.")
+                    .foregroundStyle(Palette.ash)
+                linkRow("Открыть настройки iOS", url: URL(string: UIApplication.openSettingsURLString)!)
+            } else {
+                Button("Включить защиту") {
+                    Task { await blocking.enableProtection() }
+                }
+                .foregroundStyle(Palette.gold)
+            }
+        } header: {
+            Text("Защита")
+        } footer: {
+            Text(blocking.isActive
+                 ? "Выбери приложения и сайты, с которых обычно начинается срыв. Вместо них откроется экран со стриком и кнопкой SOS."
+                 : "Фильтр Apple закрывает сайты 18+ во всех браузерах этого iPhone. Нужен доступ к Экранному времени.")
         }
     }
 

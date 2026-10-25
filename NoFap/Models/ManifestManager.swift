@@ -39,6 +39,13 @@ struct UserPainManifest: Codable, Equatable {
         let loss = pastYearLosses.first ?? "то, что уже нельзя вернуть"
         return "Ты лично написал это в первый день: после срыва тебя ждет \(first) и \(second). Ты уже отдал этой привычке \(loss). Неужели ты готов добровольно стать тем, кого описал через 5 лет?"
     }
+
+    /// Короткая версия для экрана блокировки: места под подзаголовок там мало.
+    var shieldQuote: String {
+        let feeling = (postRelapseFeeling.first ?? "пустота").lowercased()
+        let loss = (pastYearLosses.first ?? "то, что уже не вернуть").lowercased()
+        return "Ты сам написал: после срыва — \(feeling). Ты уже отдал этому \(loss). Не сейчас."
+    }
 }
 
 @MainActor

@@ -17,6 +17,7 @@ struct ContentView: View {
     @Environment(CloudSync.self) private var cloud
     @Environment(AvatarProgressManager.self) private var xp
     @Environment(AppBackup.self) private var backup
+    @Environment(ManifestManager.self) private var manifest
     @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -35,6 +36,7 @@ struct ContentView: View {
         }
         .task {
             blocking.refresh()
+            updateShieldContext()
             if backup.needsProtection {
                 backup.needsProtection = false
                 if BlockingManager.isAvailable, !blocking.isActive { await blocking.enableProtection() }
@@ -66,6 +68,10 @@ struct ContentView: View {
             Task { await squad.push(from: streak, nickname: partner.nickname) }
             Task { await adaptReminder() }
             Task { await cloud.push(streak: streak) }
+            updateShieldContext()
+        }
+        .onChange(of: manifest.currentManifest) { _, _ in
+            updateShieldContext()
         }
         .onChange(of: journal.revision) { _, _ in
             Task { await cloud.syncJournal(journal) }
@@ -96,6 +102,10 @@ struct ContentView: View {
         // Здесь, а не в RootView: ссылку могут открыть ещё до конца
         // онбординга — код подождёт в менеджере, пока появятся вкладки.
         .onOpenURL { url in
+            if url == ShieldShared.sosURL {
+                SOSLaunch.shared.requested = true
+                return
+            }
             guard let invite = PartnerLink.invite(from: url) else { return }
             switch invite.kind {
             case .partner:
@@ -106,6 +116,14 @@ struct ContentView: View {
                 squad.pendingCode = invite.code
             }
         }
+    }
+
+    /// Экран блокировки показывает стрик и строку из «Договора».
+    private func updateShieldContext() {
+        blocking.updateShieldContext(
+            streakDays: streak.currentStreak,
+            quote: manifest.currentManifest?.shieldQuote
+        )
     }
 
     /// Умное напоминание — Premium: без подписки час всегда из анкеты.

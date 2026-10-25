@@ -114,6 +114,9 @@ struct HomeView: View {
             .padding(24)
             .fittedSheet()
         }
+        // SOS, запрошенный снаружи: кнопка на экране блокировки → уведомление.
+        .onAppear(perform: openRequestedSOS)
+        .onChange(of: SOSLaunch.shared.requested) { _, _ in openRequestedSOS() }
         .sheet(isPresented: $showSOS, onDismiss: { sosPath = [] }) {
             NavigationStack(path: $sosPath) {
                 sosMenu
@@ -525,6 +528,12 @@ struct HomeView: View {
         return partner.isPaired
             ? "Щит сохранит стрик, если сразу честно разобрать срыв в дневнике. Он даётся раз в месяц. Без щита счётчик обнулится, рекорд останется. Напарник увидит, что счёт начался заново, но не узнает причину."
             : "Щит сохранит стрик, если сразу честно разобрать срыв в дневнике. Он даётся раз в месяц. Без щита счётчик обнулится, рекорд останется. Отметку видишь только ты."
+    }
+
+    private func openRequestedSOS() {
+        guard SOSLaunch.shared.requested else { return }
+        SOSLaunch.shared.requested = false
+        showSOS = true
     }
 
     private var greetingNote: LocalizedStringResource {

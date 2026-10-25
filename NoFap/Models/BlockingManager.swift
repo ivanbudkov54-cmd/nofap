@@ -2,14 +2,19 @@
 //  BlockingManager.swift
 //  NoFap
 //
-//  Обёртка над Screen Time API. Фильтр `.auto()` использует встроенный
-//  классификатор Apple: работает во всех браузерах и не требует
-//  поддерживать собственный список доменов.
+//  Обёртка над Screen Time API. Два слоя:
+//  1. Фильтр `.auto()` — встроенный классификатор Apple. Режет сайты 18+ во
+//     всех браузерах, но при срабатывании показывает системную страницу
+//     Safari: свой экран туда не подставить, и узнать о срабатывании нельзя.
+//  2. Щит на приложения и сайты, которые человек сам выбрал как триггеры.
+//     Вместо них iOS показывает наш экран (расширение ShieldConfiguration),
+//     а кнопка «Открыть SOS» на нём ведёт в приложение (ShieldAction).
 //
 
 import Foundation
 import FamilyControls
 import ManagedSettings
+import UserNotifications
 import os
 
 @Observable
@@ -24,24 +29,40 @@ final class BlockingManager {
         case failed(String)   // ошибка при включении
     }
 
-    /// Блокировке нужно разрешение Apple на Family Controls (подаётся
-    /// отдельно в аккаунте разработчика). Пока его нет, запрос доступа к
-    /// Экранному времени всегда падает — поэтому шаг включения защиты и
-    /// обещания блокировки в онбординге скрыты. Получили разрешение —
-    /// добавить entitlement и поставить true.
-    static let isAvailable = false
+    /// Apple выдала разрешение на Family Controls.
+    static let isAvailable = true
 
     private let store = ManagedSettingsStore()
 
     private(set) var state: State = .unknown
+
+    /// Приложения, категории и сайты, которые человек сам закрыл щитом.
+    private(set) var triggers: FamilyActivitySelection
+
+    /// Сколько раз человек нажал кнопку на экране блокировки — то есть
+    /// остановился. Пишет расширение, поэтому читаем при каждом показе.
+    var stops: Int { ShieldShared.stops }
 
     var isActive: Bool {
         if case .active = state { return true }
         return false
     }
 
+    var triggerCount: Int {
+        triggers.applicationTokens.count + triggers.categoryTokens.count + triggers.webDomainTokens.count
+    }
+
+    init() {
+        if let data = ShieldShared.defaults.data(forKey: ShieldShared.Key.selection),
+           let saved = try? JSONDecoder().decode(FamilyActivitySelection.self, from: data) {
+            triggers = saved
+        } else {
+            triggers = FamilyActivitySelection()
+        }
+    }
+
     /// Проверяет статус при запуске: если разрешение уже выдано, просто
-    /// переустанавливает фильтр — настройки могли сброситься после обновления iOS.
+    /// переустанавливает настройки — они могли сброситься после обновления iOS.
     func refresh() {
         guard Self.isAvailable else { return }
         switch AuthorizationCenter.shared.authorizationStatus {
@@ -51,7 +72,7 @@ final class BlockingManager {
             state = .unknown
         default:
             // .approved, а с iOS 26 ещё и .approvedWithDataAccess.
-            applyFilter()
+            apply()
         }
     }
 
@@ -59,7 +80,7 @@ final class BlockingManager {
     func enableProtection() async {
         do {
             try await Self.requestAuthorization()
-            applyFilter()
+            apply()
         } catch {
             // Раньше любая ошибка означала «пользователь отказал», и человека
             // отправляли в Настройки снимать запрет, которого он не ставил.
@@ -73,6 +94,26 @@ final class BlockingManager {
         }
     }
 
+    /// Сохраняет выбор из FamilyActivityPicker и сразу ставит щит.
+    func setTriggers(_ selection: FamilyActivitySelection) async {
+        triggers = selection
+        if let data = try? JSONEncoder().encode(selection) {
+            ShieldShared.defaults.set(data, forKey: ShieldShared.Key.selection)
+        }
+        if isActive { applyShield() }
+        // Без уведомлений кнопка «Открыть SOS» на щите ничего не откроет.
+        if triggerCount > 0 {
+            _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
+        }
+    }
+
+    /// Экран блокировки рисует другой процесс — он видит только App Group.
+    func updateShieldContext(streakDays: Int, quote: String?) {
+        let defaults = ShieldShared.defaults
+        defaults.set(streakDays, forKey: ShieldShared.Key.streakDays)
+        defaults.set(quote, forKey: ShieldShared.Key.quote)
+    }
+
     /// `AuthorizationCenter` не Sendable, поэтому синглтон берётся уже внутри
     /// неизолированного контекста — иначе он уезжал бы с главного актора
     /// наружу, и это была бы гонка данных.
@@ -80,8 +121,18 @@ final class BlockingManager {
         try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
     }
 
-    private func applyFilter() {
+    private func apply() {
         store.webContent.blockedByFilter = .auto()
+        applyShield()
         state = .active
+    }
+
+    private func applyShield() {
+        store.shield.applications = triggers.applicationTokens.isEmpty ? nil : triggers.applicationTokens
+        store.shield.applicationCategories = triggers.categoryTokens.isEmpty
+            ? nil : .specific(triggers.categoryTokens)
+        store.shield.webDomains = triggers.webDomainTokens.isEmpty ? nil : triggers.webDomainTokens
+        store.shield.webDomainCategories = triggers.categoryTokens.isEmpty
+            ? nil : .specific(triggers.categoryTokens)
     }
 }
