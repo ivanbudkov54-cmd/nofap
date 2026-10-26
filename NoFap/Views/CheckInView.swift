@@ -132,13 +132,7 @@ struct CheckInView: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 16, style: .continuous)
                                 .fill(.ultraThinMaterial)
-                            VStack(spacing: 8) {
-                                Image(systemName: "lock.fill")
-                                    .foregroundStyle(Palette.gold)
-                                Text("Доступно в Pro")
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .foregroundStyle(Ink.textPrimary)
-                            }
+                            ProLockBadge()
                         }
                     }
                     .buttonStyle(.plain)
