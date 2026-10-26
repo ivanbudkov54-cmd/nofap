@@ -245,7 +245,9 @@ private struct CircularStreakView: View {
 
     var body: some View {
         Gauge(value: entry.progress) {
-            Image(systemName: "flame.fill")
+            Image("FlameIcon")
+                .resizable()
+                .scaledToFit()
         } currentValueLabel: {
             Text("\(entry.days)")
                 .font(WidgetPalette.display(16))
@@ -264,7 +266,11 @@ private struct RectangularStreakView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 4) {
-                Image(systemName: "flame.fill")
+                // Тот же огонь, что на кнопке «Держусь» в приложении.
+                Image("FlameIcon")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 11, height: 13)
                 Text("Без срыва")
                 Spacer(minLength: 0)
                 if entry.checkedIn {
