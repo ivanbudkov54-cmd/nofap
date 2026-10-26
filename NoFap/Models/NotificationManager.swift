@@ -41,14 +41,14 @@ final class NotificationManager {
     }
 
     private static let streakBodies = [
-        "⚠️ Осталось 3 часа! Зайди и сохрани свой стрик в Spartan Pro.",
+        "⚠️ Осталось 3 часа! Зайди и сохрани свой стрик в StopFap.",
         "Твой прогресс под угрозой. Сделай отметку за день прямо сейчас!",
         "Не сбавляй темп. До сброса стрика осталось всего 3 часа.",
     ]
 
     private static let diaryBodies = [
         "Как прошел твой день? Зафиксируй мысли и состояние в дневнике.",
-        "Вечерняя рефлексия: удели 2 минуты своему дневнику Spartan.",
+        "Вечерняя рефлексия: удели 2 минуты своему дневнику в StopFap.",
         "Чистый разум начинается с честной записи. Заполни дневник за сегодня.",
     ]
 
@@ -100,7 +100,7 @@ final class NotificationManager {
     func triggerTestNotification() async {
         guard await isAuthorizedOrRequest() else { return }
         let content = UNMutableNotificationContent()
-        content.title = "Spartan Pro"
+        content.title = "StopFap"
         content.body = "Тестовое уведомление. Если ты это видишь — разрешения в порядке."
         content.sound = .default
         content.userInfo = [NotificationDestination.userInfoKey: NotificationDestination.home.rawValue]
