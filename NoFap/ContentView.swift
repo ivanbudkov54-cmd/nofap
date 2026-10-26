@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct ContentView: View {
 
@@ -118,12 +119,17 @@ struct ContentView: View {
         }
     }
 
-    /// Экран блокировки показывает стрик и строку из «Договора».
+    /// Экран блокировки и виджет живут в других процессах и читают стрик,
+    /// цель и строку из «Договора» из App Group.
     private func updateShieldContext() {
         blocking.updateShieldContext(
             streakDays: streak.currentStreak,
             quote: manifest.currentManifest?.shieldQuote
         )
+        let shared = ShieldShared.defaults
+        shared.set(streak.personalGoalDays, forKey: ShieldShared.Key.goalDays)
+        shared.set(streak.lastCheckinDate, forKey: ShieldShared.Key.lastCheckin)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     /// Умное напоминание — Premium: без подписки час всегда из анкеты.
