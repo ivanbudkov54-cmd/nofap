@@ -154,11 +154,12 @@ struct ContentView: View {
         WidgetCenter.shared.reloadAllTimelines()
     }
 
-    /// Умное напоминание — Premium: без подписки час всегда из анкеты.
+    /// Умное напоминание — Pro: без подписки час всегда из анкеты,
+    /// а нажатие ведёт на главную, а не в экспресс-чекин.
     private func adaptReminder() async {
         let peak = premium.isPremium
             ? UrgeClock.peakHour(sos: TriggerLog.entries(), relapses: RelapseLog.dates())
             : nil
-        await reminder.adapt(personalPeak: peak)
+        await reminder.adapt(personalPeak: peak, isPro: premium.isPremium)
     }
 }

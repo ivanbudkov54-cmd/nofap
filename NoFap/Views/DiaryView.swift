@@ -132,12 +132,25 @@ struct DiaryView: View {
         } message: {
             Text("Её нельзя будет вернуть.")
         }
-        .onAppear { openShieldNoteIfNeeded() }
+        .onAppear {
+            openShieldNoteIfNeeded()
+            openRequestedCheckIn()
+        }
+        .onChange(of: OpenRequest.shared.checkIn) { _, _ in openRequestedCheckIn() }
         .onChange(of: router.openRelapseReview) { _, open in
             if open { openShieldNoteIfNeeded() }
         }
         .fullScreenCover(isPresented: $showCheckIn) {
             NavigationStack { CheckInView() }
+        }
+    }
+
+    /// Нажатие на вопрос «как ты?» перед часом тяги.
+    private func openRequestedCheckIn() {
+        guard OpenRequest.shared.checkIn else { return }
+        OpenRequest.shared.checkIn = false
+        subscriptions.checkProAccess(for: "Экспресс-чекин целиком доступен в Pro") {
+            showCheckIn = true
         }
     }
 

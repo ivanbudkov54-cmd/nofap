@@ -85,6 +85,9 @@ struct RootView: View {
         case .home: tab = AppRouter.homeTab
         case .diary: tab = AppRouter.diaryTab
         case .knowledge: tab = AppRouter.knowledgeTab
+        case .checkIn:
+            tab = AppRouter.diaryTab
+            OpenRequest.shared.checkIn = true
         }
     }
 }

@@ -17,6 +17,8 @@ nonisolated enum NotificationDestination: String {
     case home
     case diary
     case knowledge
+    /// Экспресс-чекин — из вопроса «как ты?» перед часом тяги.
+    case checkIn
 
     /// Ключ в userInfo уведомления.
     static let userInfoKey = "destination"

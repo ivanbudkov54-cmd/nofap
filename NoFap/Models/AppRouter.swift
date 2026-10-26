@@ -33,4 +33,6 @@ final class OpenRequest {
     static let shared = OpenRequest()
     var sos = false
     var destination: NotificationDestination?
+    /// Открыть экспресс-чекин, когда дневник появится на экране.
+    var checkIn = false
 }
