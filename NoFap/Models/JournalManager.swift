@@ -99,6 +99,11 @@ final class JournalManager {
         persist()
     }
 
+    /// Есть ли за календарный день обычная запись (манифест точки А не считается).
+    func hasWrittenToday(asOf now: Date = Date()) -> Bool {
+        entries.contains { !$0.isManifest && Calendar.current.isDate($0.date, inSameDayAs: now) }
+    }
+
     func deleteEntry(_ entry: JournalEntry) {
         entries.removeAll { $0.id == entry.id }
         persist()

@@ -27,40 +27,65 @@ struct RootView: View {
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 
+    /// Выбранная вкладка живёт здесь, а не в AppRouter: так её смена не
+    /// пересобирает остальные экраны. Меню «Ещё» нет — вкладок ровно пять,
+    /// поэтому привязка больше не сбрасывает навигацию, как раньше. Тур
+    /// вкладки по-прежнему не переключает — показывает подсказки поверх.
+    @State private var tab = AppRouter.homeTab
+
     var body: some View {
-        // Без TabView(selection:): у вкладок в «Ещё» привязка выбранной
-        // вкладки сбрасывала навигацию при каждом обновлении данных. Поэтому
-        // тур не переключает вкладки сам — показывает подсказки поверх.
-        TabView {
+        TabView(selection: $tab) {
             HomeView()
                 .tabItem { Label("Главная", systemImage: "house.fill") }
+                .tag(AppRouter.homeTab)
 
             NavigationStack {
                 ChallengesView()
             }
             .tabItem { Label("Челленджи", systemImage: "flag.fill") }
+            .tag(1)
 
             NavigationStack {
                 DiaryView()
             }
             .tabItem { Label("Дневник", systemImage: "square.and.pencil") }
+            .tag(AppRouter.diaryTab)
 
             NavigationStack {
                 KnowledgeView()
             }
             .tabItem { Label("Знания", systemImage: "text.book.closed.fill") }
+            .tag(AppRouter.knowledgeTab)
 
             NavigationStack {
                 AvatarScreen()
             }
             .tabItem { Label("Аватар", systemImage: "figure.strengthtraining.traditional") }
+            .tag(4)
         }
         .tint(Palette.gold)
+        // Нажатие на напоминание открывает его вкладку; SOS — главную,
+        // там его покажет HomeView.
+        .onAppear(perform: openRequestedTab)
+        .onChange(of: OpenRequest.shared.destination) { _, _ in openRequestedTab() }
+        .onChange(of: OpenRequest.shared.sos) { _, requested in
+            if requested { tab = AppRouter.homeTab }
+        }
         // Всё, что следит за состоянием (приглашения, пейвол, тур,
         // подсказки), — в модификаторах, а не в теле RootView: иначе каждое
         // изменение пересобирало TabView и меню «Ещё» сбрасывало экран.
         .modifier(InviteJoinSheets())
         .modifier(RootOverlays())
+    }
+
+    private func openRequestedTab() {
+        guard let destination = OpenRequest.shared.destination else { return }
+        OpenRequest.shared.destination = nil
+        switch destination {
+        case .home: tab = AppRouter.homeTab
+        case .diary: tab = AppRouter.diaryTab
+        case .knowledge: tab = AppRouter.knowledgeTab
+        }
     }
 }
 

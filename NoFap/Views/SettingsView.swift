@@ -21,6 +21,7 @@ struct SettingsView: View {
     @Environment(ThemeManager.self) private var themes
     @Environment(PremiumStore.self) private var subscriptions
     @Environment(BlockingManager.self) private var blocking
+    @Environment(NotificationManager.self) private var notifications
     @Environment(\.openURL) private var openURL
 
     @AppStorage("onboardingDone") private var onboardingDone = false
@@ -99,6 +100,15 @@ struct SettingsView: View {
                 }
                 .tint(Palette.gold)
             }
+
+            #if DEBUG
+            Section("Отладка") {
+                Button("Тестовое уведомление (через 5 сек)") {
+                    Task { await notifications.triggerTestNotification() }
+                }
+                .foregroundStyle(Palette.marbleHigh)
+            }
+            #endif
 
             Section("Данные") {
                 Button("Сбросить текущий стрик") {

@@ -106,6 +106,14 @@ final class StreakManager {
         return calendar.isDate(last, inSameDayAs: now)
     }
 
+    /// Когда стрик сгорит, если не отметиться: стрик продолжается, только
+    /// если отметиться на следующий день после последней отметки, — значит,
+    /// конец этого следующего дня. nil — продолжать нечего.
+    var streakDeadlineDate: Date? {
+        guard currentStreak > 0, let last = lastCheckinDate else { return nil }
+        return calendar.date(byAdding: .day, value: 2, to: calendar.startOfDay(for: last))
+    }
+
     /// Дата, с которой пользователь включил защиту.
     var protectionStartDate: Date? {
         defaults.object(forKey: Key.startDate) as? Date

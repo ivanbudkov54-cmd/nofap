@@ -2,9 +2,10 @@
 //  NotificationRouter.swift
 //  NoFap
 //
-//  Делегат уведомлений. Нажатие на уведомление с экрана блокировки
-//  открывает SOS. Ставится в init приложения — до того, как iOS передаст
-//  нажатие, иначе при холодном запуске оно потеряется.
+//  Делегат уведомлений — один на всё приложение. Уведомление с экрана
+//  блокировки открывает SOS, напоминания — свою вкладку. Ставится в init
+//  приложения — до того, как iOS передаст нажатие, иначе при холодном
+//  запуске оно потеряется.
 //
 
 import UserNotifications
@@ -22,8 +23,13 @@ final class NotificationRouter: NSObject, UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse
     ) async {
         let info = response.notification.request.content.userInfo
-        guard info[ShieldShared.sosUserInfoKey] as? String == ShieldShared.sosUserInfoValue else { return }
-        await MainActor.run { SOSLaunch.shared.requested = true }
+        if info[ShieldShared.sosUserInfoKey] as? String == ShieldShared.sosUserInfoValue {
+            await MainActor.run { OpenRequest.shared.sos = true }
+            return
+        }
+        guard let raw = info[NotificationDestination.userInfoKey] as? String,
+              let destination = NotificationDestination(rawValue: raw) else { return }
+        await MainActor.run { OpenRequest.shared.destination = destination }
     }
 
     /// Без этого уведомления, пришедшие при открытом приложении, iOS прячет.

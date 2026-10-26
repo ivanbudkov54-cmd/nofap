@@ -116,7 +116,7 @@ struct HomeView: View {
         }
         // SOS, запрошенный снаружи: кнопка на экране блокировки → уведомление.
         .onAppear(perform: openRequestedSOS)
-        .onChange(of: SOSLaunch.shared.requested) { _, _ in openRequestedSOS() }
+        .onChange(of: OpenRequest.shared.sos) { _, _ in openRequestedSOS() }
         .sheet(isPresented: $showSOS, onDismiss: { sosPath = [] }) {
             NavigationStack(path: $sosPath) {
                 sosMenu
@@ -531,8 +531,8 @@ struct HomeView: View {
     }
 
     private func openRequestedSOS() {
-        guard SOSLaunch.shared.requested else { return }
-        SOSLaunch.shared.requested = false
+        guard OpenRequest.shared.sos else { return }
+        OpenRequest.shared.sos = false
         showSOS = true
     }
 

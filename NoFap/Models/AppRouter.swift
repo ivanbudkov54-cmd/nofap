@@ -17,16 +17,20 @@ final class AppRouter {
     var freezeDateBeforeShield: Date?
     var toast: String?
 
-    static let diaryTab = 1
+    static let homeTab = 0
+    static let diaryTab = 2
+    static let knowledgeTab = 3
     static let shieldPrompt = "Что стало триггером и что ты сделаешь чтобы в дальнейшем избежать срыва?"
 }
 
-/// Просьба открыть SOS снаружи: с экрана блокировки через уведомление или по
-/// ссылке nofap://sos. Синглтон, потому что уведомление может прийти, пока
-/// RestoreGate ещё не создал менеджеры, и даже до первого окна.
+/// Просьба открыть экран снаружи: SOS с экрана блокировки или по ссылке
+/// nofap://sos, вкладку — по нажатию на напоминание. Синглтон, потому что
+/// уведомление может прийти, пока RestoreGate ещё не создал менеджеры, и
+/// даже до первого окна.
 @MainActor
 @Observable
-final class SOSLaunch {
-    static let shared = SOSLaunch()
-    var requested = false
+final class OpenRequest {
+    static let shared = OpenRequest()
+    var sos = false
+    var destination: NotificationDestination?
 }

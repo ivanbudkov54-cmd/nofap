@@ -13,6 +13,7 @@ struct ContentView: View {
     @Environment(PartnerManager.self) private var partner
     @Environment(SquadManager.self) private var squad
     @Environment(ReminderManager.self) private var reminder
+    @Environment(NotificationManager.self) private var notifications
     @Environment(PremiumStore.self) private var premium
     @Environment(JournalManager.self) private var journal
     @Environment(CloudSync.self) private var cloud
@@ -43,6 +44,7 @@ struct ContentView: View {
                 if BlockingManager.isAvailable, !blocking.isActive { await blocking.enableProtection() }
             }
             await reminder.refresh()
+            await refreshLocalNotifications()
             await partner.refresh()
             await squad.refresh()
             await premium.start()
@@ -70,12 +72,24 @@ struct ContentView: View {
             Task { await adaptReminder() }
             Task { await cloud.push(streak: streak) }
             updateShieldContext()
+            if streak.hasCheckedInToday || streak.currentStreak == 0 {
+                notifications.cancelStreakWarning()
+            }
+            Task { await refreshLocalNotifications() }
         }
         .onChange(of: manifest.currentManifest) { _, _ in
             updateShieldContext()
         }
         .onChange(of: journal.revision) { _, _ in
             Task { await cloud.syncJournal(journal) }
+            if journal.hasWrittenToday() {
+                notifications.cancelDiaryReminder()
+            }
+            Task { await refreshLocalNotifications() }
+        }
+        .onChange(of: hasCompletedOnboarding) { _, done in
+            guard done, onboardingDone else { return }
+            Task { await refreshLocalNotifications() }
         }
         // И сразу, как только появилась пара или приглашение: иначе
         // напарник видел бы нули до первой отметки.
@@ -92,6 +106,7 @@ struct ContentView: View {
             Task { await partner.refresh() }
             Task { await squad.refresh() }
             Task { await cloud.syncJournal(journal) }
+            Task { await refreshLocalNotifications() }
             Task {
                 await premium.refreshEntitlements()
                 await adaptReminder()
@@ -104,7 +119,7 @@ struct ContentView: View {
         // онбординга — код подождёт в менеджере, пока появятся вкладки.
         .onOpenURL { url in
             if url == ShieldShared.sosURL {
-                SOSLaunch.shared.requested = true
+                OpenRequest.shared.sos = true
                 return
             }
             guard let invite = PartnerLink.invite(from: url) else { return }
@@ -117,6 +132,13 @@ struct ContentView: View {
                 squad.pendingCode = invite.code
             }
         }
+    }
+
+    /// Напоминания о стрике, дневнике и знаниях — только после онбординга,
+    /// чтобы запрос на уведомления не всплыл посреди анкеты.
+    private func refreshLocalNotifications() async {
+        guard onboardingDone, hasCompletedOnboarding else { return }
+        await notifications.scheduleDailyNotifications(streak: streak, journal: journal)
     }
 
     /// Экран блокировки и виджет живут в других процессах и читают стрик,
