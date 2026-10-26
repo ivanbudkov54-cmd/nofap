@@ -495,7 +495,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Entitlements/NoFap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 346BWYNX2C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -531,7 +531,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Entitlements/NoFap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 346BWYNX2C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -565,7 +565,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Entitlements/ShieldConfiguration.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 346BWYNX2C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ShieldConfiguration-Info.plist";
@@ -591,7 +591,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Entitlements/ShieldConfiguration.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 346BWYNX2C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ShieldConfiguration-Info.plist";
@@ -617,7 +617,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Entitlements/ShieldAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 346BWYNX2C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ShieldAction-Info.plist";
@@ -643,7 +643,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Entitlements/ShieldAction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 346BWYNX2C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ShieldAction-Info.plist";
@@ -669,7 +669,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Entitlements/StopFapWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 346BWYNX2C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "StopFapWidget-Info.plist";
@@ -695,7 +695,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Entitlements/StopFapWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 346BWYNX2C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "StopFapWidget-Info.plist";

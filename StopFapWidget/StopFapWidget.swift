@@ -79,34 +79,43 @@ private func daysWord(_ days: Int) -> String {
 
 // MARK: - Сизиф с числом на валуне
 
-/// Центр валуна вымерен по фото — те же доли, что в SisyphusStreakCard.
+/// Фото приближено к валуну и Сизифу: левый нижний склон горы обрезан,
+/// чтобы камень с числом стоял ближе к центру виджета. Центр валуна
+/// вымерен по фото — те же доли, что в SisyphusStreakCard.
 private struct SisyphusStreak: View {
     let days: Int
     let goal: Int
+
+    private static let aspect = 1114.0 / 1066.0
+    private static let zoom = 1.35
+    /// Точка фото (в долях), которая встаёт в центр виджета.
+    private static let focus = CGPoint(x: 0.66, y: 0.52)
+    private static let boulder = CGPoint(x: 0.70, y: 0.354)
 
     var body: some View {
         GeometryReader { geo in
             let w = geo.size.width
             let h = geo.size.height
-            // Фото чуть выше квадрата: заполняем по ширине и центрируем.
-            let imageHeight = w * (1114.0 / 1066.0)
-            let boulderY = imageHeight * 0.354 - (imageHeight - h) / 2
+            let imageWidth = w * Self.zoom
+            let imageHeight = imageWidth * Self.aspect
+            // Сдвиг фото, но так, чтобы оно всегда закрывало весь виджет.
+            let x0 = min(0, max(w - imageWidth, w / 2 - Self.focus.x * imageWidth))
+            let y0 = min(0, max(h - imageHeight, h / 2 - Self.focus.y * imageHeight))
 
             ZStack {
                 Image("WidgetSisyphus")
                     .resizable()
-                    .scaledToFill()
-                    .frame(width: w, height: h)
-                    .clipped()
+                    .frame(width: imageWidth, height: imageHeight)
+                    .position(x: x0 + imageWidth / 2, y: y0 + imageHeight / 2)
 
                 VStack(spacing: 1) {
                     ZStack {
                         Text("\(days)")
-                            .font(WidgetPalette.display(w * 0.2))
+                            .font(WidgetPalette.display(w * 0.22))
                             .foregroundStyle(.black.opacity(0.7))
                             .offset(x: w * 0.012, y: w * 0.017)
                         Text("\(days)")
-                            .font(WidgetPalette.display(w * 0.2))
+                            .font(WidgetPalette.display(w * 0.22))
                             .foregroundStyle(WidgetPalette.goldFill)
                             .shadow(color: WidgetPalette.goldLight.opacity(0.7), radius: 6)
                     }
@@ -114,13 +123,15 @@ private struct SisyphusStreak: View {
                     .lineLimit(1)
 
                     Text("из \(goal)")
-                        .font(WidgetPalette.display(w * 0.06, bold: false))
+                        .font(WidgetPalette.display(w * 0.065, bold: false))
                         .foregroundStyle(WidgetPalette.marbleHigh)
                         .shadow(color: .black.opacity(0.6), radius: 2)
                 }
-                .frame(width: w * 0.4)
-                .position(x: w * 0.70, y: boulderY)
+                .frame(width: imageWidth * 0.34)
+                .position(x: x0 + Self.boulder.x * imageWidth, y: y0 + Self.boulder.y * imageHeight)
             }
+            .frame(width: w, height: h)
+            .clipped()
         }
     }
 }
@@ -145,7 +156,7 @@ private struct MediumStreakView: View {
     var body: some View {
         HStack(spacing: 0) {
             SisyphusStreak(days: entry.days, goal: entry.goal)
-                .aspectRatio(1, contentMode: .fit)
+                .frame(width: 150)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("БЕЗ СРЫВА")
@@ -189,6 +200,7 @@ private struct MediumStreakView: View {
                         .padding(.horizontal, 12)
                         .padding(.vertical, 7)
                         .overlay(Capsule().strokeBorder(WidgetPalette.garnet, lineWidth: 1.5))
+                        .fixedSize()
                     }
                 }
             }
@@ -204,7 +216,13 @@ private struct CheckInLabel: View {
     var body: some View {
         HStack(spacing: 4) {
             Image(systemName: checkedIn ? "checkmark.circle.fill" : "circle")
-            Text(checkedIn ? "Отмечено" : "Отметься")
+            // Ширина — по самой длинной подписи: значок не прыгает, когда
+            // в полночь «Отмечено» сменяется на «Отметься».
+            ZStack(alignment: .leading) {
+                Text("Отмечено").hidden()
+                Text("Отметься").hidden()
+                Text(checkedIn ? "Отмечено" : "Отметься")
+            }
         }
         .lineLimit(1)
         .fixedSize()
