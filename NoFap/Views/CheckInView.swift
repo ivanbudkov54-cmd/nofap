@@ -127,7 +127,7 @@ struct CheckInView: View {
             .overlay {
                 if !subscriptions.isPro {
                     Button {
-                        subscriptions.checkProAccess(for: "Отслеживание уровня энергии и физического тонуса входит в Premium") {}
+                        subscriptions.checkProAccess(for: "Отслеживание уровня энергии и физического тонуса входит в Spartan Pro") {}
                     } label: {
                         ZStack {
                             RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -135,7 +135,7 @@ struct CheckInView: View {
                             VStack(spacing: 8) {
                                 Image(systemName: "lock.fill")
                                     .foregroundStyle(Palette.gold)
-                                Text("Доступно в Premium")
+                                Text("Доступно в Pro")
                                     .font(.system(size: 13, weight: .semibold))
                                     .foregroundStyle(Ink.textPrimary)
                             }

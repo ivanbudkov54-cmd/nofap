@@ -58,16 +58,16 @@ struct AvatarView: View {
 
             VStack(spacing: 12) {
                 ProLockBadge()
-                Text("Аватар и его прокачка доступны в Premium")
+                Text("Аватар и его прокачка доступны в Spartan Pro")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(Palette.marbleHigh)
                     .multilineTextAlignment(.center)
-                Text("Сила, энергия и смена формы открываются вместе с подпиской.")
+                Text("Сила, энергия и смена формы открываются вместе с Pro.")
                     .font(.system(size: 14))
                     .foregroundStyle(Palette.ash)
                     .multilineTextAlignment(.center)
-                Button("Открыть Premium") {
-                    subscriptions.checkProAccess(for: "Прокачка аватара и смена формы доступны в Premium") {}
+                Button("Открыть Pro") {
+                    subscriptions.checkProAccess(for: "Прокачка аватара и смена формы доступны в Spartan Pro") {}
                 }
                 .buttonStyle(GoldButton())
             }

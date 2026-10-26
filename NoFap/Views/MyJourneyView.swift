@@ -69,7 +69,7 @@ struct MyJourneyView: View {
         let day = JourneyLibrary.all.first { $0.day == currentDay } ?? JourneyLibrary.all[0]
         if access(day) == .premium {
             Button { showPaywall = true } label: {
-                currentDayCardContent(day, action: "Открыть с Premium", symbol: "lock.open.fill")
+                currentDayCardContent(day, action: "Открыть с Pro", symbol: "lock.open.fill")
             }
             .buttonStyle(.plain)
         } else {
@@ -177,12 +177,7 @@ struct MyJourneyView: View {
                     .padding(.vertical, 5)
                     .background(Palette.vein.opacity(0.5), in: .capsule)
             case .premium:
-                Text("Premium")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(Palette.onGold)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
-                    .background(Capsule().fill(.goldSurface))
+                ProLockBadge()
             }
         }
         .padding(14)

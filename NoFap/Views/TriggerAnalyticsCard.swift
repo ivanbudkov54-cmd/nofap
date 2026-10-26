@@ -78,7 +78,7 @@ struct TriggerAnalyticsCard: View {
 
             Button { showPaywall = true } label: {
                 HStack(spacing: 6) {
-                    Text("Открыть с Premium")
+                    Text("Открыть с Pro")
                     Image(systemName: "lock.open.fill")
                 }
                 .font(.system(size: 14, weight: .semibold))
