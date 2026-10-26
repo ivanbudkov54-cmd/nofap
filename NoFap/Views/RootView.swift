@@ -54,7 +54,7 @@ struct RootView: View {
                 KnowledgeView()
             }
             .tabItem { Label("Знания", systemImage: "text.book.closed.fill") }
-            .tag(2)
+            .tag(AppRouter.knowledgeTab)
 
             NavigationStack {
                 ChallengesView()

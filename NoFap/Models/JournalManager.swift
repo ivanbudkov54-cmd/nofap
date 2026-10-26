@@ -50,6 +50,8 @@ final class JournalManager {
 
     /// Новые записи — сверху, как в любом дневнике.
     private(set) var entries: [JournalEntry]
+    /// Растёт при каждом сохранении — ContentView снимает напоминание о дневнике.
+    private(set) var revision = 0
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -100,6 +102,11 @@ final class JournalManager {
         persist()
     }
 
+    /// Есть ли за календарный день обычная запись (манифест точки А не считается).
+    func hasWrittenToday(asOf now: Date = Date()) -> Bool {
+        entries.contains { !$0.isManifest && Calendar.current.isDate($0.date, inSameDayAs: now) }
+    }
+
     func deleteEntry(_ entry: JournalEntry) {
         entries.removeAll { $0.id == entry.id }
         persist()
@@ -108,10 +115,12 @@ final class JournalManager {
     func removeAll() {
         entries = []
         defaults.removeObject(forKey: Key.entries)
+        revision += 1
     }
 
     private func persist() {
         guard let data = try? JSONEncoder().encode(entries) else { return }
         defaults.set(data, forKey: Key.entries)
+        revision += 1
     }
 }

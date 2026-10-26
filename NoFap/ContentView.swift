@@ -11,6 +11,8 @@ struct ContentView: View {
     @Environment(StreakManager.self) private var streak
     @Environment(PartnerManager.self) private var partner
     @Environment(ReminderManager.self) private var reminder
+    @Environment(NotificationManager.self) private var notifications
+    @Environment(AppRouter.self) private var router
     @Environment(Backend.self) private var backend
     @Environment(SubscriptionManager.self) private var subscriptions
     @Environment(JournalManager.self) private var journal
@@ -42,7 +44,8 @@ struct ContentView: View {
             await partner.refresh()
             streak.checkStreakStatus()
             await backend.bootstrap(streak: streak, journal: journal)
-            await syncStreakWarnings()
+            bindNotificationTaps()
+            await refreshLocalNotifications()
             if let userId = backend.currentUserId() {
                 await subscriptions.identify(userId.uuidString)
             } else {
@@ -65,8 +68,21 @@ struct ContentView: View {
             Task {
                 await partner.push(from: streak)
                 await backend.pushStreak(from: streak)
-                await syncStreakWarnings()
+                if streak.hasCheckedInToday || streak.currentStreak == 0 {
+                    notifications.cancelStreakWarning()
+                }
+                await refreshLocalNotifications()
             }
+        }
+        .onChange(of: journal.revision) { _, _ in
+            if journal.hasWrittenToday() {
+                notifications.cancelDiaryReminder()
+            }
+            Task { await refreshLocalNotifications() }
+        }
+        .onChange(of: hasCompletedOnboarding) { _, done in
+            guard done, onboardingDone else { return }
+            Task { await refreshLocalNotifications() }
         }
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active else { return }
@@ -76,16 +92,26 @@ struct ContentView: View {
                     await subscriptions.checkSubscription(backend: backend)
                 }
                 await partner.refresh()
-                await syncStreakWarnings()
+                await refreshLocalNotifications()
             }
         }
     }
 
-    private func syncStreakWarnings() async {
-        if streak.currentStreak == 0 {
-            reminder.cancelStreakWarnings()
-        } else if let deadline = streak.streakDeadlineDate {
-            await reminder.rescheduleStreakWarnings(deadline: deadline)
+    private func refreshLocalNotifications() async {
+        guard onboardingDone, hasCompletedOnboarding else { return }
+        await notifications.scheduleDailyNotifications(streak: streak, journal: journal)
+    }
+
+    private func bindNotificationTaps() {
+        notifications.onOpen = { destination in
+            switch destination {
+            case .home:
+                router.selectedTab = 0
+            case .diary:
+                router.selectedTab = AppRouter.diaryTab
+            case .knowledge:
+                router.selectedTab = AppRouter.knowledgeTab
+            }
         }
     }
 }

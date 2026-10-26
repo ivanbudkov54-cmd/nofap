@@ -21,6 +21,7 @@ struct SettingsView: View {
     @Environment(ThemeManager.self) private var theme
     @Environment(BuddyManager.self) private var buddies
     @Environment(SubscriptionManager.self) private var subscriptions
+    @Environment(NotificationManager.self) private var notifications
 
     @AppStorage("onboardingDone") private var onboardingDone = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
@@ -123,6 +124,15 @@ struct SettingsView: View {
                 }
             }
             .task { await buddies.refresh() }
+
+            #if DEBUG
+            Section("Отладка") {
+                Button("Тестовое уведомление (через 5 сек)") {
+                    Task { await notifications.triggerTestNotification() }
+                }
+                .foregroundStyle(Palette.marbleHigh)
+            }
+            #endif
 
             Section("Данные и прогресс") {
                 Button("Сбросить текущий стрик") {

@@ -18,5 +18,6 @@ final class AppRouter {
     var toast: String?
 
     static let diaryTab = 1
+    static let knowledgeTab = 2
     static let shieldPrompt = "Что стало триггером и что ты сделаешь чтобы в дальнейшем избежать срыва?"
 }
