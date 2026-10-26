@@ -255,21 +255,47 @@ private struct CircularStreakView: View {
     }
 }
 
+/// Как системные виджеты «Фитнеса» и «Погоды»: подпись со значком сверху,
+/// крупное значение по центру, полоса до цели снизу. Галочка справа —
+/// отметка за сегодня.
 private struct RectangularStreakView: View {
     let entry: StreakEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text("StopFap")
-                .font(.system(size: 13, weight: .semibold))
-                .widgetAccentable()
-            Text("\(entry.days) \(daysWord(entry.days)) из \(entry.goal)")
-                .font(WidgetPalette.display(14))
-            Text(entry.checkedIn ? "Сегодня отмечено" : "Отметься сегодня")
-                .font(.system(size: 12))
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(spacing: 4) {
+                Image(systemName: "flame.fill")
+                Text("Без срыва")
+                Spacer(minLength: 0)
+                if entry.checkedIn {
+                    Image(systemName: "checkmark.circle.fill")
+                }
+            }
+            .font(.system(size: 12, weight: .semibold))
+            .widgetAccentable()
+
+            Text("\(entry.days) \(daysWord(entry.days))")
+                .font(WidgetPalette.display(20))
+                .minimumScaleFactor(0.6)
+                .lineLimit(1)
+
+            HStack(spacing: 6) {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(.primary.opacity(0.25))
+                        Capsule().fill(.primary)
+                            .frame(width: max(geo.size.width * entry.progress, 4))
+                    }
+                }
+                .frame(height: 4)
+
+                Text("из \(entry.goal)")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .fixedSize()
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     }
 }
 
