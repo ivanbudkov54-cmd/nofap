@@ -87,9 +87,9 @@ private struct SisyphusStreak: View {
     let goal: Int
 
     private static let aspect = 1114.0 / 1066.0
-    private static let zoom = 1.22
-    /// Точка фото (в долях), которая встаёт в центр виджета.
-    private static let focus = CGPoint(x: 0.64, y: 0.47)
+    private static let zoom = 0.88
+    /// Точка фото (в долях), которая встаёт в центр виджета по горизонтали.
+    private static let focus = CGPoint(x: 0.64, y: 0.5)
     private static let boulder = CGPoint(x: 0.70, y: 0.354)
 
     var body: some View {
@@ -98,11 +98,11 @@ private struct SisyphusStreak: View {
             let h = geo.size.height
             let imageWidth = w * Self.zoom
             let imageHeight = imageWidth * Self.aspect
-            // Слева и снизу фото всегда доходит до края — там гора. Сверху
-            // и справа у него прозрачное небо, поэтому туда можно сдвинуть:
-            // над камнем останется чёрное поле.
-            let x0 = max(w - imageWidth, w / 2 - Self.focus.x * imageWidth)
-            let y0 = min(h * 0.12, max(h - imageHeight, h / 2 - Self.focus.y * imageHeight))
+            // Слева и снизу фото всегда стоит вплотную к краю — там гора и
+            // ноги Сизифа, их не режем. Сверху и справа у фото прозрачное
+            // небо, поэтому над камнем остаётся чёрное поле.
+            let x0 = min(0, max(w - imageWidth, w / 2 - Self.focus.x * imageWidth))
+            let y0 = h - imageHeight
 
             ZStack {
                 Image("WidgetSisyphus")
@@ -113,11 +113,11 @@ private struct SisyphusStreak: View {
                 VStack(spacing: 1) {
                     ZStack {
                         Text("\(days)")
-                            .font(WidgetPalette.display(w * 0.22))
+                            .font(WidgetPalette.display(w * 0.17))
                             .foregroundStyle(.black.opacity(0.7))
                             .offset(x: w * 0.012, y: w * 0.017)
                         Text("\(days)")
-                            .font(WidgetPalette.display(w * 0.22))
+                            .font(WidgetPalette.display(w * 0.17))
                             .foregroundStyle(WidgetPalette.goldFill)
                             .shadow(color: WidgetPalette.goldLight.opacity(0.7), radius: 6)
                     }
@@ -125,7 +125,7 @@ private struct SisyphusStreak: View {
                     .lineLimit(1)
 
                     Text("из \(goal)")
-                        .font(WidgetPalette.display(w * 0.065, bold: false))
+                        .font(WidgetPalette.display(w * 0.055, bold: false))
                         .foregroundStyle(WidgetPalette.marbleHigh)
                         .shadow(color: .black.opacity(0.6), radius: 2)
                 }
