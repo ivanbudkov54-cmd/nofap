@@ -87,9 +87,9 @@ private struct SisyphusStreak: View {
     let goal: Int
 
     private static let aspect = 1114.0 / 1066.0
-    private static let zoom = 1.35
+    private static let zoom = 1.22
     /// Точка фото (в долях), которая встаёт в центр виджета.
-    private static let focus = CGPoint(x: 0.66, y: 0.52)
+    private static let focus = CGPoint(x: 0.64, y: 0.47)
     private static let boulder = CGPoint(x: 0.70, y: 0.354)
 
     var body: some View {
@@ -98,9 +98,11 @@ private struct SisyphusStreak: View {
             let h = geo.size.height
             let imageWidth = w * Self.zoom
             let imageHeight = imageWidth * Self.aspect
-            // Сдвиг фото, но так, чтобы оно всегда закрывало весь виджет.
-            let x0 = min(0, max(w - imageWidth, w / 2 - Self.focus.x * imageWidth))
-            let y0 = min(0, max(h - imageHeight, h / 2 - Self.focus.y * imageHeight))
+            // Слева и снизу фото всегда доходит до края — там гора. Сверху
+            // и справа у него прозрачное небо, поэтому туда можно сдвинуть:
+            // над камнем останется чёрное поле.
+            let x0 = max(w - imageWidth, w / 2 - Self.focus.x * imageWidth)
+            let y0 = min(h * 0.12, max(h - imageHeight, h / 2 - Self.focus.y * imageHeight))
 
             ZStack {
                 Image("WidgetSisyphus")
