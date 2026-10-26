@@ -79,29 +79,33 @@ private func daysWord(_ days: Int) -> String {
 
 // MARK: - Сизиф с числом на валуне
 
-/// Фото приближено к валуну и Сизифу: левый нижний склон горы обрезан,
-/// чтобы камень с числом стоял ближе к центру виджета. Центр валуна
-/// вымерен по фото — те же доли, что в SisyphusStreakCard.
+/// Фото подогнано под валун: сверху и справа от камня одинаковое чёрное
+/// поле, левый склон горы обрезан. Центр валуна вымерен по фото — те же
+/// доли, что в SisyphusStreakCard.
 private struct SisyphusStreak: View {
     let days: Int
     let goal: Int
 
     private static let aspect = 1114.0 / 1066.0
-    private static let zoom = 0.88
-    /// Точка фото (в долях), которая встаёт в центр виджета по горизонтали.
-    private static let focus = CGPoint(x: 0.64, y: 0.5)
+    /// Верх и правый край валуна на фото (в долях), вымерены по картинке.
+    private static let boulderTop = 0.136
+    private static let boulderRight = 0.969
+    /// Чёрное поле над камнем и справа от него — одинаковое, в долях ширины.
+    private static let margin = 0.15
     private static let boulder = CGPoint(x: 0.70, y: 0.354)
 
     var body: some View {
         GeometryReader { geo in
             let w = geo.size.width
             let h = geo.size.height
-            let imageWidth = w * Self.zoom
-            let imageHeight = imageWidth * Self.aspect
-            // Слева и снизу фото всегда стоит вплотную к краю — там гора и
-            // ноги Сизифа, их не режем. Сверху и справа у фото прозрачное
-            // небо, поэтому над камнем остаётся чёрное поле.
-            let x0 = min(0, max(w - imageWidth, w / 2 - Self.focus.x * imageWidth))
+            let m = w * Self.margin
+            // Снизу фото стоит вплотную к краю — там ноги Сизифа, их не
+            // режем. Размер подобран так, чтобы над камнем осталось ровно m,
+            // а сдвиг влево — чтобы столько же осталось справа. Лишний склон
+            // горы слева при этом уходит за край.
+            let imageHeight = (h - m) / (1 - Self.boulderTop)
+            let imageWidth = imageHeight / Self.aspect
+            let x0 = min(0, w - m - Self.boulderRight * imageWidth)
             let y0 = h - imageHeight
 
             ZStack {
