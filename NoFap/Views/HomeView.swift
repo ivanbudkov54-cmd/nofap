@@ -214,9 +214,12 @@ struct HomeView: View {
     private func sosManifest(_ item: UserPainManifest) -> some View {
         let date = item.createdAt.formatted(date: .abbreviated, time: .omitted)
         return VStack(alignment: .leading, spacing: 10) {
-            Label("ТВОЙ ЛИЧНЫЙ РАЗГОВОР С СОБОЙ", systemImage: "exclamationmark.triangle.fill")
-                .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(Palette.garnet)
+            HStack(spacing: 6) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Palette.garnet)
+                Eyebrow(text: "разговор с собой", color: Palette.garnet)
+            }
             Text("Вспомни, ради чего ты начал")
                 .font(Face.display(20, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
@@ -257,7 +260,7 @@ struct HomeView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(Face.display(14, .medium))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(Palette.marbleHigh)
                         .lineLimit(1)
                         .minimumScaleFactor(0.85)
@@ -489,7 +492,7 @@ struct HomeView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(trigger.title)
-                        .font(Face.display(14, .medium))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(Palette.marbleHigh)
                     Text(trigger.subtitle)
                         .font(.system(size: 12))
@@ -795,6 +798,24 @@ struct EngravedButton: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
             // Отклик в момент касания, а не отпускания — как у системных кнопок.
+            .onChange(of: configuration.isPressed) { _, pressed in if pressed { Haptics.light() } }
+    }
+}
+
+/// Второстепенное действие: золотой контур-капсула вокруг текста системным
+/// шрифтом. Unbounded на кнопке читается как заголовок, а сплошное золото
+/// оставлено главному действию экрана.
+struct PillButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 14, weight: .medium))
+            .foregroundStyle(.goldFill)
+            .padding(.horizontal, 18)
+            .frame(height: 38)
+            .background { Capsule().fill(Palette.gold.opacity(configuration.isPressed ? 0.12 : 0)) }
+            .overlay { Capsule().strokeBorder(Palette.gold.opacity(0.4), lineWidth: 1) }
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.snappy(duration: 0.15), value: configuration.isPressed)
             .onChange(of: configuration.isPressed) { _, pressed in if pressed { Haptics.light() } }
     }
 }

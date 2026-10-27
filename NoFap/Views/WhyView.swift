@@ -161,10 +161,10 @@ struct WhyView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     title
-                        .font(Face.display(16, .medium))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(Palette.marbleHigh)
                     Text(subtitle)
-                        .font(Face.display(13))
+                        .font(.system(size: 13))
                         .foregroundStyle(Palette.ash)
                 }
 

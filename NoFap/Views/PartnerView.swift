@@ -135,13 +135,8 @@ struct PartnerView: View {
 
             ShareLink(item: inviteMessage(invite)) {
                 Text("Отправить приглашение")
-                    .font(.system(size: 15, weight: .semibold))
-                    .tracking(1.6)
-                    .foregroundStyle(.goldFill)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 54)
-                    .overlay { Capsule().strokeBorder(Palette.gold.opacity(0.45), lineWidth: 1) }
             }
+            .buttonStyle(EngravedButton())
 
             Button("Отменить") { Task { await partner.cancelInvite() } }
                 .buttonStyle(StoneButton())
@@ -186,13 +181,8 @@ struct PartnerView: View {
                 PartnerChatView()
             } label: {
                 Label("Написать", systemImage: "bubble.left.and.bubble.right.fill")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Palette.onGold)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
-                    .background(Capsule().fill(.goldSurface))
-                    .shadow(color: Palette.gold.opacity(0.28), radius: 14, y: 4)
             }
+            .buttonStyle(GoldButton())
 
             Button("Разорвать связь") { showUnpairConfirm = true }
                 .buttonStyle(StoneButton())
@@ -255,7 +245,7 @@ struct PartnerView: View {
             Eyebrow(text: "как тебя звать напарнику")
 
             TextField("Прозвище", text: $nicknameDraft)
-                .font(Face.display(17, .medium))
+                .font(.system(size: 17, weight: .medium))
                 .foregroundStyle(Palette.marbleHigh)
                 .autocorrectionDisabled()
                 .padding(.horizontal, 14)

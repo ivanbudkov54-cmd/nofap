@@ -71,7 +71,7 @@ private struct PartnerJoinSheet: View {
                 Eyebrow(text: "как тебя звать напарнику")
 
                 TextField("Прозвище", text: $nicknameDraft)
-                    .font(Face.display(17, .medium))
+                    .font(.system(size: 17, weight: .medium))
                     .foregroundStyle(Palette.marbleHigh)
                     .autocorrectionDisabled()
                     .padding(.horizontal, 14)

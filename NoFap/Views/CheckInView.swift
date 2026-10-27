@@ -148,10 +148,7 @@ struct CheckInView: View {
     ) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Text(title.uppercased())
-                    .font(.system(size: 12, weight: .semibold))
-                    .tracking(1.2)
-                    .foregroundStyle(Ink.textSecondary)
+                Eyebrow(verbatim: title, color: Ink.textSecondary)
 
                 Spacer()
 
@@ -176,10 +173,7 @@ struct CheckInView: View {
 
     private var triggerPicker: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("ТРИГГЕРЫ ЗА ДЕНЬ")
-                .font(.system(size: 12, weight: .semibold))
-                .tracking(1.2)
-                .foregroundStyle(Ink.textSecondary)
+            Eyebrow(text: "триггеры за день", color: Ink.textSecondary)
 
             FlowLayout(spacing: 8) {
                 ForEach(CheckInTag.allCases) { tag in
@@ -226,10 +220,7 @@ struct CheckInView: View {
 
     private var noteField: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("МЫСЛИ ДНЯ / ЗАМЕТКА")
-                .font(.system(size: 12, weight: .semibold))
-                .tracking(1.2)
-                .foregroundStyle(Ink.textSecondary)
+            Eyebrow(text: "мысли дня / заметка", color: Ink.textSecondary)
 
             ZStack(alignment: .topLeading) {
                 if note.isEmpty {
@@ -269,13 +260,8 @@ struct CheckInView: View {
                     Text("Сохранить запись")
                 }
             }
-            .font(.system(size: 17, weight: .bold))
-            .tracking(1.2)
-            .foregroundStyle(Palette.onGold)
-            .frame(maxWidth: .infinity)
-            .frame(height: 56)
-            .background(Capsule().fill(.goldSurface))
         }
+        .buttonStyle(GoldButton())
         .disabled(isSaving)
         .opacity(isSaving ? 0.85 : 1)
         .padding(.top, 4)

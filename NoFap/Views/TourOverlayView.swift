@@ -157,23 +157,11 @@ private struct TourTooltipCard: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             if step == .finish {
-                Button(action: onNext) {
-                    Text("В бой!")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Palette.onGold)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                }
+                Button("В бой!", action: onNext)
+                    .buttonStyle(GoldButton(compact: true))
             } else if step == .sisyphus {
-                Button(action: onNext) {
-                    Text(step.nextLabel)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Palette.onGold)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                }
+                Button(step.nextLabel, action: onNext)
+                    .buttonStyle(GoldButton(compact: true))
             } else {
                 HStack {
                     Spacer()

@@ -54,9 +54,7 @@ struct UrgeSimulatorView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Выбери сценарий")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(Palette.marbleHigh)
+            Eyebrow(text: "выбери сценарий", color: Palette.marble)
             Text("Пройди ситуацию до конца и увидь, к чему реально ведёт каждый выбор.")
                 .font(.system(size: 13))
                 .foregroundStyle(Palette.ash)

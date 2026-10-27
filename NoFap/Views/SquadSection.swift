@@ -106,12 +106,8 @@ struct SquadSection: View {
                 SquadChatView()
             } label: {
                 Label("Чат сквада", systemImage: "bubble.left.and.bubble.right.fill")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Palette.onGold)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 54)
-                    .background(Capsule().fill(.goldSurface))
             }
+            .buttonStyle(GoldButton())
 
             Button("Выйти из сквада") { showLeaveConfirm = true }
                 .buttonStyle(StoneButton())
@@ -193,13 +189,8 @@ struct SquadSection: View {
 
             ShareLink(item: inviteMessage(invite)) {
                 Text("Отправить приглашение")
-                    .font(.system(size: 15, weight: .semibold))
-                    .tracking(1.2)
-                    .foregroundStyle(.goldFill)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .overlay { Capsule().strokeBorder(Palette.gold.opacity(0.45), lineWidth: 1) }
             }
+            .buttonStyle(EngravedButton())
 
             Button("Отменить приглашение") { Task { await squad.cancelInvite() } }
                 .font(.system(size: 13))

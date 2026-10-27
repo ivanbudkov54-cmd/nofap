@@ -45,7 +45,7 @@ struct PaywallView: View {
                         .foregroundStyle(.goldFill)
 
                     Text("Функция программы Spartan Pro")
-                        .font(Face.display(28, .semibold))
+                        .font(Face.display(26, .semibold))
                         .foregroundStyle(Palette.marbleHigh)
                         .fixedSize(horizontal: false, vertical: true)
 

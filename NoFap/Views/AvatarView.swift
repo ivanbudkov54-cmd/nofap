@@ -212,8 +212,7 @@ struct AvatarView: View {
 
     private var sources: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Источники роста")
-                .font(Face.display(18, .semibold))
+            Eyebrow(text: "источники роста", color: Palette.marble)
                 .foregroundStyle(Palette.marbleHigh)
             sourceRow("Стрик", value: avatar.streakPower)
             sourceRow("Челленджей закрыто", value: avatar.challengePower)
@@ -353,7 +352,7 @@ private struct EnergyRing: View {
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 0.45), value: percent)
             Text("\(percent)")
-                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .font(.system(size: 13, weight: .bold).monospacedDigit())
                 .foregroundStyle(Palette.marbleHigh)
         }
         .frame(width: 72, height: 72)

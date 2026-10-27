@@ -186,7 +186,7 @@ struct ChatThreadView: View {
     private var placeholder: some View {
         VStack(spacing: 10) {
             Text("Здесь пусто")
-                .font(Face.display(20, .medium))
+                .font(Face.display(18, .medium))
                 .foregroundStyle(Palette.marbleHigh)
 
             Text(emptyNote)

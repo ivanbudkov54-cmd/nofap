@@ -42,7 +42,7 @@ struct EmailLinkSheet: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 18) {
                 Text(phase == .email ? "Сохраните прогресс" : "Введите код")
-                    .font(Face.display(28, .semibold))
+                    .font(Face.display(26, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
 
                 Text(phase == .email

@@ -65,7 +65,7 @@ struct ContrastExperimentView: View {
         switch experiment.state {
         case .notStarted:
             Text("Эксперимент: Осознание контраста")
-                .font(Face.display(18, .semibold))
+                .font(Face.display(20, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
                 .fixedSize(horizontal: false, vertical: true)
             Text("Практика парадоксального наблюдения: сними любые ограничения на один день, доведя импульс до полного пресыщения. После этого остановись и на контрасте отследи, как меняется твоя биохимия и фокус.")
@@ -78,7 +78,7 @@ struct ContrastExperimentView: View {
 
         case .activeWaitingReset:
             Text("Эксперимент: Осознание контраста")
-                .font(Face.display(18, .semibold))
+                .font(Face.display(20, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
                 .fixedSize(horizontal: false, vertical: true)
             Text("Эксперимент запущен. Когда завершишь цикл, нажми кнопку ниже, чтобы запустить таймер чистоты и сравнения.")
@@ -102,7 +102,7 @@ struct ContrastExperimentView: View {
 
         case .readyForReview:
             Text("Время сравнить ощущения! 📊")
-                .font(Face.display(18, .semibold))
+                .font(Face.display(20, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
                 .fixedSize(horizontal: false, vertical: true)
             Text("Сутки наблюдения прошли. Зафиксируй, чем сегодняшнее состояние отличается от момента срыва.")
@@ -115,7 +115,7 @@ struct ContrastExperimentView: View {
 
         case .completed(let review):
             Text("Вывод сохранён")
-                .font(Face.display(18, .semibold))
+                .font(Face.display(20, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
             Text("Энергия и ясность: \(review.energy)/10")
                 .font(.system(size: 14, weight: .semibold))
@@ -186,7 +186,7 @@ private struct ContrastTimerRing: View {
                 .stroke(Palette.adaptive(dark: 0x8B7CFF, light: 0x6B5BEF), style: StrokeStyle(lineWidth: 6, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             Text(label)
-                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Palette.marbleHigh)
                 .monospacedDigit()
         }

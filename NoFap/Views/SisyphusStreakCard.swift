@@ -144,13 +144,8 @@ struct SisyphusStreakCard: View {
             if squad.freeSlots > 0 {
                 Button { showSquad = true } label: {
                     Label("Позвать в сквад", systemImage: "plus")
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(.goldFill)
-                        .padding(.horizontal, 18)
-                        .frame(height: 38)
-                        .overlay { Capsule().strokeBorder(Palette.gold.opacity(0.4), lineWidth: 1) }
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PillButton())
                 // Посередине между картинкой и цитатой под ней.
                 .padding(.top, 6)
             }

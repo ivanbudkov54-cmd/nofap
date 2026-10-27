@@ -217,7 +217,7 @@ struct DiaryView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Экспресс-чекин")
-                        .font(Face.display(15, .medium))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(Palette.marbleHigh)
                     Text("Энергия, тяга, триггеры — 30 секунд")
                         .font(.system(size: 12))
@@ -262,10 +262,8 @@ struct DiaryView: View {
             Button { editManifest = true } label: {
                 Label(item.yearVision?.isEmpty == false ? "Редактировать" : "Добавить цель на год",
                       systemImage: "square.and.pencil")
-                    .font(Face.display(13, .medium))
-                    .foregroundStyle(.goldFill)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PillButton())
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
@@ -293,7 +291,7 @@ struct DiaryView: View {
                 .foregroundStyle(Palette.ash)
 
             Text("Записей пока нет")
-                .font(Face.display(16, .medium))
+                .font(Face.display(18, .medium))
                 .foregroundStyle(Palette.marbleHigh)
 
             Text("Нажми на карандаш вверху или пройди экспресс-чекин выше.")
@@ -541,10 +539,7 @@ struct DiaryView: View {
                 Image(systemName: "lightbulb.fill")
                     .font(.system(size: 13))
                     .foregroundStyle(Palette.gold)
-                Text("ВОПРОС ДНЯ")
-                    .font(.system(size: 11, weight: .semibold))
-                    .tracking(1.4)
-                    .foregroundStyle(Color(hex: 0x8C8C97))
+                Eyebrow(text: "вопрос дня", color: Color(hex: 0x8C8C97))
 
                 Spacer()
 
