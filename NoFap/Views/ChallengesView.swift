@@ -125,9 +125,8 @@ struct ChallengesView: View {
 
     private var history: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("История выполненных вызовов")
-                .font(Face.display(18, .semibold))
-                .foregroundStyle(Palette.marbleHigh)
+            // Подпись раздела, а не заголовок — как «Зал славы» у аватара.
+            Eyebrow(text: "история вызовов", color: Palette.marble)
 
             if challenges.completedItems.isEmpty {
                 Text("Пока пусто. Закрой текущий вызов — он появится здесь.")
