@@ -11,12 +11,14 @@ import Foundation
 
 enum EmailLinkError: LocalizedError {
     case invalidCode
+    case expired
     case tooManyAttempts
     case network
 
     var errorDescription: String? {
         switch self {
-        case .invalidCode:     "Неверный код. Проверьте письмо и введите его ещё раз."
+        case .invalidCode:     "Неверная ссылка. Запросите новую из приложения и не открывайте её в браузере."
+        case .expired:         "Ссылка уже использована или истекла. Запросите новую и вставьте её сюда, не открывая."
         case .tooManyAttempts: "Слишком много попыток. Подождите минуту и запросите код снова."
         case .network:         "Нет подключения к сети. Проверьте интернет и попробуйте ещё раз."
         }
@@ -98,13 +100,33 @@ final class SupabaseSession {
 
     // MARK: - Вход по почте
 
+    /// Куда GoTrue вернёт сессию после клика по magic link.
+    /// Должен быть в Redirect URLs: `nofap://**`.
+    static let magicLinkRedirect = "nofap://auth"
+
+    static func isMagicLink(_ url: URL) -> Bool {
+        url.scheme == "nofap" && url.host()?.lowercased() == "auth"
+    }
+
     /// Код из 6 цифр на почту. Если такого пользователя нет — Supabase его заведёт.
+    /// На Free-проекте шаблон письма — ссылка, не цифры: после клика
+    /// сессия приходит сюда через `nofap://auth`.
     func sendEmailCode(to email: String) async throws {
-        var request = URLRequest(url: URL(string: "\(SupabaseConfig.url)/auth/v1/otp")!)
+        // redirect_to должен быть в Allow List проекта. Иначе GoTrue
+        // подставляет Site URL (по умолчанию localhost) — браузер
+        // открывает мёртвую ссылку вместо письма с кодом.
+        var components = URLComponents(string: "\(SupabaseConfig.url)/auth/v1/otp")!
+        components.queryItems = [
+            URLQueryItem(name: "redirect_to", value: Self.magicLinkRedirect),
+        ]
+        var request = URLRequest(url: components.url!)
         request.httpMethod = "POST"
         request.setValue(SupabaseConfig.anonKey, forHTTPHeaderField: "apikey")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONSerialization.data(withJSONObject: ["email": email, "create_user": true])
+        request.httpBody = try JSONSerialization.data(withJSONObject: [
+            "email": email,
+            "create_user": true,
+        ])
         let (data, response) = try await URLSession.shared.data(for: request)
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
         guard (200..<300).contains(status) else {
@@ -126,6 +148,69 @@ final class SupabaseSession {
         }
         guard let uid else { throw EmailLinkError.network }
         return uid
+    }
+
+    /// Safari на симуляторе теряет `#access_token` у `nofap://`. Поэтому
+    /// ссылку из письма лучше обменять здесь, не открывая её в браузере.
+    @discardableResult
+    func consumeVerifyURL(_ url: URL) async throws -> String? {
+        if Self.isMagicLink(url) { return try await applyMagicLink(url) }
+        let host = url.host()?.lowercased() ?? ""
+        guard host.contains("supabase.co"), url.path.contains("/auth/v1/verify") else {
+            throw EmailLinkError.invalidCode
+        }
+        let catcher = MagicLinkRedirectCatcher()
+        let session = URLSession(configuration: .ephemeral, delegate: catcher, delegateQueue: nil)
+        do {
+            _ = try await session.data(for: URLRequest(url: url))
+        } catch {
+            if catcher.location == nil { throw EmailLinkError.network }
+        }
+        guard let location = catcher.location else { throw EmailLinkError.network }
+        return try await applyMagicLink(location)
+    }
+
+    /// Сессия из редиректа magic link (`nofap://auth#access_token=&refresh_token=`).
+    @discardableResult
+    func applyMagicLink(_ url: URL) async throws -> String? {
+        let pairs = Self.parameters(from: url)
+        if pairs["error_code"] == "otp_expired" || pairs["error"] == "access_denied" {
+            throw EmailLinkError.expired
+        }
+        guard let access = pairs["access_token"], let refresh = pairs["refresh_token"] else {
+            throw EmailLinkError.invalidCode
+        }
+        var request = URLRequest(url: URL(string: "\(SupabaseConfig.url)/auth/v1/user")!)
+        request.setValue(SupabaseConfig.anonKey, forHTTPHeaderField: "apikey")
+        request.setValue("Bearer \(access)", forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+        let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
+        guard status == 200, let id = json["id"] as? String else {
+            throw EmailLinkError.network
+        }
+        let seconds = Double(pairs["expires_in"] ?? "") ?? 3600
+        accessToken = access
+        expiresAt = Date().addingTimeInterval(seconds)
+        uid = id.lowercased()
+        Keychain.write(Key.uid, uid)
+        Keychain.write(Key.refreshToken, refresh)
+        return json["email"] as? String
+    }
+
+    private static func parameters(from url: URL) -> [String: String] {
+        var pairs: [String: String] = [:]
+        let encoded = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        for item in encoded?.queryItems ?? [] {
+            if let value = item.value { pairs[item.name] = value }
+        }
+        let fragment = url.fragment ?? encoded?.fragment
+        for piece in fragment?.split(separator: "&") ?? [] {
+            let parts = piece.split(separator: "=", maxSplits: 1).map(String.init)
+            guard parts.count == 2 else { continue }
+            pairs[parts[0]] = parts[1].removingPercentEncoding ?? parts[1]
+        }
+        return pairs
     }
 
     // MARK: - Внутреннее
@@ -194,5 +279,24 @@ final class SupabaseSession {
         Keychain.write(Key.uid, uid)
         Keychain.write(Key.refreshToken, refresh)
         return token
+    }
+}
+
+/// Не ходим по `nofap://` редиректу: URLSession его не откроет, а Safari
+/// на симуляторе выкидывает фрагмент с токенами.
+private final class MagicLinkRedirectCatcher: NSObject, URLSessionTaskDelegate, @unchecked Sendable {
+    nonisolated(unsafe) var location: URL?
+
+    nonisolated func urlSession(
+        _ session: URLSession,
+        task: URLSessionTask,
+        willPerformHTTPRedirection response: HTTPURLResponse,
+        newRequest request: URLRequest,
+        completionHandler: @escaping (URLRequest?) -> Void
+    ) {
+        if let header = response.value(forHTTPHeaderField: "Location") {
+            location = URL(string: header)
+        }
+        completionHandler(nil)
     }
 }
