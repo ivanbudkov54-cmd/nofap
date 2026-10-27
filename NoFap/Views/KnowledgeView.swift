@@ -63,6 +63,10 @@ struct KnowledgeView: View {
         .padding(4)
         .background(Palette.basalt, in: .capsule)
         .overlay { Capsule().strokeBorder(Palette.vein, lineWidth: 1) }
+        // Анимируется только подсветка. Раньше в анимацию попадала и смена
+        // вкладки целиком: три длинных списка перестраивались внутри одной
+        // транзакции, и переключение подтормаживало.
+        .animation(.snappy(duration: 0.25), value: selected)
         .padding(.horizontal, 18)
         .padding(.top, 16)
         .padding(.bottom, 12)
@@ -72,7 +76,7 @@ struct KnowledgeView: View {
         let isSelected = selected == tab
         return Button {
             Haptics.selection()
-            withAnimation(.snappy(duration: 0.25)) { selected = tab }
+            selected = tab
         } label: {
             Text(tab.label)
                 .font(.system(size: 12, weight: .semibold))

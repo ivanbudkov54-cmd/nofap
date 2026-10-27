@@ -249,16 +249,10 @@ struct ContrastReflectionSheet: View {
                             }
                     }
 
-                    Button {
+                    Button("Зафиксировать вывод") {
                         onSave(Int(energy), options.filter { feelings.contains($0) }, comparison)
-                    } label: {
-                        Text("Зафиксировать вывод")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Palette.onGold)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
+                    .buttonStyle(GoldButton())
                     .disabled(comparison.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     .opacity(comparison.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1)
                 }

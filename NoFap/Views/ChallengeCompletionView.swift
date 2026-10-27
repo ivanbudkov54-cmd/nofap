@@ -41,17 +41,9 @@ struct ChallengeCompletionView: View {
                         .padding(.top, 4)
                 }
 
-                Button(action: onClaim) {
-                    Text("Получить следующий челлендж")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Palette.onGold)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 8)
-                        .background(.goldSurface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                }
-                .padding(.top, 8)
+                Button("Получить следующий челлендж", action: onClaim)
+                    .buttonStyle(GoldButton())
+                    .padding(.top, 8)
             }
             .padding(24)
         }
@@ -79,7 +71,7 @@ private struct ConfettiBurst: View {
         (-120, 0.0, Palette.gold),
         (-70, 0.05, .green),
         (-20, 0.02, Palette.goldLight),
-        (30, 0.08, .orange),
+        (30, 0.08, Palette.goldSurface),
         (80, 0.03, Palette.gold),
         (130, 0.06, .mint)
     ]

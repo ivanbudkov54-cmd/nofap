@@ -553,6 +553,9 @@ struct HomeView: View {
                     .font(.system(size: 15))
                     .foregroundStyle(Palette.ash)
             }
+            // Текст стоял вплотную к краю экрана — отступ как у остального
+            // содержимого карточек.
+            .padding(.leading, 8)
 
             Spacer()
 

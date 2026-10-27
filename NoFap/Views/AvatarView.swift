@@ -138,7 +138,7 @@ struct AvatarView: View {
         case .awakening: Color(hex: 0x9BB7E0)
         case .athlete: Palette.goldLight
         case .warrior: Palette.gold
-        case .titan: Color(hex: 0xFF7A2F)
+        case .titan: Palette.goldSurfaceLight
         }
     }
 
@@ -266,7 +266,7 @@ struct AvatarFigureView: View {
             if stage == .titan {
                 ForEach(0..<6, id: \.self) { index in
                     Circle()
-                        .fill(Color(hex: index.isMultiple(of: 2) ? 0xFF7A2F : 0xF0BC4F).opacity(0.55))
+                        .fill((index.isMultiple(of: 2) ? Palette.goldSurfaceLight : Palette.goldSurface).opacity(0.55))
                         .frame(width: 14, height: 14)
                         .offset(x: CGFloat(index - 3) * 22, y: 90)
                         .blur(radius: 1)
@@ -381,15 +381,9 @@ struct AvatarEvolutionView: View {
                 Text("Уровень \(stage.rawValue): \(stage.title)")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Palette.gold)
-                Button(action: onClose) {
-                    Text("Продолжить")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Palette.onGold)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                }
-                .padding(.top, 8)
+                Button("Продолжить", action: onClose)
+                    .buttonStyle(GoldButton())
+                    .padding(.top, 8)
             }
             .padding(24)
         }

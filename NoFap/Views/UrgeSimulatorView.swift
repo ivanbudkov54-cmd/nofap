@@ -82,11 +82,13 @@ struct UrgeSimulatorView: View {
                     .foregroundStyle(Palette.ash)
                     .lineLimit(2)
             }
+            // Текст забирает всю ширину, и значок встаёт у правого края —
+            // в одну колонку во всех строках, а не следом за заголовком.
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             if !subscriptions.isPro {
                 ProLockBadge()
             }
-            Spacer()
 
             Image(systemName: "chevron.right")
                 .font(.system(size: 13, weight: .semibold))

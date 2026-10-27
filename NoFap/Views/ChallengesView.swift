@@ -111,17 +111,9 @@ struct ChallengesView: View {
                 .foregroundStyle(Palette.ash)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Button {
-                confirmComplete = true
-            } label: {
-                Text("Выполнил вызов")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Palette.onGold)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(.goldSurface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-            }
-            .padding(.top, 4)
+            Button("Выполнил вызов") { confirmComplete = true }
+                .buttonStyle(GoldButton())
+                .padding(.top, 4)
         }
         .padding(16)
         .cardSurface()
