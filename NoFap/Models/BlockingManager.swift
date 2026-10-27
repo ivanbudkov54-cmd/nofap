@@ -27,8 +27,17 @@ final class BlockingManager {
     enum State {
         case unknown          // ещё не спрашивали разрешение
         case active           // защита работает
-        case denied           // пользователь отказал в доступе
+        case denied           // доступ запрещён в Настройках iOS
+        case declined         // нажал «Не разрешать» в системном запросе
         case failed(String)   // ошибка при включении
+
+        /// Попытка была и не удалась — пора предложить путь без защиты.
+        var needsFallback: Bool {
+            switch self {
+            case .denied, .declined, .failed: true
+            case .unknown, .active: false
+            }
+        }
     }
 
     /// Apple выдала разрешение на Family Controls.
@@ -71,7 +80,10 @@ final class BlockingManager {
         case .denied:
             state = .denied
         case .notDetermined:
-            state = .unknown
+            // «Не разрешать» в запросе с `.individual` не меняет статус —
+            // он так и остаётся «не спрашивали». Не затираем отказ, иначе
+            // при возврате в приложение пропадали и сообщение, и выход.
+            if case .active = state { state = .unknown }
         default:
             // .approved, а с iOS 26 ещё и .approvedWithDataAccess.
             apply()
@@ -83,6 +95,8 @@ final class BlockingManager {
         do {
             try await Self.requestAuthorization()
             apply()
+        } catch FamilyControlsError.authorizationCanceled {
+            state = .declined
         } catch {
             // Раньше любая ошибка означала «пользователь отказал», и человека
             // отправляли в Настройки снимать запрет, которого он не ставил.

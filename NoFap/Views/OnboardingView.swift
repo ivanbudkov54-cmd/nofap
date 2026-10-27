@@ -20,6 +20,7 @@ struct OnboardingView: View {
     @Environment(ReminderManager.self) private var reminder
     @Environment(\.openURL) private var openURL
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
 
     let onFinish: () -> Void
 
@@ -101,6 +102,16 @@ struct OnboardingView: View {
         // Клавиатура не поднимает полосу прогресса и кнопку: иначе они
         // наезжали на поле «своими словами» и закрывали его.
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        // Отказавший мог выдать доступ в Настройках iOS. Состояние само не
+        // обновится — без проверки здесь человек вернулся бы к тому же
+        // «Доступ не выдан».
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active, case .consent = steps[page], !blocking.isActive else { return }
+            blocking.refresh()
+            guard blocking.isActive else { return }
+            streak.markProtectionStart()
+            Task { await finish() }
+        }
     }
 
     // MARK: - Страницы
@@ -237,6 +248,40 @@ struct OnboardingView: View {
                     .foregroundStyle(.goldFill)
                 }
                 .padding(.top, 18)
+            } else if case .declined = blocking.state {
+                Text("Без доступа фильтр не работает. Можно попробовать ещё раз или включить позже.")
+                    .font(.system(size: 13))
+                    .foregroundStyle(Palette.gold)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 18)
+            } else if case .failed(let message) = blocking.state {
+                Text(message)
+                    .font(.system(size: 13))
+                    .foregroundStyle(Palette.gold)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 18)
+            }
+
+            // Без доступа приложение всё равно должно открываться: дневник,
+            // стрик и SOS работают и без фильтра (да и Apple не пускает
+            // приложения, которые требуют разрешение, чтобы пройти дальше).
+            // Включить защиту можно потом в Настройках → Защита.
+            if blocking.state.needsFallback {
+                VStack(spacing: 6) {
+                    Button("Продолжить без защиты") {
+                        Task { await finish() }
+                    }
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(Palette.marbleHigh)
+                    .disabled(isRequesting)
+
+                    Text("Включить можно позже: Настройки → Защита.")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Palette.ash)
+                }
+                .padding(.top, 28)
             }
 
             Spacer()
