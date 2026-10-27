@@ -23,6 +23,8 @@ struct ChallengesView: View {
                     .font(Face.display(28, .semibold))
                     .foregroundStyle(Palette.marbleHigh)
                     .padding(.top, 8)
+                    // Заголовок на 5pt правее карточек — на одной линии с «Привет, воин».
+                    .padding(.leading, 5)
 
                 ContrastExperimentView()
 

@@ -208,7 +208,7 @@ struct JourneyDayDetailView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 section("Биохимия", symbol: "brain.head.profile", tint: Palette.adaptive(dark: 0x3DDCB0, light: 0x0E7C62), text: day.biochemistry)
-                section("В реальности", symbol: "bolt.heart.fill", tint: Palette.adaptive(dark: 0xFF6B3D, light: 0xC2410C), text: day.realFeel)
+                section("В реальности", symbol: "bolt.heart.fill", tint: Palette.garnet, text: day.realFeel)
                 section("Ловушка дня", symbol: "exclamationmark.shield.fill", tint: Palette.gold, text: day.trapWarning)
                 section("Действие", symbol: "checkmark.seal.fill", tint: Palette.adaptive(dark: 0x3DDC97, light: 0x15784A), text: day.tacticalAction)
 

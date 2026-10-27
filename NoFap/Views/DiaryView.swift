@@ -196,6 +196,8 @@ struct DiaryView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 8)
+        // Заголовок на 5pt правее карточек — на одной линии с «Привет, воин».
+        .padding(.leading, 5)
     }
 
     // MARK: - Вход в экспресс-чекин

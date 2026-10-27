@@ -134,6 +134,8 @@ struct HomeView: View {
             // С напарником в меню четыре пути — окну нужно чуть больше места.
             // Договор из опроса сверху добавляет высоты — тогда сразу во весь экран.
             .presentationDetents(manifestStore.currentManifest == nil ? [.height(650), .large] : [.large])
+            // Жест по содержимому двигает само окно, а не прокрутку внутри.
+            .presentationContentInteraction(.resizes)
             .presentationBackground(Palette.obsidian)
             .presentationDragIndicator(.visible)
         }
@@ -144,16 +146,20 @@ struct HomeView: View {
     /// Точка входа на случай острой тяги: три равноценных пути, а не один
     /// навязанный совет — то, что откликнется, у всех разное.
     private var sosMenu: some View {
-        ScrollView {
-        VStack(spacing: 22) {
-            if let item = manifestStore.currentManifest {
-                sosManifest(item)
+        let manifest = manifestStore.currentManifest
+        return ScrollView {
+        // С договором всё должно влезть в один экран без прокрутки: шаг
+        // между блоками меньше, а руку заменяет предупреждение в карточке.
+        VStack(spacing: manifest == nil ? 22 : 16) {
+            if let manifest {
+                sosManifest(manifest)
+                    .padding(.top, 12)
+            } else {
+                Image(systemName: "hand.raised.fill")
+                    .font(.system(size: 34))
+                    .foregroundStyle(Palette.garnet)
                     .padding(.top, 12)
             }
-            Image(systemName: "hand.raised.fill")
-                .font(.system(size: 34))
-                .foregroundStyle(Palette.garnet)
-                .padding(.top, 12)
 
             Text("Стоп. Тяга — это волна")
                 .font(Face.display(24, .semibold))
@@ -167,7 +173,7 @@ struct HomeView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 12)
 
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 sosRow(icon: "wind", title: "Дыхательная практика",
                        subtitle: "Снять напряжение за 3 круга дыхания", option: .breathing)
                 sosRow(icon: "figure.strengthtraining.traditional", title: "Физическое упражнение",
@@ -192,8 +198,6 @@ struct HomeView: View {
             }
             .padding(.horizontal, 4)
 
-            Spacer()
-
             Button("Закрыть") { showSOS = false }
                 .font(.system(size: 14))
                 .foregroundStyle(Palette.ash)
@@ -201,6 +205,10 @@ struct HomeView: View {
         .padding(.horizontal, 24)
         .padding(.bottom, 24)
         }
+        // Прокрутка включается, только если содержимое не влезло (маленький
+        // экран, длинная цитата). Иначе она перехватывала жест вниз, и окно
+        // начинало уезжать с запинкой.
+        .scrollBounceBehavior(.basedOnSize)
     }
 
     private func sosManifest(_ item: UserPainManifest) -> some View {
@@ -208,7 +216,7 @@ struct HomeView: View {
         return VStack(alignment: .leading, spacing: 10) {
             Label("ТВОЙ ЛИЧНЫЙ РАЗГОВОР С СОБОЙ", systemImage: "exclamationmark.triangle.fill")
                 .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(Palette.adaptive(dark: 0xFF6B3D, light: 0xC2410C))
+                .foregroundStyle(Palette.garnet)
             Text("Вспомни, ради чего ты начал")
                 .font(Face.display(20, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
@@ -265,7 +273,8 @@ struct HomeView: View {
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(Palette.ash)
             }
-            .padding(14)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
             .cardSurface()
         }
         .buttonStyle(.plain)

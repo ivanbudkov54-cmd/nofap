@@ -51,6 +51,8 @@ struct KnowledgeView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 18)
+        // Заголовок на 5pt правее карточек — на одной линии с «Привет, воин».
+        .padding(.leading, 5)
         .padding(.top, 8)
     }
 
