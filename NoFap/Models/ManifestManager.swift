@@ -3,7 +3,8 @@
 //  NoFap
 //
 //  «Договор с собой» из опроса: что человек чувствует после срыва, что уже
-//  потерял и кем станет через 5 лет. Показывается в дневнике и в SOS.
+//  потерял и кем хочет стать через год без срывов. Показывается в дневнике
+//  и в SOS.
 //
 
 import Foundation
@@ -11,7 +12,11 @@ import Foundation
 struct UserPainManifest: Codable, Equatable {
     var postRelapseFeeling: [String]
     var pastYearLosses: [String]
+    /// Прежний вопрос «кем станешь через 5 лет, если сдашься». Новые договоры
+    /// его не заполняют; у старых он остаётся, пока человек сам не сотрёт.
     var fiveYearFutureVision: String
+    /// Кем человек видит себя через год без срывов: цель, а не страшилка.
+    var yearVision: String?
     var customNotes: String?
     var createdAt: Date
 
@@ -24,8 +29,13 @@ struct UserPainManifest: Codable, Equatable {
             "",
             "После срыва я чувствую: \(feelings)",
             "Я уже потерял: \(losses)",
-            "Если я сдамся, через 5 лет я стану: \(fiveYearFutureVision)"
         ]
+        if let yearVision, !yearVision.isEmpty {
+            lines.append("Через год без срывов я стану: \(yearVision)")
+        }
+        if !fiveYearFutureVision.isEmpty {
+            lines.append("Если я сдамся, через 5 лет я стану: \(fiveYearFutureVision)")
+        }
         if let customNotes, !customNotes.isEmpty {
             lines.append("")
             lines.append(customNotes)
@@ -43,7 +53,23 @@ struct UserPainManifest: Codable, Equatable {
         default: "тебя ждут \(feelings[0]) и \(feelings[1])"
         }
         let loss = pastYearLosses.first.map(Self.accusative) ?? "то, что уже нельзя вернуть"
-        return "Ты лично написал это в первый день: после срыва \(awaits). Ты уже отдал этой привычке \(loss). Неужели ты готов добровольно стать тем, кого описал через 5 лет?"
+        let quote = "Ты лично написал это в первый день: после срыва \(awaits). Ты уже отдал этой привычке \(loss)."
+        if let yearVision, !yearVision.isEmpty {
+            // Слова человека — в кавычках как есть: падеж своего текста
+            // не угадать, а точка в конце задвоилась бы с нашей.
+            let vision = yearVision.trimmingCharacters(in: CharacterSet(charactersIn: ".!… ").union(.whitespacesAndNewlines))
+            return quote + " Через год без срывов ты видишь себя так: «\(vision)». Не меняй это на пять минут."
+        }
+        if !fiveYearFutureVision.isEmpty {
+            return quote + " Неужели ты готов добровольно стать тем, кого описал через 5 лет?"
+        }
+        return quote
+    }
+
+    /// Ответы для карточки: без эмодзи вариантов, через запятую, с заглавной.
+    static func list(_ options: [String]) -> String {
+        let text = options.map(phrase).joined(separator: ", ")
+        return text.prefix(1).uppercased() + text.dropFirst()
     }
 
     /// Короткая версия для экрана блокировки: места под подзаголовок там мало.
@@ -93,7 +119,8 @@ final class ManifestManager {
     func saveManifest(
         postRelapse: [String],
         losses: [String],
-        future: String,
+        vision: String,
+        legacyFuture: String = "",
         notes: String?,
         journal: JournalManager
     ) {
@@ -102,7 +129,8 @@ final class ManifestManager {
         let manifest = UserPainManifest(
             postRelapseFeeling: postRelapse.filter { !$0.isEmpty },
             pastYearLosses: losses.filter { !$0.isEmpty },
-            fiveYearFutureVision: future,
+            fiveYearFutureVision: legacyFuture.trimmingCharacters(in: .whitespacesAndNewlines),
+            yearVision: vision.trimmingCharacters(in: .whitespacesAndNewlines),
             customNotes: trimmedNotes?.isEmpty == false ? trimmedNotes : nil,
             createdAt: created
         )

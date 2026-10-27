@@ -57,10 +57,13 @@ struct OnboardingQuizView: View {
         "🧬 Тестостерон, выносливость и форма",
         "🎯 Глубокий фокус и память"
     ]
+    // Цель вместо страшилки «кем станешь через 5 лет»: сравнивать себя
+    // с худшей версией не мотивирует, а образ, к которому идёшь, — да.
     private let futureOptions = [
-        "Сломленным человеком без воли, амбиций и мужского стержня.",
-        "Одиноким наблюдателем чужих побед, зависящим от пикселей на экране.",
-        "Уставшим неудачником с хронической тревогой и упущенным потенциалом."
+        "Спокойным и собранным: голова ясная, тревога ушла.",
+        "Уверенным в себе — с девушками, с людьми, в деле.",
+        "Энергичным: силы есть на спорт, работу и свои цели.",
+        "Хозяином своего времени, а не экрана."
     ]
     private let contractPage = 8
     private let finale = 10
@@ -257,13 +260,13 @@ struct OnboardingQuizView: View {
 
     private var futureStep: some View {
         painStep(
-            title: "Твой худший кошмар",
-            subtitle: "Кем ты станешь через 5 лет, если оставишь всё как есть и продолжишь сдаваться импульсу?",
+            title: "Кем ты станешь через год",
+            subtitle: "Представь год без срывов. Каким ты себя видишь?",
             options: futureOptions,
             selected: futureChoice.map { [$0] } ?? []
         ) { toggleSingle($0, into: &futureChoice) }
         extra: {
-            Text("Напиши прямо и без прикрас...")
+            Text("Или напиши своими словами...")
                 .font(.system(size: 13))
                 .foregroundStyle(Palette.ash)
             ownField("", text: $futureNote, multiline: true, field: .future)
@@ -437,7 +440,7 @@ struct OnboardingQuizView: View {
         manifest.saveManifest(
             postRelapse: feelings,
             losses: yearLosses,
-            future: future,
+            vision: future,
             notes: own.isEmpty ? nil : own,
             journal: journal
         )

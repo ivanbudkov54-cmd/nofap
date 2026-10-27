@@ -242,27 +242,45 @@ struct DiaryView: View {
 
     // MARK: - Договор из опроса
 
+    /// Шрифт, подписи и рамка — как у остальных карточек: моноширинный
+    /// заголовок с эмодзи и плотная золотая рамка выбивались из приложения.
     private func painManifestCard(_ item: UserPainManifest) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("📌 МОЙ МАНИФЕСТ • ТОЧКА А")
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundStyle(Palette.gold)
-            Text("После срыва я чувствую: \(item.postRelapseFeeling.joined(separator: ", "))")
-            Text("Я уже потерял: \(item.pastYearLosses.joined(separator: ", "))")
-            Text("Если я сдамся, через 5 лет я стану: \(item.fiveYearFutureVision)")
-            Button("Редактировать / Дополнить") { editManifest = true }
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(Palette.gold)
+        VStack(alignment: .leading, spacing: 14) {
+            Eyebrow(text: "Мой манифест · точка А")
+            if !item.postRelapseFeeling.isEmpty {
+                manifestLine("После срыва я чувствую", UserPainManifest.list(item.postRelapseFeeling))
+            }
+            if !item.pastYearLosses.isEmpty {
+                manifestLine("Я уже потерял", UserPainManifest.list(item.pastYearLosses))
+            }
+            if let vision = item.yearVision, !vision.isEmpty {
+                manifestLine("Через год без срывов я стану", vision)
+            }
+            if !item.fiveYearFutureVision.isEmpty {
+                manifestLine("Если я сдамся, через 5 лет я стану", item.fiveYearFutureVision)
+            }
+            Button { editManifest = true } label: {
+                Label(item.yearVision?.isEmpty == false ? "Редактировать" : "Добавить цель на год",
+                      systemImage: "square.and.pencil")
+                    .font(Face.display(13, .medium))
+                    .foregroundStyle(.goldFill)
+            }
+            .buttonStyle(.plain)
         }
-        .font(.system(size: 15))
-        .foregroundStyle(Palette.marble)
-        .fixedSize(horizontal: false, vertical: true)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(Palette.gold.opacity(0.7), lineWidth: 1)
+        .cardSurface()
+    }
+
+    private func manifestLine(_ title: LocalizedStringResource, _ value: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.ash)
+            Text(value)
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.marbleHigh)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -616,7 +634,8 @@ private struct ManifestEditView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var feelings = ""
     @State private var losses = ""
-    @State private var future = ""
+    @State private var vision = ""
+    @State private var legacyFuture = ""
     @State private var notes = ""
 
     var body: some View {
@@ -624,13 +643,19 @@ private struct ManifestEditView: View {
             VStack(alignment: .leading, spacing: 14) {
                 field("После срыва я чувствую", text: $feelings)
                 field("Я уже потерял", text: $losses)
-                field("Через 5 лет я стану", text: $future)
+                field("Через год без срывов я стану", text: $vision)
+                // Старый вопрос виден, только пока заполнен: стёр — и он
+                // исчезнет из манифеста и из SOS.
+                if manifestStore.currentManifest?.fiveYearFutureVision.isEmpty == false {
+                    field("Если я сдамся, через 5 лет я стану", text: $legacyFuture)
+                }
                 field("Дополнительно", text: $notes)
                 Button("Сохранить") {
                     manifestStore.saveManifest(
-                        postRelapse: feelings.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
-                        losses: losses.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
-                        future: future,
+                        postRelapse: Self.items(feelings),
+                        losses: Self.items(losses),
+                        vision: vision,
+                        legacyFuture: legacyFuture,
                         notes: notes,
                         journal: journal
                     )
@@ -645,11 +670,19 @@ private struct ManifestEditView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             guard let item = manifestStore.currentManifest else { return }
-            feelings = item.postRelapseFeeling.joined(separator: ", ")
-            losses = item.pastYearLosses.joined(separator: ", ")
-            future = item.fiveYearFutureVision
+            feelings = item.postRelapseFeeling.joined(separator: "\n")
+            losses = item.pastYearLosses.joined(separator: "\n")
+            vision = item.yearVision ?? ""
+            legacyFuture = item.fiveYearFutureVision
             notes = item.customNotes ?? ""
         }
+    }
+
+    /// Пункт на строку, а не через запятую: в вариантах опроса свои запятые
+    /// («Тестостерон, выносливость и форма»), и при сохранении они рвались
+    /// на куски.
+    private static func items(_ text: String) -> [String] {
+        text.split(whereSeparator: \.isNewline).map { $0.trimmingCharacters(in: .whitespaces) }
     }
 
     private func field(_ title: String, text: Binding<String>) -> some View {
