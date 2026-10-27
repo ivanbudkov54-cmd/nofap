@@ -2,16 +2,18 @@
 //  ManifestDecisionView.swift
 //  NoFap
 //
-//  Последний экран квиза: человек сам выбирает путь. Отказ сворачивает
-//  приложение на домашний экран; при возврате выбор снова перед ним.
+//  Последний экран квиза: человек сам выбирает путь. Отказ возвращает на
+//  финал опроса — выбор снова перед ним. Сворачивать приложение нельзя:
+//  iOS-приложение не закрывает себя само, на проверке это выглядит как сбой.
 //
 
 import SwiftUI
-import UIKit
 
 struct ManifestDecisionView: View {
 
     let onAccept: () -> Void
+
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack(spacing: 0) {
@@ -50,7 +52,7 @@ struct ManifestDecisionView: View {
                 Button("Готов изменить себя", action: onAccept)
                     .buttonStyle(GoldButton())
 
-                Button("Остаться в серой реальности", action: leaveApp)
+                Button("Остаться в серой реальности") { dismiss() }
                     .buttonStyle(StoneButton())
             }
             .padding(.horizontal, 20)
@@ -60,7 +62,4 @@ struct ManifestDecisionView: View {
         .background(Palette.obsidian.ignoresSafeArea())
     }
 
-    private func leaveApp() {
-        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-    }
 }

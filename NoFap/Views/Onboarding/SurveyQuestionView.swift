@@ -67,6 +67,10 @@ struct SurveyQuestionView<Option: SurveyOption>: View {
             .padding(.vertical, 24)
         }
         .scrollDismissesKeyboard(.interactively)
+        // Касание пустого места убирает клавиатуру. Жест на самой прокрутке:
+        // слой под ней касаний не получает. Варианты и поле — дочерние,
+        // их собственные нажатия срабатывают раньше.
+        .onTapGesture { noteFocused = false }
     }
 
     // MARK: - Вариант ответа
@@ -139,6 +143,15 @@ struct SurveyQuestionView<Option: SurveyOption>: View {
                 .foregroundStyle(Palette.marbleHigh)
                 .lineLimit(2...5)
                 .focused($noteFocused)
+                // Многострочное поле забирает «Ввод» под перенос строки, и
+                // клавиатуру было нечем убрать, кроме как выбрать вариант.
+                // Здесь «Ввод» — это «Готово».
+                .submitLabel(.done)
+                .onChange(of: text.wrappedValue) { _, value in
+                    guard value.contains("\n") else { return }
+                    text.wrappedValue = value.replacingOccurrences(of: "\n", with: "")
+                    noteFocused = false
+                }
                 .padding(14)
                 .background(Palette.basalt, in: .rect(cornerRadius: 14))
                 .overlay {

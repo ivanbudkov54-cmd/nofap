@@ -31,6 +31,10 @@ struct OnboardingQuizView: View {
     @State private var generated = false
     @State private var statusLine = "Анализ твоих триггеров..."
     @State private var showDecision = false
+    @State private var goingBack = false
+    @FocusState private var focusedField: Field?
+
+    private enum Field { case feeling, future }
 
     private let durations = ["Меньше 1 года", "1–3 года", "3–7 лет", "Более 7 лет"]
     private let triggerOptions = ["Поздно вечером в кровати", "Стресс и выгорание", "От скуки", "Бесцельный скроллинг соцсетей", "Одиночество"]
@@ -64,57 +68,24 @@ struct OnboardingQuizView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            TabView(selection: $page) {
-                disclaimer.tag(0)
-                question(
-                    title: "Как давно эта привычка присутствует в твоей жизни?",
-                    options: durations,
-                    selected: duration.map { [$0] } ?? [],
-                    limit: 1
-                ) { toggleSingle($0, into: &duration) }
-                .tag(1)
-                question(
-                    title: "В какие моменты импульс срывает твою защиту чаще всего?",
-                    options: triggerOptions,
-                    selected: triggers,
-                    limit: nil
-                ) { toggle($0, in: &triggers, limit: nil) }
-                .tag(2)
-                question(
-                    title: "Что эта привычка отнимает у тебя прямо сейчас?",
-                    options: costOptions,
-                    selected: costs,
-                    limit: nil
-                ) { toggle($0, in: &costs, limit: nil) }
-                .tag(3)
-                question(
-                    title: "Какой твой максимальный рекорд осознанного воздержания в прошлом?",
-                    options: records,
-                    selected: pastRecord.map { [$0] } ?? [],
-                    limit: 1
-                ) { toggleSingle($0, into: &pastRecord) }
-                .tag(4)
-                question(
-                    title: "Ради чего главного ты хочешь освободиться от зависимости?",
-                    options: goalOptions,
-                    selected: goals,
-                    limit: 2
-                ) { toggle($0, in: &goals, limit: 2) }
-                .tag(5)
-                feelingStep.tag(6)
-                lossStep.tag(7)
-                futureStep.tag(8)
-                dayQuestion.tag(9)
-                finaleScreen.tag(10)
+            // Не TabView: при быстром «Далее» он не успевал долистать —
+            // счётчик показывал следующий вопрос, а на экране оставался
+            // прежний, и ответ уходил не туда.
+            ZStack {
+                pageView(page)
+                    .id(page)
+                    .transition(.push(from: goingBack ? .leading : .trailing))
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .scrollDisabled(true)
-            .animation(.easeInOut(duration: 0.35), value: page)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .clipped()
 
             footer
         }
-        .background(Palette.obsidian.ignoresSafeArea())
+        .background { StoneBackground() }
+        // Клавиатура не поднимает кнопку: иначе она наезжает на поле.
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .onChange(of: page) { _, newValue in
+            focusedField = nil
             if newValue == finale { startGeneration() }
         }
         .fullScreenCover(isPresented: $showDecision) {
@@ -126,12 +97,72 @@ struct OnboardingQuizView: View {
         }
     }
 
+    @ViewBuilder
+    private func pageView(_ index: Int) -> some View {
+        switch index {
+        case 0: disclaimer
+        case 1:
+            question(
+                title: "Как давно эта привычка присутствует в твоей жизни?",
+                options: durations,
+                selected: duration.map { [$0] } ?? [],
+                limit: 1
+            ) { toggleSingle($0, into: &duration) }
+        case 2:
+            question(
+                title: "В какие моменты импульс срывает твою защиту чаще всего?",
+                options: triggerOptions,
+                selected: triggers,
+                limit: nil
+            ) { toggle($0, in: &triggers, limit: nil) }
+        case 3:
+            question(
+                title: "Что эта привычка отнимает у тебя прямо сейчас?",
+                options: costOptions,
+                selected: costs,
+                limit: nil
+            ) { toggle($0, in: &costs, limit: nil) }
+        case 4:
+            question(
+                title: "Какой твой максимальный рекорд осознанного воздержания в прошлом?",
+                options: records,
+                selected: pastRecord.map { [$0] } ?? [],
+                limit: 1
+            ) { toggleSingle($0, into: &pastRecord) }
+        case 5:
+            question(
+                title: "Ради чего главного ты хочешь освободиться от зависимости?",
+                options: goalOptions,
+                selected: goals,
+                limit: 2
+            ) { toggle($0, in: &goals, limit: 2) }
+        case 6: feelingStep
+        case 7: lossStep
+        case 8: futureStep
+        case 9: dayQuestion
+        default: finaleScreen
+        }
+    }
+
+    /// Направление выставляется до смены страницы: уходящий экран берёт
+    /// переход из прошлого кадра, иначе «назад» уезжал бы не в ту сторону.
+    /// Цель считается сразу: двойное касание «Далее» не перепрыгнет вопрос.
+    private func go(by step: Int) {
+        let target = min(max(page + step, 0), finale)
+        goingBack = step < 0
+        DispatchQueue.main.async {
+            withAnimation(.snappy(duration: 0.3)) { page = target }
+        }
+    }
+
     private var topBar: some View {
         VStack(alignment: .leading, spacing: 10) {
+            // Высота строки постоянная: на финале стрелка «назад» исчезает,
+            // и без этого счётчик с полосой подпрыгивали вверх.
             HStack {
                 if page > 0 && !generated {
                     Button {
-                        withAnimation(.easeInOut(duration: 0.35)) { page -= 1 }
+                        go(by: -1)
                     } label: {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .semibold))
@@ -147,12 +178,13 @@ struct OnboardingQuizView: View {
                         .foregroundStyle(Palette.ash)
                 }
             }
+            .frame(height: 36)
             if page > 0 {
                 ProgressView(value: Double(min(page, finale)), total: Double(finale))
                     .tint(Palette.gold)
             }
         }
-        .padding(.horizontal, 18)
+        .padding(.horizontal, 28)
         .padding(.top, 8)
     }
 
@@ -160,8 +192,8 @@ struct OnboardingQuizView: View {
         VStack(alignment: .leading, spacing: 14) {
             Spacer()
             Text("Диагностика твоего пути")
-                .font(Face.display(28, .semibold))
-                .foregroundStyle(Palette.marbleHigh)
+                .font(Face.display(34, .medium))
+                .foregroundStyle(.marbleFill)
                 .fixedSize(horizontal: false, vertical: true)
             Text("Этот опрос нужен для честного осознания твоих триггеров, слабых мест и фиксации точки А, из которой ты начинаешь свой путь.")
                 .font(.system(size: 16))
@@ -169,7 +201,7 @@ struct OnboardingQuizView: View {
                 .fixedSize(horizontal: false, vertical: true)
             Spacer()
         }
-        .padding(24)
+        .padding(.horizontal, 28)
     }
 
     private func question(
@@ -182,12 +214,13 @@ struct OnboardingQuizView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 Text(title)
-                    .font(Face.display(22, .semibold))
-                    .foregroundStyle(Palette.marbleHigh)
+                    .font(Face.display(26, .medium))
+                    .foregroundStyle(.marbleFill)
+                    .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
                 if limit == 2 {
                     Text("Можно выбрать до двух")
-                        .font(.system(size: 13))
+                        .font(.system(size: 14))
                         .foregroundStyle(Palette.ash)
                 }
                 ForEach(options, id: \.self) { option in
@@ -196,7 +229,8 @@ struct OnboardingQuizView: View {
                     }
                 }
             }
-            .padding(24)
+            .padding(.horizontal, 28)
+            .padding(.vertical, 24)
         }
     }
 
@@ -208,7 +242,7 @@ struct OnboardingQuizView: View {
             selected: relapseFeelings
         ) { toggle($0, in: &relapseFeelings, limit: nil) }
         extra: {
-            ownField("Свой вариант", text: $customFeeling, multiline: false)
+            ownField("Свой вариант", text: $customFeeling, multiline: false, field: .feeling)
         }
     }
 
@@ -232,7 +266,7 @@ struct OnboardingQuizView: View {
             Text("Напиши прямо и без прикрас...")
                 .font(.system(size: 13))
                 .foregroundStyle(Palette.ash)
-            ownField("", text: $futureNote, multiline: true)
+            ownField("", text: $futureNote, multiline: true, field: .future)
         }
     }
 
@@ -247,33 +281,51 @@ struct OnboardingQuizView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 Text(title)
-                    .font(Face.display(22, .semibold))
-                    .foregroundStyle(Palette.marbleHigh)
+                    .font(Face.display(26, .medium))
+                    .foregroundStyle(.marbleFill)
+                    .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
                 Text(subtitle)
                     .font(.system(size: 15))
                     .foregroundStyle(Palette.ash)
                     .fixedSize(horizontal: false, vertical: true)
                 ForEach(options, id: \.self) { option in
-                    chip(option, on: selected.contains(option)) { onTap(option) }
+                    chip(option, on: selected.contains(option)) {
+                        focusedField = nil
+                        onTap(option)
+                    }
                 }
                 extra()
             }
-            .padding(24)
+            .padding(.horizontal, 28)
+            .padding(.vertical, 24)
         }
         .scrollDismissesKeyboard(.interactively)
+        // Касание пустого места убирает клавиатуру. Жест на самой прокрутке:
+        // слой под ней касаний не получает. Варианты и поле — дочерние,
+        // их собственные нажатия срабатывают раньше.
+        .onTapGesture { focusedField = nil }
     }
 
-    private func ownField(_ placeholder: String, text: Binding<String>, multiline: Bool) -> some View {
+    /// Многострочное поле перехватывает «Ввод» под перенос строки, и
+    /// клавиатуру было нечем убрать. Здесь «Ввод» — это «Готово».
+    private func ownField(_ placeholder: String, text: Binding<String>, multiline: Bool, field: Field) -> some View {
         TextField(placeholder, text: text, axis: .vertical)
             .lineLimit(multiline ? 3...6 : 1...2)
             .font(.system(size: 16))
             .foregroundStyle(Palette.marbleHigh)
+            .focused($focusedField, equals: field)
+            .submitLabel(.done)
+            .onChange(of: text.wrappedValue) { _, value in
+                guard value.contains("\n") else { return }
+                text.wrappedValue = value.replacingOccurrences(of: "\n", with: "")
+                focusedField = nil
+            }
             .padding(14)
             .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .strokeBorder(Palette.vein, lineWidth: 1)
+                    .strokeBorder(focusedField == field ? Palette.gold : Palette.vein, lineWidth: 1)
             }
     }
 
@@ -286,7 +338,7 @@ struct OnboardingQuizView: View {
         ) { title in
             if let days = dayOptions.first(where: { "\($0) дней" == title }) {
                 targetDays = days
-                UISelectionFeedbackGenerator().selectionChanged()
+                Haptics.selection()
             }
         }
     }
@@ -317,29 +369,23 @@ struct OnboardingQuizView: View {
         .padding(24)
     }
 
+    /// Та же кнопка, что в первом опросе: два опроса подряд не должны
+    /// выглядеть как два разных приложения.
     private var footer: some View {
-        Button(action: advance) {
-            Text(buttonTitle)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(canAdvance ? Palette.onGold : Palette.ash)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(
-                    canAdvance ? AnyShapeStyle(.goldSurface) : AnyShapeStyle(Palette.vein),
-                    in: RoundedRectangle(cornerRadius: 16, style: .continuous)
-                )
-        }
-        .disabled(!canAdvance)
-        .padding(.horizontal, 18)
-        .padding(.bottom, 24)
-        .padding(.top, 8)
+        Button(buttonTitle, action: advance)
+            .buttonStyle(EngravedButton())
+            .disabled(!canAdvance)
+            .opacity(canAdvance ? 1 : 0.35)
+            .padding(.horizontal, 28)
+            .padding(.bottom, 24)
+            .padding(.top, 8)
     }
 
     private var buttonTitle: String {
-        if page == 0 { return "Начать диагностику" }
-        if page == contractPage { return "Зафиксировать этот договор ⚔️" }
-        if page == finale { return "Войти в приложение" }
-        return "Далее"
+        if page == 0 { return "НАЧАТЬ ДИАГНОСТИКУ" }
+        if page == contractPage { return "ЗАФИКСИРОВАТЬ ЭТОТ ДОГОВОР" }
+        if page == finale { return "ВОЙТИ В ПРИЛОЖЕНИЕ" }
+        return "ДАЛЕЕ"
     }
 
     private var canAdvance: Bool {
@@ -367,7 +413,7 @@ struct OnboardingQuizView: View {
         if page == contractPage {
             saveContract()
         }
-        withAnimation(.easeInOut(duration: 0.35)) { page += 1 }
+        go(by: 1)
     }
 
     private func startGeneration() {
@@ -427,14 +473,15 @@ struct OnboardingQuizView: View {
         Button(action: action) {
             HStack {
                 Text(title)
-                    .font(.system(size: 16, weight: .medium))
+                    .font(Face.display(16, .medium))
                     .foregroundStyle(on ? Palette.onGold : Palette.marbleHigh)
                     .multilineTextAlignment(.leading)
                 Spacer(minLength: 8)
                 Image(systemName: on ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(on ? Palette.onGold : Palette.ash)
             }
-            .padding(14)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 16)
             .background(on ? AnyShapeStyle(.goldSurface) : AnyShapeStyle(Palette.basalt), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
@@ -446,7 +493,7 @@ struct OnboardingQuizView: View {
 
     private func toggleSingle(_ option: String, into value: inout String?) {
         value = option
-        UISelectionFeedbackGenerator().selectionChanged()
+        Haptics.selection()
     }
 
     private func toggle(_ option: String, in list: inout [String], limit: Int?) {
@@ -457,6 +504,6 @@ struct OnboardingQuizView: View {
         } else {
             list.append(option)
         }
-        UISelectionFeedbackGenerator().selectionChanged()
+        Haptics.selection()
     }
 }
