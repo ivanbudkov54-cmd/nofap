@@ -65,6 +65,7 @@ struct SquadOnImage: View {
 
     @Environment(PartnerManager.self) private var partner
     @Environment(SquadManager.self) private var squad
+    @Environment(PremiumStore.self) private var subscriptions
 
     let onTap: () -> Void
 
@@ -102,7 +103,9 @@ struct SquadOnImage: View {
     /// Напарник может состоять и в скваде — на картинке он один раз, в
     /// своём углу.
     private var squadMates: [PartnerProfile] {
-        squad.members.filter { $0.id != partner.partner?.id }
+        // Сквад — в Spartan Pro: без подписки участников на картинке нет.
+        guard subscriptions.isPro else { return [] }
+        return squad.members.filter { $0.id != partner.partner?.id }
     }
 
     private var accessibilitySummary: String {

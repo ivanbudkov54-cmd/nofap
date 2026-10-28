@@ -13,8 +13,10 @@ struct SquadSection: View {
     @Environment(SquadManager.self) private var squad
     @Environment(PartnerManager.self) private var partner
     @Environment(StreakManager.self) private var streak
+    @Environment(PremiumStore.self) private var subscriptions
 
     @State private var enteringCode = false
+    @State private var showPaywall = false
     @State private var codeDraft = ""
     @State private var showLeaveConfirm = false
 
@@ -28,7 +30,11 @@ struct SquadSection: View {
             case .none:
                 empty
             case .active(let snapshot):
-                active(snapshot)
+                if subscriptions.isPro {
+                    active(snapshot)
+                } else {
+                    lapsed
+                }
             case .failed(let message):
                 failure(message)
             }
@@ -39,6 +45,9 @@ struct SquadSection: View {
         .onAppear { squad.startWatchingMembers() }
         .onDisappear { squad.stopWatchingMembers() }
         .sheet(isPresented: $enteringCode) { codeSheet }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(contextReason: "Сквад доступен в Spartan Pro")
+        }
         .alert("Выйти из сквада?", isPresented: $showLeaveConfirm) {
             Button("Выйти", role: .destructive) { Task { await squad.leave() } }
             Button("Отмена", role: .cancel) {}
@@ -51,7 +60,11 @@ struct SquadSection: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Eyebrow(text: "сквад", color: Palette.gold)
+            HStack {
+                Eyebrow(text: "сквад", color: Palette.gold)
+                Spacer()
+                if !subscriptions.isPro { ProLockBadge() }
+            }
             Text("Держитесь группой")
                 .font(Face.display(20, .semibold))
                 .foregroundStyle(Palette.marbleHigh)
@@ -64,15 +77,43 @@ struct SquadSection: View {
 
     private var empty: some View {
         VStack(spacing: 12) {
-            Button("Собрать сквад") { Task { await squad.createInvite() } }
-                .buttonStyle(GoldButton())
-                .disabled(squad.isBusy)
+            Button("Собрать сквад") {
+                requirePro { Task { await squad.createInvite() } }
+            }
+            .buttonStyle(GoldButton())
+            .disabled(squad.isBusy)
 
             Button("У меня есть код") {
-                codeDraft = ""
-                enteringCode = true
+                requirePro {
+                    codeDraft = ""
+                    enteringCode = true
+                }
             }
             .buttonStyle(EngravedButton())
+        }
+    }
+
+    /// Подписка кончилась, а человек ещё в скваде: участников и чат не
+    /// показываем, но выйти можно и без Pro.
+    private var lapsed: some View {
+        VStack(spacing: 12) {
+            Text("Сквад — часть Spartan Pro. Продли подписку, чтобы снова видеть участников и общий чат.")
+                .font(.system(size: 14))
+                .foregroundStyle(Palette.marble)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+            Button("Открыть доступ") { showPaywall = true }
+                .buttonStyle(GoldButton())
+            Button("Выйти из сквада") { showLeaveConfirm = true }
+                .buttonStyle(StoneButton())
+        }
+    }
+
+    private func requirePro(_ action: () -> Void) {
+        if subscriptions.isPro {
+            action()
+        } else {
+            showPaywall = true
         }
     }
 

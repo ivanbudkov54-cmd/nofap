@@ -111,6 +111,9 @@ private struct SquadJoinSheet: View {
 
     @Environment(SquadManager.self) private var squad
     @Environment(PartnerManager.self) private var partner
+    @Environment(PremiumStore.self) private var subscriptions
+
+    @State private var showPaywall = false
 
     var body: some View {
         let code = squad.pendingCode ?? ""
@@ -125,6 +128,12 @@ private struct SquadJoinSheet: View {
 
             VStack(spacing: 12) {
                 Button("Вступить") {
+                    // Сквад — в Spartan Pro. После покупки пейвол закроется,
+                    // а приглашение останется: можно сразу нажать ещё раз.
+                    guard subscriptions.isPro else {
+                        showPaywall = true
+                        return
+                    }
                     squad.pendingCode = nil
                     Task { await squad.join(code: code) }
                 }
@@ -137,6 +146,9 @@ private struct SquadJoinSheet: View {
         }
         .padding(.horizontal, 20)
         .fittedSheet()
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(contextReason: "Сквад доступен в Spartan Pro")
+        }
     }
 }
 

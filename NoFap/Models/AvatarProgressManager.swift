@@ -164,6 +164,10 @@ final class AvatarProgressManager {
     var lastGain: XPGain?
     private(set) var unlockedRank: SpartanRank = .initiate
 
+    /// Опыт копится только со Spartan Pro — аватар тоже платный. Задаёт
+    /// ContentView по статусу подписки.
+    var isEarning = false
+
     /// Отправка опыта на сервер. Задаёт CloudSync — менеджер о сети не знает.
     var onTotalChanged: ((Int) -> Void)?
 
@@ -204,7 +208,7 @@ final class AvatarProgressManager {
     // MARK: - Начисление
 
     func addXP(_ amount: Int, source: XPSource) {
-        guard amount > 0 else { return }
+        guard amount > 0, isEarning else { return }
         let before = currentRank
         let fromXP = totalXP
         totalXP += amount
@@ -226,7 +230,8 @@ final class AvatarProgressManager {
     /// Одна и та же статья даёт очки только один раз.
     @discardableResult
     func rewardArticleRead(articleID: String, isScience: Bool) -> Bool {
-        guard !readArticleIDs.contains(articleID) else { return false }
+        // Без Pro статью не помечаем: после покупки за неё ещё можно получить опыт.
+        guard isEarning, !readArticleIDs.contains(articleID) else { return false }
         readArticleIDs.insert(articleID)
         addXP(isScience ? Reward.scienceArticle : Reward.dailyArticle, source: .article)
         return true

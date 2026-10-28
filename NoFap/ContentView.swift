@@ -96,6 +96,9 @@ struct ContentView: View {
         .onChange(of: partner.state) { _, _ in
             Task { await partner.push(from: streak) }
         }
+        .onChange(of: premium.isPro, initial: true) { _, pro in
+            xp.isEarning = pro
+        }
         .onChange(of: squad.isInSquad) { _, _ in
             Task { await squad.push(from: streak, nickname: partner.nickname) }
         }
