@@ -147,18 +147,17 @@ struct HomeView: View {
     /// навязанный совет — то, что откликнется, у всех разное.
     private var sosMenu: some View {
         let manifest = manifestStore.currentManifest
-        return ScrollView {
+        return GeometryReader { proxy in
+        ScrollView {
         // С договором всё должно влезть в один экран без прокрутки: шаг
         // между блоками меньше, а руку заменяет предупреждение в карточке.
         VStack(spacing: manifest == nil ? 22 : 16) {
             if let manifest {
                 sosManifest(manifest)
-                    .padding(.top, 12)
             } else {
                 Image(systemName: "hand.raised.fill")
                     .font(.system(size: 34))
                     .foregroundStyle(Palette.garnet)
-                    .padding(.top, 12)
             }
 
             Text("Стоп. Тяга — это волна")
@@ -203,12 +202,19 @@ struct HomeView: View {
                 .foregroundStyle(Palette.ash)
         }
         .padding(.horizontal, 24)
+        // Сверху отступ от серой полоски окна — иначе карточка и рука
+        // упирались прямо в неё.
+        .padding(.top, 32)
         .padding(.bottom, 24)
+        // На высоких экранах (Pro Max) всё уезжало вверх, а снизу оставалась
+        // пустота — теперь блок стоит по центру окна.
+        .frame(maxWidth: .infinity, minHeight: proxy.size.height)
         }
         // Прокрутка включается, только если содержимое не влезло (маленький
         // экран, длинная цитата). Иначе она перехватывала жест вниз, и окно
         // начинало уезжать с запинкой.
         .scrollBounceBehavior(.basedOnSize)
+        }
     }
 
     private func sosManifest(_ item: UserPainManifest) -> some View {
