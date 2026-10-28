@@ -33,6 +33,7 @@ struct EmailLinkSheet: View {
     @State private var message: String?
     @State private var secondsLeft = 0
     @State private var ticker: Task<Void, Never>?
+    @FocusState private var fieldFocused: Bool
 
     private enum Phase {
         case email, code
@@ -58,6 +59,7 @@ struct EmailLinkSheet: View {
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
+                        .focused($fieldFocused)
                         .foregroundStyle(Palette.marbleHigh)
                         .padding(14)
                         .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
@@ -67,6 +69,7 @@ struct EmailLinkSheet: View {
                         .keyboardType(.numberPad)
                         .font(.system(size: 28, weight: .semibold, design: .monospaced))
                         .multilineTextAlignment(.center)
+                        .focused($fieldFocused)
                         .padding(14)
                         .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                         .foregroundStyle(Palette.marbleHigh)
@@ -112,6 +115,8 @@ struct EmailLinkSheet: View {
                 Spacer()
             }
             .padding(20)
+            // Содержимое прижато к верху, и клавиатура его не двигает.
+            .ignoresSafeArea(.keyboard)
             .background(Palette.obsidian.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -121,7 +126,12 @@ struct EmailLinkSheet: View {
                 }
             }
         }
-        .presentationDetents([.medium, .large])
+        // Только во весь экран: с половинной высотой клавиатура сперва
+        // растягивала окно вверх, а на каждой букве оно дёргалось снова.
+        .presentationDetents([.large])
+        // Клавиатура выезжает вместе с окном, а не отдельным рывком потом.
+        .onAppear { fieldFocused = true }
+        .onChange(of: phase) { _, _ in fieldFocused = true }
         .onDisappear { ticker?.cancel() }
     }
 
