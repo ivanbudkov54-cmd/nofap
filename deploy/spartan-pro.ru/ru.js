@@ -3,8 +3,8 @@
 const INVOICE_URL = "https://gmmwfxpoidtpwbtxgjbk.supabase.co/functions/v1/create-robokassa-invoice";
 // Публичный anon-ключ Supabase — не секрет, он и так лежит в приложении.
 const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtbXdmeHBvaWR0cHdidHhnamJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyODc2OTQsImV4cCI6MjEwMzg2MzY5NH0.qw8KEXu7q6I8FdwzNn2S1zqZnJ4tZ5IcBG7epVV-LGQ";
-const AMOUNT = 349;
-const PAY_LABEL = "Оплатить картой или СБП — 349 ₽";
+const AMOUNT = 299;
+const PAY_LABEL = "Оплатить картой или СБП — 299 ₽";
 
 (function () {
   // Приложение открывает страницу как …?user_id=<id аккаунта>&email=…
@@ -53,7 +53,10 @@ const PAY_LABEL = "Оплатить картой или СБП — 349 ₽";
         body: JSON.stringify({ email: address, outSum: AMOUNT, userId: userId() }),
         signal: controller.signal
       });
-      if (!res.ok) throw new Error("bad status");
+      if (!res.ok) {
+        const fail = await res.json().catch(function () { return null; });
+        throw new Error((fail && fail.error) || "bad status");
+      }
       const data = await res.json();
       if (!data || typeof data.url !== "string" || !/^https:\/\//.test(data.url)) throw new Error("no url");
       location.href = data.url;

@@ -1,12 +1,12 @@
 # Деплой spartan-pro.ru (Beget) и оплаты Robokassa
 
 `spartan-pro.ru/` — готовый сайт: русский лендинг Spartan Pro. Тот же сайт архивом: `spartan-pro.ru.zip`.
-Сайт статичный, сборка не нужна.
+Сайт статичный, сборка не нужна. Цена на лендинге и в `create-robokassa-invoice`: **299 ₽** за 30 дней.
 
 ## 1. Залить сайт на Beget
 
 Содержимое папки `spartan-pro.ru/` должно лежать прямо в `public_html` домена spartan-pro.ru
-(в корне — `index.html`, `thanks.html`, `offer.html`, `privacy.html`, `refund.html`, `ru.js`, папка `assets/`).
+(в корне — `index.html`, `thanks.html`, `offer.html`, `privacy.html`, `refund.html`, `auth.html`, `ru.js`, `favicon.ico`, папка `assets/`).
 Старые файлы из `public_html` перед этим сохранить и удалить.
 
 Через FTP (данные — Beget → FTP):
@@ -25,9 +25,11 @@ lftp -u "$BEGET_FTP_USER" ftp.beget.com -e "mirror -R --delete deploy/spartan-pr
 ```bash
 supabase secrets set ROBOKASSA_PASSWORD2=...        # пароль №2 из кабинета Robokassa
 supabase functions deploy robokassa-result --no-verify-jwt
+supabase functions deploy create-robokassa-invoice --no-verify-jwt
 ```
 
-`create-robokassa-invoice` уже задеплоена (секреты ROBOKASSA_MERCHANT_LOGIN, ROBOKASSA_PASSWORD_1).
+Секреты `ROBOKASSA_MERCHANT_LOGIN`, `ROBOKASSA_PASSWORD_1`, `ROBOKASSA_PASSWORD2`, `service_role` в репозиторий не класть.
+
 Проверка: `curl -X POST https://gmmwfxpoidtpwbtxgjbk.supabase.co/functions/v1/robokassa-result` → 400 «bad request» (не 404).
 
 ## 3. Robokassa → Мои магазины → Технические настройки
@@ -38,8 +40,8 @@ supabase functions deploy robokassa-result --no-verify-jwt
 
 ## 4. Проверка платежа
 
-В приложении: Pro-функция → «Узнать подробнее о программе» → оплата 349 ₽ →
+В приложении: Pro-функция → «Узнать подробнее о программе» → оплата 299 ₽ →
 вернуться в приложение → «Проверить статус доступа». Pro должен включиться.
 
-Pro выдаётся только по `user_id` из ссылки, которую открывает приложение.
-Оплата со страницы без `?user_id=` деньги примет, но Pro не откроет.
+Оплата без `?user_id=` тоже валидна: доступ привязывается к email из формы.
+В приложении нужно войти по той же почте.
