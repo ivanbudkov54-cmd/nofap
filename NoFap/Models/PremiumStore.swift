@@ -151,9 +151,11 @@ final class PremiumStore {
     @discardableResult
     func checkSubscription() async -> SubscriptionRefresh {
         guard SupabaseConfig.isConfigured,
-              let uid = try? await SupabaseSession.shared.userID(),
-              let rows: [ProProfileRow] = try? await db.select(
-                  "profiles", [("id", "eq.\(uid)")], columns: "email,is_pro,pro_expires_at")
+              let uid = try? await SupabaseSession.shared.userID()
+        else { return .unavailable }
+        try? await db.call("claim_pro")
+        guard let rows: [ProProfileRow] = try? await db.select(
+            "profiles", [("id", "eq.\(uid)")], columns: "email,is_pro,pro_expires_at")
         else { return .unavailable }
         let row = rows.first
         if let email = row?.email, !email.isEmpty { noteLinkedAccount(email: email) }
