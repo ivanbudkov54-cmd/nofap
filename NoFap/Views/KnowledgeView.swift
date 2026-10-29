@@ -27,10 +27,9 @@ struct KnowledgeView: View {
     }
 
     @State private var selected: Tab = .journey
-    /// Вкладки, которые уже открывали: они остаются в памяти, и повторное
-    /// переключение не строит списки заново.
+    /// Вкладки, которые уже собраны: они остаются в памяти, и переключение
+    /// только меняет видимость, ничего не строя заново.
     @State private var visited: Set<Tab> = [.journey]
-    @Namespace private var tabAnimation
 
     var body: some View {
         VStack(spacing: 0) {
@@ -41,6 +40,16 @@ struct KnowledgeView: View {
         .background(Palette.obsidian.ignoresSafeArea())
         // Своя шапка вместо панели навигации — у всех вкладок одна высота.
         .toolbar(.hidden, for: .navigationBar)
+        // Остальные вкладки собираем сразу после показа экрана, пока
+        // человек читает, — чтобы и первое нажатие не тормозило.
+        .task {
+            try? await Task.sleep(for: .milliseconds(400))
+            visited = Set(Tab.allCases)
+        }
+        .onChange(of: selected) { _, tab in
+            visited.insert(tab)
+            Haptics.selection()
+        }
     }
 
     private var header: some View {
@@ -59,47 +68,20 @@ struct KnowledgeView: View {
         .padding(.top, 8)
     }
 
+    /// Системный переключатель: анимацию выделения рисует сама iOS (на
+    /// iOS 26 — Liquid Glass), вне SwiftUI-перерисовки. Свой с
+    /// matchedGeometryEffect подтормаживал на каждом нажатии.
     private var tabBar: some View {
-        HStack(spacing: 4) {
+        Picker("Раздел", selection: $selected) {
             ForEach(Tab.allCases) { tab in
-                tabButton(tab)
+                Text(tab.label).tag(tab)
             }
         }
-        .padding(4)
-        .background(Palette.basalt, in: .capsule)
-        .overlay { Capsule().strokeBorder(Palette.vein, lineWidth: 1) }
-        // Анимируется только подсветка. Раньше в анимацию попадала и смена
-        // вкладки целиком: три длинных списка перестраивались внутри одной
-        // транзакции, и переключение подтормаживало.
-        .animation(.snappy(duration: 0.25), value: selected)
+        .pickerStyle(.segmented)
+        .labelsHidden()
         .padding(.horizontal, 18)
         .padding(.top, 16)
         .padding(.bottom, 12)
-    }
-
-    private func tabButton(_ tab: Tab) -> some View {
-        let isSelected = selected == tab
-        return Button {
-            Haptics.selection()
-            visited.insert(tab)
-            selected = tab
-        } label: {
-            Text(tab.label)
-                .font(.system(size: 12, weight: .semibold))
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .foregroundStyle(isSelected ? Palette.onGold : Palette.ash)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 9)
-                .background {
-                    if isSelected {
-                        Capsule()
-                            .fill(.goldSurface)
-                            .matchedGeometryEffect(id: "knowledgeTabHighlight", in: tabAnimation)
-                    }
-                }
-        }
-        .buttonStyle(.plain)
     }
 
     /// Раньше `switch` выбрасывал прошлую вкладку и с нуля собирал новую —
