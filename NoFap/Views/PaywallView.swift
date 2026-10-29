@@ -33,6 +33,7 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var showEmailLink = false
+    @State private var openSiteAfterEmail = false
     @State private var isChecking = false
     @State private var statusNote: String?
 
@@ -101,7 +102,7 @@ struct PaywallView: View {
                     }
 
                     Button {
-                        Task { await subscriptions.openExternalWebsite() }
+                        Task { await openProgramSite() }
                     } label: {
                         Label("Узнать подробнее о программе", systemImage: "arrow.up.right")
                     }
@@ -123,7 +124,12 @@ struct PaywallView: View {
                 }
             }
         }
-        .sheet(isPresented: $showEmailLink) {
+        .sheet(isPresented: $showEmailLink, onDismiss: {
+            guard openSiteAfterEmail else { return }
+            openSiteAfterEmail = false
+            guard subscriptions.hasLinkedEmail else { return }
+            Task { await subscriptions.openExternalWebsite() }
+        }) {
             EmailLinkSheet(purpose: .signIn)
         }
         .onChange(of: subscriptions.isPro) { _, unlocked in
@@ -131,6 +137,15 @@ struct PaywallView: View {
         }
         .presentationDragIndicator(.visible)
         .task { await subscriptions.checkSubscription() }
+    }
+
+    private func openProgramSite() async {
+        if subscriptions.hasLinkedEmail {
+            await subscriptions.openExternalWebsite()
+            return
+        }
+        openSiteAfterEmail = true
+        showEmailLink = true
     }
 
     private func refreshStatus() async {

@@ -55,12 +55,12 @@ Deno.serve(async (request) => {
 
   const paidEmail = email || existing.data?.email || "";
   let userId = "";
-  if (paidEmail) {
+  if (isUuid(shpUserId)) userId = shpUserId.toLowerCase();
+  if (!userId && existing.data?.user_id) userId = String(existing.data.user_id);
+  if (!userId && paidEmail) {
     const looked = await supabase.rpc("account_id_for_email", { p_email: paidEmail });
     if (typeof looked.data === "string" && isUuid(looked.data)) userId = looked.data;
   }
-  if (!userId && isUuid(shpUserId)) userId = shpUserId.toLowerCase();
-  if (!userId && existing.data?.user_id) userId = String(existing.data.user_id);
 
   const amount = Number(outSum);
   if (existing.data) {
@@ -79,6 +79,13 @@ Deno.serve(async (request) => {
       status: "paid",
       paid_at: new Date().toISOString(),
     });
+  }
+
+  if (paidEmail) {
+    const recorded = await supabase.rpc("record_pro_grant", { p_email: paidEmail });
+    if (recorded.error) {
+      return new Response("grant ledger failed", { status: 500 });
+    }
   }
 
   if (userId) {

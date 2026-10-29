@@ -47,8 +47,10 @@ Deno.serve(async (request) => {
   }
 
   const supabase = createClient(supabaseUrl, serviceKey);
+  const fromClient = (body?.userId ?? body?.shp_user_id ?? "").trim();
   const { data: accountId } = await supabase.rpc("account_id_for_email", { p_email: email });
-  const userId = typeof accountId === "string" && isUuid(accountId) ? accountId : "";
+  const fromEmail = typeof accountId === "string" && isUuid(accountId) ? accountId : "";
+  const userId = isUuid(fromClient) ? fromClient.toLowerCase() : fromEmail;
 
   const { data: payment, error: paymentError } = await supabase
     .from("payments")

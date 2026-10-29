@@ -30,6 +30,9 @@ supabase functions deploy create-robokassa-invoice --no-verify-jwt
 
 Секреты `ROBOKASSA_MERCHANT_LOGIN`, `ROBOKASSA_PASSWORD_1`, `ROBOKASSA_PASSWORD2`, `service_role` в репозиторий не класть.
 
+Redirect URLs (Authentication → URL Configuration): `https://spartan-pro.ru/auth.html` и `nofap://**`.
+Без первой строки письмо снова уйдёт на localhost, и вход одним нажатием не откроет приложение.
+
 Проверка: `curl -X POST https://gmmwfxpoidtpwbtxgjbk.supabase.co/functions/v1/robokassa-result` → 400 «bad request» (не 404).
 
 ## 3. Robokassa → Мои магазины → Технические настройки
