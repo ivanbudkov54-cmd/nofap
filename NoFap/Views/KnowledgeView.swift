@@ -10,7 +10,7 @@ import SwiftUI
 
 struct KnowledgeView: View {
 
-    private enum Tab: String, CaseIterable, Identifiable {
+    private enum Tab: String, CaseIterable, Identifiable, Hashable {
         case journey = "My Journey"
         case simulator = "Urge Simulator"
         case deepDive = "Deep Dive"
@@ -27,6 +27,9 @@ struct KnowledgeView: View {
     }
 
     @State private var selected: Tab = .journey
+    /// Вкладки, которые уже открывали: они остаются в памяти, и повторное
+    /// переключение не строит списки заново.
+    @State private var visited: Set<Tab> = [.journey]
     @Namespace private var tabAnimation
 
     var body: some View {
@@ -78,6 +81,7 @@ struct KnowledgeView: View {
         let isSelected = selected == tab
         return Button {
             Haptics.selection()
+            visited.insert(tab)
             selected = tab
         } label: {
             Text(tab.label)
@@ -98,9 +102,25 @@ struct KnowledgeView: View {
         .buttonStyle(.plain)
     }
 
-    @ViewBuilder
+    /// Раньше `switch` выбрасывал прошлую вкладку и с нуля собирал новую —
+    /// 45 дней пути или все статьи на каждое нажатие, отсюда подтормаживание.
+    /// Теперь открытые вкладки лежат стопкой, видна только выбранная.
     private var content: some View {
-        switch selected {
+        ZStack {
+            ForEach(Tab.allCases) { tab in
+                if visited.contains(tab) {
+                    page(tab)
+                        .opacity(selected == tab ? 1 : 0)
+                        .allowsHitTesting(selected == tab)
+                        .accessibilityHidden(selected != tab)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func page(_ tab: Tab) -> some View {
+        switch tab {
         case .journey:
             MyJourneyView()
         case .simulator:

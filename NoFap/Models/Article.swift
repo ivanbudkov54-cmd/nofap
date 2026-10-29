@@ -30,9 +30,17 @@ struct Article: Identifiable, Hashable {
     let icon: String
     let readTime: String
     let excerpt: String
+
+    /// Открыта без Spartan Pro — см. `ArticleLibrary.freeIDs`.
+    var isFree: Bool { ArticleLibrary.freeIDs.contains(id) }
 }
 
 enum ArticleLibrary {
+
+    /// Бесплатные статьи — по одной на главный вопрос новичка: «это вообще
+    /// проблема?», «что происходит с мозгом?», «почему пропал вкус к жизни?».
+    /// Остальные — в Spartan Pro.
+    static let freeIDs: Set<String> = ["icd11-csbd", "voon-cambridge", "sci_dopamine_reset"]
 
     static let all: [Article] = [
         Article(

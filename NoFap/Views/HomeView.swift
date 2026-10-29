@@ -35,21 +35,24 @@ struct HomeView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 6) {
-                greeting
-                // Сизиф с валуном — и стрик, и цель, и напарник со сквадом
-                // в одной картинке. Заменил «Твой стрик» и «Свободен от».
-                SisyphusStreakCard()
-                    .padding(.top, 8)
-                quoteCard
-                actions
-            }
-            .padding(.horizontal, 15)
-            // Запас снизу небольшой: нижние 12pt зоны нажатия «Сообщить о
-            // срыве» сами работают буфером перед таб-баром.
-            .padding(.bottom, 12)
+        // Главная не листается: всё на одном экране. Если места мало
+        // (маленький iPhone), сжимается картинка — у неё фиксированные
+        // пропорции, а кнопки и цитата сохраняют свой размер.
+        VStack(spacing: 6) {
+            greeting
+            // Сизиф с валуном — и стрик, и цель, и напарник со сквадом
+            // в одной картинке. Заменил «Твой стрик» и «Свободен от».
+            SisyphusStreakCard()
+                .padding(.top, 8)
+            quoteCard
+            actions
+            Spacer(minLength: 0)
         }
+        .padding(.horizontal, 15)
+        // Запас снизу небольшой: нижние 12pt зоны нажатия «Сообщить о
+        // срыве» сами работают буфером перед таб-баром.
+        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Palette.obsidian.ignoresSafeArea())
         // .alert вместо .confirmationDialog: в iOS 26 у confirmationDialog
         // появилась стрелка-«хвостик», указывающая на кнопку-источник — на

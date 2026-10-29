@@ -57,6 +57,10 @@ struct DeepDiveView: View {
     }
 
     private func open(_ article: Article) {
+        if article.isFree {
+            openedArticle = article
+            return
+        }
         subscriptions.checkProAccess(for: "Расширенная база знаний доступна в Spartan Pro") {
             openedArticle = article
         }
@@ -132,7 +136,7 @@ struct DeepDiveView: View {
 
                 // Замок — отдельной строкой под мета: справа от заголовка он
                 // сжимал текст, и слова рвались по слогам.
-                if !subscriptions.isPro {
+                if !subscriptions.isPro && !article.isFree {
                     ProLockBadge()
                         .padding(.top, 4)
                 }

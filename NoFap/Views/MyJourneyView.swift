@@ -51,7 +51,7 @@ struct MyJourneyView: View {
             VStack(spacing: 14) {
                 currentDayCard
 
-                VStack(spacing: 10) {
+                LazyVStack(spacing: 10) {
                     ForEach(JourneyLibrary.all) { day in
                         dayRow(day)
                     }
