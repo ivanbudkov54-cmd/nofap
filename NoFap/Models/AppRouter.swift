@@ -35,4 +35,6 @@ final class OpenRequest {
     var destination: NotificationDestination?
     /// Открыть экспресс-чекин, когда дневник появится на экране.
     var checkIn = false
+    /// Magic link открыл приложение и сессия уже записана.
+    var emailAuthCompleted = false
 }

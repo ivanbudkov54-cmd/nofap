@@ -125,6 +125,10 @@ struct ContentView: View {
                 OpenRequest.shared.sos = true
                 return
             }
+            if SupabaseSession.isMagicLink(url) || (url.host()?.contains("supabase.co") == true && url.path.contains("/verify")) {
+                Task { await finishMagicLink(url) }
+                return
+            }
             guard let invite = PartnerLink.invite(from: url) else { return }
             switch invite.kind {
             case .partner:
@@ -164,5 +168,24 @@ struct ContentView: View {
             ? UrgeClock.peakHour(sos: TriggerLog.entries(), relapses: RelapseLog.dates())
             : nil
         await reminder.adapt(personalPeak: peak, isPro: premium.isPremium)
+    }
+
+    private func finishMagicLink(_ url: URL) async {
+        do {
+            let email = try await SupabaseSession.shared.consumeVerifyURL(url)
+            cloud.forgetSyncState()
+            if let email, !email.isEmpty { premium.noteLinkedAccount(email: email) }
+            await premium.checkSubscription()
+            await cloud.push(streak: streak)
+            await cloud.syncJournal(journal)
+            switch await backup.check() {
+            case .restoreNow(let found): backup.offer = found
+            case .nothing:               await backup.upload(force: true)
+            case .unknown:               break
+            }
+            OpenRequest.shared.emailAuthCompleted = true
+        } catch {
+            return
+        }
     }
 }
