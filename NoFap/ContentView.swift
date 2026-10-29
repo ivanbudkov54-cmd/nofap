@@ -118,26 +118,12 @@ struct ContentView: View {
         .onChange(of: premium.isPremium) { _, _ in
             Task { await adaptReminder() }
         }
-        // Здесь, а не в RootView: ссылку могут открыть ещё до конца
-        // онбординга — код подождёт в менеджере, пока появятся вкладки.
-        .onOpenURL { url in
-            if url == ShieldShared.sosURL {
-                OpenRequest.shared.sos = true
-                return
-            }
-            if SupabaseSession.isMagicLink(url) || (url.host()?.contains("supabase.co") == true && url.path.contains("/verify")) {
-                Task { await finishMagicLink(url) }
-                return
-            }
-            guard let invite = PartnerLink.invite(from: url) else { return }
-            switch invite.kind {
-            case .partner:
-                partner.pendingInviter = invite.inviter
-                partner.pendingCode = invite.code
-            case .squad:
-                squad.pendingInviter = invite.inviter
-                squad.pendingCode = invite.code
-            }
+        // Ссылку могут открыть, пока RestoreGate ещё на экране — она
+        // лежит в OpenRequest.incomingURL до появления вкладок.
+        .onChange(of: OpenRequest.shared.incomingURL, initial: true) { _, url in
+            guard let url else { return }
+            OpenRequest.shared.incomingURL = nil
+            handleIncoming(url)
         }
     }
 
@@ -168,6 +154,28 @@ struct ContentView: View {
             ? UrgeClock.peakHour(sos: TriggerLog.entries(), relapses: RelapseLog.dates())
             : nil
         await reminder.adapt(personalPeak: peak, isPro: premium.isPremium)
+    }
+
+    private func handleIncoming(_ url: URL) {
+        if url == ShieldShared.sosURL {
+            OpenRequest.shared.sos = true
+            return
+        }
+        if SupabaseSession.isMagicLink(url)
+            || (url.host()?.contains("supabase.co") == true && url.path.contains("/verify"))
+            || (url.host()?.contains("spartan-pro.ru") == true && url.path.contains("auth")) {
+            Task { await finishMagicLink(url) }
+            return
+        }
+        guard let invite = PartnerLink.invite(from: url) else { return }
+        switch invite.kind {
+        case .partner:
+            partner.pendingInviter = invite.inviter
+            partner.pendingCode = invite.code
+        case .squad:
+            squad.pendingInviter = invite.inviter
+            squad.pendingCode = invite.code
+        }
     }
 
     private func finishMagicLink(_ url: URL) async {

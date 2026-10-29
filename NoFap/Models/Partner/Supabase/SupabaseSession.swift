@@ -101,8 +101,8 @@ final class SupabaseSession {
     // MARK: - Вход по почте
 
     /// Куда GoTrue вернёт сессию после клика по magic link.
-    /// Должен быть в Redirect URLs: `nofap://**`.
-    static let magicLinkRedirect = "nofap://auth"
+    /// Должен быть в Redirect URLs: `https://spartan-pro.ru/auth.html` и `nofap://**`.
+    static let magicLinkRedirect = "https://spartan-pro.ru/auth.html"
 
     static func isMagicLink(_ url: URL) -> Bool {
         url.scheme == "nofap" && url.host()?.lowercased() == "auth"
@@ -150,12 +150,15 @@ final class SupabaseSession {
         return uid
     }
 
-    /// Safari на симуляторе теряет `#access_token` у `nofap://`. Поэтому
-    /// ссылку из письма лучше обменять здесь, не открывая её в браузере.
+    /// Safari теряет `#access_token` у `nofap://`, поэтому страница
+    /// `auth.html` кладёт токены в query. Ссылку из письма можно и вставить.
     @discardableResult
     func consumeVerifyURL(_ url: URL) async throws -> String? {
         if Self.isMagicLink(url) { return try await applyMagicLink(url) }
         let host = url.host()?.lowercased() ?? ""
+        if host.contains("spartan-pro.ru"), url.path.contains("auth") {
+            return try await applyMagicLink(url)
+        }
         guard host.contains("supabase.co"), url.path.contains("/auth/v1/verify") else {
             throw EmailLinkError.invalidCode
         }
@@ -170,12 +173,15 @@ final class SupabaseSession {
         return try await applyMagicLink(location)
     }
 
-    /// Сессия из редиректа magic link (`nofap://auth#access_token=&refresh_token=`).
+    /// Сессия из редиректа (`nofap://auth?access_token=` или `#access_token=`).
     @discardableResult
     func applyMagicLink(_ url: URL) async throws -> String? {
         let pairs = Self.parameters(from: url)
         if pairs["error_code"] == "otp_expired" || pairs["error"] == "access_denied" {
             throw EmailLinkError.expired
+        }
+        if pairs["error"] != nil || pairs["error_code"] != nil {
+            throw EmailLinkError.invalidCode
         }
         guard let access = pairs["access_token"], let refresh = pairs["refresh_token"] else {
             throw EmailLinkError.invalidCode
@@ -204,13 +210,22 @@ final class SupabaseSession {
         for item in encoded?.queryItems ?? [] {
             if let value = item.value { pairs[item.name] = value }
         }
+        // `URLComponents.queryItems` пустой, если токены пришли как
+        // `nofap://auth?access_token=…` без стандартного host/path.
+        if pairs.isEmpty, let query = url.query {
+            Self.merge(query, into: &pairs)
+        }
         let fragment = url.fragment ?? encoded?.fragment
-        for piece in fragment?.split(separator: "&") ?? [] {
+        if let fragment { Self.merge(fragment, into: &pairs) }
+        return pairs
+    }
+
+    private static func merge(_ raw: String, into pairs: inout [String: String]) {
+        for piece in raw.split(separator: "&") {
             let parts = piece.split(separator: "=", maxSplits: 1).map(String.init)
             guard parts.count == 2 else { continue }
             pairs[parts[0]] = parts[1].removingPercentEncoding ?? parts[1]
         }
-        return pairs
     }
 
     // MARK: - Внутреннее

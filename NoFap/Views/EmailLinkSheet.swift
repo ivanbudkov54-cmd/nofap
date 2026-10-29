@@ -48,7 +48,7 @@ struct EmailLinkSheet: View {
 
                 Text(phase == .email
                      ? "Укажите ваш email. На него будет оформлена подписка, а ваш текущий прогресс сохранится даже при смене телефона."
-                     : "На \(email) ушла ссылка. Не открывайте её в Safari — скопируйте из письма и вставьте сюда. Ссылка одноразовая.")
+                     : "Откройте письмо и нажмите ссылку — приложение откроется само.")
                     .font(.system(size: 15))
                     .foregroundStyle(Palette.marble)
                     .fixedSize(horizontal: false, vertical: true)
@@ -59,27 +59,9 @@ struct EmailLinkSheet: View {
                         .padding(14)
                         .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 } else {
-                    TextField("https://…/auth/v1/verify?token=…", text: $pastedLink)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .keyboardType(.URL)
-                        .focused($fieldFocused)
-                        .foregroundStyle(Palette.marbleHigh)
-                        .padding(14)
-                        .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-
-                    Button {
-                        Task { await confirmPastedLink() }
-                    } label: {
-                        if isBusy {
-                            ProgressView().tint(Palette.onGold)
-                        } else {
-                            Text("Войти по ссылке")
-                        }
-                    }
-                    .buttonStyle(GoldButton())
-                    .disabled(isBusy || pastedLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    .opacity(pastedLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1)
+                    Text("Письмо ушло на \(email).")
+                        .font(.system(size: 14))
+                        .foregroundStyle(Palette.ash)
 
                     Button(secondsLeft > 0 ? "Отправить снова через \(secondsLeft) с" : "Отправить ссылку снова") {
                         Task { await sendCode() }
@@ -87,6 +69,34 @@ struct EmailLinkSheet: View {
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(secondsLeft > 0 ? Palette.ash : Palette.gold)
                     .disabled(secondsLeft > 0 || isBusy)
+
+                    Text("Не открывается? Скопируйте ссылку из письма и вставьте сюда.")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Palette.ash)
+                        .padding(.top, 8)
+
+                    TextField("https://…/auth/v1/verify?token=…", text: $pastedLink)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .keyboardType(.URL)
+                        .focused($fieldFocused)
+                        .font(.system(size: 13))
+                        .foregroundStyle(Palette.marbleHigh)
+                        .padding(12)
+                        .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+                    Button {
+                        Task { await confirmPastedLink() }
+                    } label: {
+                        if isBusy {
+                            ProgressView().tint(Palette.gold)
+                        } else {
+                            Text("Войти по ссылке")
+                                .font(.system(size: 14, weight: .medium))
+                        }
+                    }
+                    .foregroundStyle(pastedLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Palette.ash : Palette.gold)
+                    .disabled(isBusy || pastedLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
 
                 if let message {
@@ -187,6 +197,7 @@ struct EmailLinkSheet: View {
             case .nothing:               await backup.upload(force: true)
             case .unknown:               break
             }
+            OpenRequest.shared.emailAuthCompleted = true
             if purpose == .backup {
                 router.toast = "Email успешно привязан. Прогресс синхронизирован."
             }

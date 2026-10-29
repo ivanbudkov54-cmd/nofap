@@ -16,6 +16,7 @@ struct NoFapApp: App {
     var body: some Scene {
         WindowGroup {
             RestoreGate()
+                .onOpenURL { OpenRequest.shared.incomingURL = $0 }
         }
     }
 }

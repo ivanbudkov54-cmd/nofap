@@ -37,4 +37,6 @@ final class OpenRequest {
     var checkIn = false
     /// Magic link открыл приложение и сессия уже записана.
     var emailAuthCompleted = false
+    /// Ссылка пришла, пока RestoreGate ещё на экране, или приложение только что поднялось.
+    var incomingURL: URL?
 }

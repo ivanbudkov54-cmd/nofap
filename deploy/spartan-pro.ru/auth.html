@@ -6,15 +6,26 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Вход — Spartan Pro</title>
 <meta name="theme-color" content="#0A0A0D">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="stylesheet" href="assets/site.css">
 <script>
 (function () {
-  var hash = location.hash || "";
-  var search = location.search || "";
-  var payload = "";
-  if (hash.indexOf("access_token=") !== -1) payload = hash.replace(/^#/, "");
-  else if (search.indexOf("access_token=") !== -1) payload = search.replace(/^\?/, "");
-  if (payload) location.replace("nofap://auth?" + payload);
+  function payload() {
+    var hash = (location.hash || "").replace(/^#/, "");
+    var search = (location.search || "").replace(/^\?/, "");
+    if (hash.indexOf("access_token=") !== -1 || hash.indexOf("error=") !== -1 || hash.indexOf("error_code=") !== -1) {
+      return hash;
+    }
+    if (search.indexOf("access_token=") !== -1 || search.indexOf("error=") !== -1 || search.indexOf("error_code=") !== -1) {
+      return search;
+    }
+    return hash || search;
+  }
+  var data = payload();
+  if (data) {
+    try { sessionStorage.setItem("spartan_auth", data); } catch (e) {}
+    location.replace("nofap://auth?" + data);
+  }
 })();
 </script>
 </head>
@@ -22,13 +33,21 @@
 <main>
   <span class="eyebrow">Вход</span>
   <h1>Открываем приложение.</h1>
-  <p>Если StopFap не открылся сам, нажмите кнопку. На симуляторе вставьте ссылку из письма в Safari симулятора.</p>
+  <p>Нажмите ссылку в письме — StopFap откроется сам. Если этого не произошло, нажмите кнопку.</p>
   <a class="btn btn-gold" id="open-app" href="nofap://auth">Открыть приложение</a>
 </main>
 <script>
-  var link = document.getElementById("open-app");
-  var payload = (location.hash || "").replace(/^#/, "") || (location.search || "").replace(/^\?/, "");
-  if (payload.indexOf("access_token=") !== -1) link.href = "nofap://auth?" + payload;
+  (function () {
+    var link = document.getElementById("open-app");
+    var data = "";
+    try { data = sessionStorage.getItem("spartan_auth") || ""; } catch (e) {}
+    if (!data) {
+      var hash = (location.hash || "").replace(/^#/, "");
+      var search = (location.search || "").replace(/^\?/, "");
+      data = hash || search;
+    }
+    if (data) link.href = "nofap://auth?" + data;
+  })();
 </script>
 </body>
 </html>
