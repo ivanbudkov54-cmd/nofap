@@ -16,7 +16,9 @@ struct GoalPicker: View {
     @State private var customText: String = ""
     @FocusState private var customFocused: Bool
 
-    private let presets = [7, 14, 21, 30, 60, 90]
+    /// Самая длинная готовая цель — 45 дней, как весь «Мой путь». Дольше
+    /// можно поставить через «Своё число».
+    private let presets = [7, 10, 14, 21, 30, 45]
 
     private var isCustomActive: Bool {
         !presets.contains(selected)

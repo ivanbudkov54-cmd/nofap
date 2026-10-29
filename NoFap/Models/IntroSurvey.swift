@@ -200,7 +200,7 @@ struct PersonalTrack {
 
     /// Те же пресеты, что и в GoalPicker: рекомендация должна подсветиться
     /// готовой плиткой, а не упасть в поле «своё число».
-    private static let ladder = [7, 14, 21, 30, 60, 90]
+    private static let ladder = [7, 10, 14, 21, 30, 45]
 
     static func make(from answers: IntroSurveyAnswers) -> PersonalTrack {
         // Срок считается один раз и передаётся во фразы: раньше `statements`
@@ -223,7 +223,7 @@ struct PersonalTrack {
         case nil:             21
         }
 
-        var index = ladder.firstIndex(of: base) ?? 2
+        var index = ladder.firstIndex(of: base) ?? 3
 
         // Чем дольше привычка, тем короче первая цель: важно, чтобы первая
         // победа была достижимой, а не «правильной».
