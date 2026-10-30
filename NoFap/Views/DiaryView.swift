@@ -271,12 +271,12 @@ struct DiaryView: View {
     }
 
     private func manifestLine(_ title: LocalizedStringResource, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 5) {
             Text(title)
-                .font(.system(size: 13))
-                .foregroundStyle(Palette.ash)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(Palette.marble)
             Text(value)
-                .font(.system(size: 15))
+                .font(.system(size: 17))
                 .foregroundStyle(Palette.marbleHigh)
                 .fixedSize(horizontal: false, vertical: true)
         }

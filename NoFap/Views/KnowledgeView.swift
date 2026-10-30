@@ -31,6 +31,20 @@ struct KnowledgeView: View {
     /// только меняет видимость, ничего не строя заново.
     @State private var visited: Set<Tab> = [.journey]
 
+    /// Выбранный сегмент — золотой, как кнопки приложения. Других
+    /// сегментированных переключателей в приложении нет, так что общий
+    /// appearance задевает только этот.
+    init() {
+        let control = UISegmentedControl.appearance()
+        control.selectedSegmentTintColor = UIColor(Palette.goldSurface)
+        control.setTitleTextAttributes([.foregroundColor: UIColor(Palette.onGold),
+                                        .font: UIFont.systemFont(ofSize: 14, weight: .semibold)],
+                                       for: .selected)
+        control.setTitleTextAttributes([.foregroundColor: UIColor(Palette.marble),
+                                        .font: UIFont.systemFont(ofSize: 14, weight: .medium)],
+                                       for: .normal)
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             header
