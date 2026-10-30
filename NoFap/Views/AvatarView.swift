@@ -402,20 +402,18 @@ struct ArticleStudiedBar: View {
 
     var body: some View {
         let studied = xp.hasRead(articleID: articleID) || avatar.hasReadArticle(id: articleID)
-        Button {
-            avatar.addPowerForArticle(id: articleID)
-            xp.rewardArticleRead(articleID: articleID, isScience: isScience)
-        } label: {
-            Text(studied ? "Уже изучена" : "Статья изучена")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(studied ? Palette.ash : Palette.onGold)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-                .background(
-                    studied ? AnyShapeStyle(Palette.vein) : AnyShapeStyle(Palette.gold),
-                    in: RoundedRectangle(cornerRadius: 14, style: .continuous)
-                )
+        // Те же кнопки, что везде: золотая капсула с градиентом, а после
+        // нажатия — приглушённая каменная. Плоская оранжевая выбивалась.
+        if studied {
+            Button("Уже изучена") {}
+                .buttonStyle(StoneButton())
+                .disabled(true)
+        } else {
+            Button("Статья изучена") {
+                avatar.addPowerForArticle(id: articleID)
+                xp.rewardArticleRead(articleID: articleID, isScience: isScience)
+            }
+            .buttonStyle(GoldButton())
         }
-        .disabled(studied)
     }
 }
