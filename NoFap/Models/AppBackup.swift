@@ -148,6 +148,7 @@ final class AppBackup {
     ]
     private static let skippedKeys: Set<String> = [
         "premiumOverride", "webCheckoutOverride",   // отладка
+        "testerPro",                                // Pro для своих в TestFlight
         "knowledgeArticlesCache"                    // скачивается заново
     ]
 

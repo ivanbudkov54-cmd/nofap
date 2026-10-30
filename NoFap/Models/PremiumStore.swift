@@ -59,6 +59,7 @@ final class PremiumStore {
 
     var isPremium: Bool {
         Self.freeLaunch || hasStoreSubscription || accountActive || web.isActive || debugOverride
+            || (testerUnlock && isTestBuild)
     }
 
     /// Пейвол по требованию экрана: `checkProAccess` поднимает флаг, RootView
@@ -98,6 +99,7 @@ final class PremiumStore {
     }
 
     func start() async {
+        await detectTestBuild()
         guard !Self.freeLaunch else { return }
         await checkSubscription()
         await refreshEntitlements()
@@ -225,6 +227,30 @@ final class PremiumStore {
     }
 
     // MARK: - Отладка
+
+    /// Pro для своих: семь нажатий по версии внизу Настроек. Работает
+    /// только в TestFlight и из Xcode — в сборке из App Store флаг ничего
+    /// не открывает, даже если оказался включён.
+    private(set) var testerUnlock = UserDefaults.standard.bool(forKey: "testerPro")
+    private(set) var isTestBuild = false
+
+    func toggleTesterUnlock() {
+        guard isTestBuild else { return }
+        testerUnlock.toggle()
+        UserDefaults.standard.set(testerUnlock, forKey: "testerPro")
+        if isPremium { shouldShowPaywall = false }
+    }
+
+    /// TestFlight подписан песочницей App Store, Xcode — своим окружением.
+    private func detectTestBuild() async {
+        #if DEBUG
+        isTestBuild = true
+        #else
+        if case .verified(let app) = try? await AppTransaction.shared {
+            isTestBuild = app.environment != .production
+        }
+        #endif
+    }
 
     /// `-premiumOverride YES` в аргументах запуска — посмотреть приложение
     /// глазами подписчика без тестовой покупки.

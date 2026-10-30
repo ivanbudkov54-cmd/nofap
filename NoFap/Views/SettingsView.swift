@@ -35,6 +35,7 @@ struct SettingsView: View {
     @State private var showEmailLink = false
     @State private var showTriggerPicker = false
     @State private var triggerDraft = FamilyActivitySelection()
+    @State private var versionTaps = 0
 
     private let supportURL = AppInfo.supportURL
 
@@ -134,7 +135,10 @@ struct SettingsView: View {
                 }
                 .disabled(isDeleting || !SupabaseConfig.isConfigured)
             } footer: {
-                Text("Удаление стирает историю воздержания, дневник и сессию на этом устройстве и на сервере.")
+                VStack(spacing: 16) {
+                    Text("Удаление стирает историю воздержания, дневник и сессию на этом устройстве и на сервере.")
+                    versionLabel
+                }
             }
         }
         .listStyle(.insetGrouped)
@@ -245,6 +249,28 @@ struct SettingsView: View {
                  ? "Выбери сайты, с которых обычно начинается срыв, — вместо них откроется экран со стриком и кнопкой SOS. В списке есть сайты, которые ты открывал в Safari. Приложения не блокируются, даже если отметить их: чаты остаются."
                  : "Фильтр Apple закрывает сайты 18+ во всех браузерах этого iPhone. Нужен доступ к Экранному времени.")
         }
+    }
+
+    /// Версия внизу списка. Семь нажатий в TestFlight включают и выключают
+    /// Pro для своих — чтобы проверять платные экраны без оплаты.
+    private var versionLabel: some View {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "—"
+        let build = info?["CFBundleVersion"] as? String ?? "—"
+        return Text(verbatim: "StopFap \(version) (\(build))" + (subscriptions.testerUnlock && subscriptions.isTestBuild ? " · Pro для теста" : ""))
+            .font(.system(size: 12))
+            .foregroundStyle(Palette.ash)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                guard subscriptions.isTestBuild else { return }
+                versionTaps += 1
+                if versionTaps >= 7 {
+                    versionTaps = 0
+                    subscriptions.toggleTesterUnlock()
+                    Haptics.success()
+                }
+            }
     }
 
     private func linkRow(_ title: String, url: URL) -> some View {
