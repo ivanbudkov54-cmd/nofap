@@ -19,16 +19,20 @@ struct ChallengesView: View {
         ScrollViewReader { proxy in
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                Text("Челленджи")
-                    .font(Face.display(28, .semibold))
-                    .foregroundStyle(Palette.marbleHigh)
-                    .padding(.top, 8)
-                    // Заголовок на 5pt правее карточек — на одной линии с «Привет, воин».
-                    .padding(.leading, 5)
+                // Уровень и счёт — одной строкой у заголовка: двумя
+                // карточками они занимали полэкрана ради двух чисел.
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Челленджи")
+                        .font(Face.display(28, .semibold))
+                        .foregroundStyle(Palette.marbleHigh)
+                    Spacer()
+                    stats
+                }
+                .padding(.top, 8)
+                // Заголовок на 5pt правее карточек — на одной линии с «Привет, воин».
+                .padding(.leading, 5)
 
                 ContrastExperimentView()
-
-                stats
 
                 activeCard
 
@@ -63,24 +67,22 @@ struct ChallengesView: View {
     }
 
     private var stats: some View {
-        HStack(spacing: 10) {
-            stat(title: "Уровень", value: "\(challenges.level)")
-            stat(title: "Закрыто", value: "\(challenges.totalCompletedChallengesCount)")
-        }
-    }
-
-    private func stat(title: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.system(size: 12, weight: .medium))
+        HStack(spacing: 6) {
+            Text("Ур. \(challenges.level)")
+                .foregroundStyle(.goldFill)
+            Text(verbatim: "·")
                 .foregroundStyle(Palette.ash)
-            Text(value)
-                .font(Face.display(20, .semibold))
-                .foregroundStyle(Palette.marbleHigh)
+            Label("\(challenges.totalCompletedChallengesCount)", systemImage: "checkmark")
+                .labelStyle(.titleAndIcon)
+                .foregroundStyle(Palette.marble)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .cardSurface()
+        .font(.system(size: 13, weight: .semibold))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Palette.basalt, in: Capsule())
+        .overlay { Capsule().strokeBorder(Palette.vein, lineWidth: 1) }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Уровень \(challenges.level), закрыто вызовов: \(challenges.totalCompletedChallengesCount)")
     }
 
     private var activeCard: some View {

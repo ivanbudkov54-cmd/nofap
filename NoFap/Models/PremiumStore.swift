@@ -38,7 +38,7 @@ final class PremiumStore {
     let web = WebPremium()
 
     /// true — всё открыто бесплатно (Pro не продаётся).
-    static let freeLaunch = false
+    static let freeLaunch = true
 
     /// Spartan Pro по статусу аккаунта: оплата на сайте (Робокасса) пишет
     /// profiles.is_pro / pro_expires_at, приложение только читает.
