@@ -68,11 +68,15 @@ struct SettingsView: View {
 
             protectionSection
 
-            Section("Управление подпиской") {
-                NavigationLink {
-                    SubscriptionStatusView()
-                } label: {
-                    Text("Управление подпиской").foregroundStyle(Palette.marbleHigh)
+            // Пока Pro бесплатный, подписки нет — и ссылки на сайт с оплатой
+            // тоже: без разрешения Apple на внешнюю оплату её быть не должно.
+            if !PremiumStore.freeLaunch {
+                Section("Управление подпиской") {
+                    NavigationLink {
+                        SubscriptionStatusView()
+                    } label: {
+                        Text("Управление подпиской").foregroundStyle(Palette.marbleHigh)
+                    }
                 }
             }
 
