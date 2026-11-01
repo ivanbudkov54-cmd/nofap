@@ -46,7 +46,7 @@ struct SquadSection: View {
         .onDisappear { squad.stopWatchingMembers() }
         .sheet(isPresented: $enteringCode) { codeSheet }
         .sheet(isPresented: $showPaywall) {
-            PaywallView(contextReason: "Сквад доступен в Spartan Pro")
+            PaywallView(feature: .squad)
         }
         .alert("Выйти из сквада?", isPresented: $showLeaveConfirm) {
             Button("Выйти", role: .destructive) { Task { await squad.leave() } }

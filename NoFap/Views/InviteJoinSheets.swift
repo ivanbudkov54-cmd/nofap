@@ -147,7 +147,7 @@ private struct SquadJoinSheet: View {
         .padding(.horizontal, 20)
         .fittedSheet()
         .sheet(isPresented: $showPaywall) {
-            PaywallView(contextReason: "Сквад доступен в Spartan Pro")
+            PaywallView(feature: .squad)
         }
     }
 }

@@ -16,10 +16,11 @@ struct TriggerAnalyticsCard: View {
 
     /// SOS-лог не наблюдаемый — перечитываем при каждом показе вкладки.
     @State private var sos: [TriggerEntry] = []
+    @State private var relapses: [Date] = []
     @State private var showPaywall = false
 
     private var insights: TriggerInsights {
-        TriggerInsights(sos: sos, checkIns: checkIns.entries)
+        TriggerInsights(sos: sos, checkIns: checkIns.entries, relapses: relapses)
     }
 
     var body: some View {
@@ -42,8 +43,11 @@ struct TriggerAnalyticsCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
         .cardSurface()
-        .onAppear { sos = TriggerLog.entries() }
-        .sheet(isPresented: $showPaywall) { PaywallView() }
+        .onAppear {
+            sos = TriggerLog.entries()
+            relapses = RelapseLog.dates()
+        }
+        .sheet(isPresented: $showPaywall) { PaywallView(feature: .analytics) }
     }
 
     // MARK: - Без подписки
@@ -121,42 +125,80 @@ struct TriggerAnalyticsCard: View {
                 .foregroundStyle(Palette.marble)
             }
 
-            section("чаще всего") {
-                let top = insights.triggers.prefix(5)
-                let most = top.first?.count ?? 1
-                VStack(spacing: 12) {
-                    ForEach(Array(top)) { item in
-                        VStack(alignment: .leading, spacing: 6) {
-                            HStack {
-                                Text("\(item.key.emoji)  \(item.key.title)")
-                                    .font(.system(size: 14))
-                                    .foregroundStyle(Palette.marble)
-                                Spacer()
-                                Text("\(item.count)")
-                                    .font(.system(size: 13, weight: .semibold).monospacedDigit())
-                                    .foregroundStyle(Palette.ash)
+            if !insights.triggers.isEmpty {
+                section("чаще всего") {
+                    let top = insights.triggers.prefix(5)
+                    let most = top.first?.count ?? 1
+                    VStack(spacing: 12) {
+                        ForEach(Array(top)) { item in
+                            VStack(alignment: .leading, spacing: 6) {
+                                HStack {
+                                    Text("\(item.key.emoji)  \(item.key.title)")
+                                        .font(.system(size: 14))
+                                        .foregroundStyle(Palette.marble)
+                                    Spacer()
+                                    Text("\(item.count)")
+                                        .font(.system(size: 13, weight: .semibold).monospacedDigit())
+                                        .foregroundStyle(Palette.ash)
+                                }
+                                bar(share: Double(item.count) / Double(most),
+                                    emphasized: item.key == insights.topTrigger)
                             }
-                            bar(share: Double(item.count) / Double(most),
-                                emphasized: item.key == insights.topTrigger)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel(Text("\(item.key.title): \(item.count)"))
                         }
-                        .accessibilityElement(children: .combine)
-                        .accessibilityLabel(Text("\(item.key.title): \(item.count)"))
                     }
                 }
             }
 
             if insights.sosMoments > 0 {
-                section("время суток") {
+                section("когда тянет") {
                     columns(insights.dayParts.map { ($0.key.label, $0.count) },
                             peak: insights.peakDayPart.map { $0.rawValue })
                 }
             }
 
-            section("дни недели") {
-                columns(insights.weekdays.map { (TriggerInsights.weekdayShort($0.key), $0.count) },
-                        peak: insights.peakWeekday)
+            if insights.totalMarks > 0 {
+                section("дни недели") {
+                    columns(insights.weekdays.map { (TriggerInsights.weekdayShort($0.key), $0.count) },
+                            peak: insights.peakWeekday)
+                }
+            }
+
+            if insights.relapseCount > 0 {
+                relapseSection(insights)
             }
         }
+    }
+
+    /// Срывы отдельно от тяги: тяга бывает каждый день, а срыв показывает,
+    /// где защита не выдерживает.
+    private func relapseSection(_ insights: TriggerInsights) -> some View {
+        section("срывы") {
+            VStack(alignment: .leading, spacing: 14) {
+                Text(relapseSummary(insights))
+                    .font(.system(size: 14))
+                    .foregroundStyle(Palette.marble)
+                    .fixedSize(horizontal: false, vertical: true)
+                columns(insights.relapseDayParts.map { ($0.key.label, $0.count) },
+                        peak: insights.relapsePeakDayPart.map { $0.rawValue })
+            }
+        }
+    }
+
+    private func relapseSummary(_ insights: TriggerInsights) -> String {
+        var text = String(localized: "Всего срывов: \(insights.relapseCount).")
+        switch (insights.relapsePeakDayPart, insights.relapsePeakWeekday) {
+        case let (part?, day?):
+            text += " " + String(localized: "Чаще всего \(part.phrase), особенно \(TriggerInsights.weekdayPhrase(day)).")
+        case let (part?, nil):
+            text += " " + String(localized: "Чаще всего \(part.phrase).")
+        case let (nil, day?):
+            text += " " + String(localized: "Чаще всего \(TriggerInsights.weekdayPhrase(day)).")
+        case (nil, nil):
+            break
+        }
+        return text
     }
 
     private func summary(_ insights: TriggerInsights) -> String? {

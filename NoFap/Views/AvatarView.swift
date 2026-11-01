@@ -67,7 +67,7 @@ struct AvatarView: View {
                     .foregroundStyle(Palette.ash)
                     .multilineTextAlignment(.center)
                 Button("Открыть Pro") {
-                    subscriptions.checkProAccess(for: "Прокачка аватара и смена формы доступны в Spartan Pro") {}
+                    subscriptions.checkProAccess(.avatar) {}
                 }
                 .buttonStyle(GoldButton())
             }

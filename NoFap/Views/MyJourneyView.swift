@@ -61,7 +61,7 @@ struct MyJourneyView: View {
             .padding(.top, 4)
             .padding(.bottom, 24)
         }
-        .sheet(isPresented: $showPaywall) { PaywallView() }
+        .sheet(isPresented: $showPaywall) { PaywallView(feature: .journey) }
     }
 
     @ViewBuilder

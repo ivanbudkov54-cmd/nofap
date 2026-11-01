@@ -21,7 +21,7 @@ struct UrgeSimulatorView: View {
         if remote.isEmpty {
             localBody
         } else {
-            RemoteArticleList(articles: remote, proReason: "Разблокируй готовые сценарии предотвращения срывов")
+            RemoteArticleList(articles: remote, proFeature: .simulator)
         }
     }
 
@@ -33,7 +33,7 @@ struct UrgeSimulatorView: View {
                 VStack(spacing: 12) {
                     ForEach(UrgeSimulatorLibrary.all) { scenario in
                         Button {
-                            subscriptions.checkProAccess(for: "Разблокируй готовые сценарии предотвращения срывов") {
+                            subscriptions.checkProAccess(.simulator) {
                                 opened = scenario
                             }
                         } label: {

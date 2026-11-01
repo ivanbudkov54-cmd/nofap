@@ -10,7 +10,7 @@ import SwiftUI
 
 struct RemoteArticleList: View {
     let articles: [KnowledgeArticle]
-    var proReason: String? = nil
+    var proFeature: ProFeature? = nil
     /// Сколько первых статей открыто без Pro, если список платный.
     var freeCount = 3
 
@@ -21,7 +21,7 @@ struct RemoteArticleList: View {
         ScrollView {
             VStack(spacing: 12) {
                 ForEach(Array(articles.enumerated()), id: \.element.id) { index, article in
-                    let locked = proReason != nil && index >= freeCount
+                    let locked = proFeature != nil && index >= freeCount
                     Button {
                         open(article, locked: locked)
                     } label: {
@@ -61,8 +61,8 @@ struct RemoteArticleList: View {
     }
 
     private func open(_ article: KnowledgeArticle, locked: Bool) {
-        if locked, let proReason {
-            subscriptions.checkProAccess(for: proReason) { opened = article }
+        if locked, let proFeature {
+            subscriptions.checkProAccess(proFeature) { opened = article }
         } else {
             opened = article
         }

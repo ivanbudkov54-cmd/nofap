@@ -27,7 +27,9 @@ struct ProLockBadge: View {
 
 struct PaywallView: View {
 
-    var contextReason: String? = nil
+    /// Функция, на которую нажали: экран начинается с неё. nil — общий
+    /// экран Spartan Pro.
+    var feature: ProFeature? = nil
 
     @Environment(PremiumStore.self) private var subscriptions
     @Environment(\.dismiss) private var dismiss
@@ -40,58 +42,44 @@ struct PaywallView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 22) {
-                    Image(systemName: "lock.shield.fill")
-                        .font(.system(size: 40, weight: .semibold))
-                        .foregroundStyle(.goldFill)
+                VStack(alignment: .leading, spacing: 24) {
+                    hero
 
-                    Text("Функция программы Spartan Pro")
-                        .font(Face.display(26, .semibold))
-                        .foregroundStyle(Palette.marbleHigh)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    if let contextReason, !contextReason.isEmpty {
-                        Text(contextReason)
-                            .font(.system(size: 15))
-                            .foregroundStyle(Palette.ash)
-                            .fixedSize(horizontal: false, vertical: true)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Eyebrow(text: feature == nil ? "что входит" : "ещё в spartan pro")
+                        ForEach(ProFeature.allCases.filter { $0 != feature }) { item in
+                            benefit(item)
+                        }
                     }
 
-                    VStack(alignment: .leading, spacing: 10) {
-                        benefit("Экспресс-чекин")
-                        benefit("Аналитика триггеров")
-                        benefit("Аватар прогресса")
-                        benefit("Сквад: группа до четырёх человек")
-                        benefit("Расширенная база знаний")
-                    }
+                    VStack(spacing: 12) {
+                        // Пока Pro бесплатный (freeLaunch), этот экран не
+                        // показывается. Перед тем как снова продавать Pro,
+                        // кнопку нужно перевести на ExternalPurchaseLink —
+                        // без разрешения Apple ссылка на оплату запрещена.
+                        Button("Купить Spartan Pro") {
+                            Task { await openProgramSite() }
+                        }
+                        .buttonStyle(GoldButton())
 
-                    if subscriptions.hasLinkedEmail {
-                        Text("Для этого аккаунта Pro-доступ ещё не активирован.")
-                            .font(.system(size: 15))
-                            .foregroundStyle(Palette.marble)
-                            .fixedSize(horizontal: false, vertical: true)
-
-                        Button {
-                            Task { await refreshStatus() }
-                        } label: {
-                            if isChecking {
-                                ProgressView().tint(Palette.onGold)
-                            } else {
-                                Text("Проверить статус доступа")
+                        if subscriptions.hasLinkedEmail {
+                            Button {
+                                Task { await refreshStatus() }
+                            } label: {
+                                if isChecking {
+                                    ProgressView()
+                                } else {
+                                    Text("Уже купил — проверить доступ")
+                                }
                             }
+                            .buttonStyle(StoneButton())
+                            .disabled(isChecking)
+                        } else {
+                            Button("Уже есть Pro? Войти по Email") {
+                                showEmailLink = true
+                            }
+                            .buttonStyle(StoneButton())
                         }
-                        .buttonStyle(GoldButton())
-                        .disabled(isChecking)
-                    } else {
-                        Text("Если у вас уже активирован доступ Spartan Pro, войдите по вашему Email.")
-                            .font(.system(size: 15))
-                            .foregroundStyle(Palette.marble)
-                            .fixedSize(horizontal: false, vertical: true)
-
-                        Button("Войти по Email") {
-                            showEmailLink = true
-                        }
-                        .buttonStyle(GoldButton())
                     }
 
                     if let statusNote {
@@ -101,14 +89,7 @@ struct PaywallView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
 
-                    Button {
-                        Task { await openProgramSite() }
-                    } label: {
-                        Label("Узнать подробнее о программе", systemImage: "arrow.up.right")
-                    }
-                    .buttonStyle(EngravedButton())
-
-                    Text("Spartan Pro является единой кросс-платформенной системой. Доступ синхронизируется через ваш аккаунт.")
+                    Text("Spartan Pro привязан к вашему Email: доступ один и тот же на всех устройствах.")
                         .font(.system(size: 12))
                         .foregroundStyle(Palette.ash)
                         .fixedSize(horizontal: false, vertical: true)
@@ -162,11 +143,36 @@ struct PaywallView: View {
         }
     }
 
-    private func benefit(_ text: LocalizedStringKey) -> some View {
-        HStack(spacing: 10) {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(.goldFill)
-            Text(text)
+    /// Сначала — что даёт функция, на которую нажали, а не замок.
+    private var hero: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Image(systemName: feature?.icon ?? "crown.fill")
+                .font(.system(size: 26, weight: .semibold))
+                .foregroundStyle(Palette.onGold)
+                .frame(width: 60, height: 60)
+                .background(Circle().fill(.goldSurface))
+
+            Eyebrow(text: "spartan pro", color: Palette.gold)
+
+            Text(feature?.title ?? String(localized: "Всё, чтобы держаться дольше"))
+                .font(Face.display(26, .semibold))
+                .foregroundStyle(Palette.marbleHigh)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text(feature?.summary ?? String(localized: "Аналитика, сквад, аватар и вся база знаний — инструменты, которые помогают заметить срыв до того, как он случится."))
+                .font(.system(size: 16))
+                .foregroundStyle(Palette.marble)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func benefit(_ item: ProFeature) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: item.icon)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Palette.gold)
+                .frame(width: 22)
+            Text(item.title)
                 .font(.system(size: 15))
                 .foregroundStyle(Palette.marble)
         }

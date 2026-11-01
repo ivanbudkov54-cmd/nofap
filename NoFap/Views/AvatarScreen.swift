@@ -44,7 +44,7 @@ struct AvatarScreen: View {
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                 Button("Открыть доступ") {
-                    subscriptions.checkProAccess(for: "Аватар прогресса доступен в Spartan Pro") {}
+                    subscriptions.checkProAccess(.avatar) {}
                 }
                 .buttonStyle(GoldButton())
             }

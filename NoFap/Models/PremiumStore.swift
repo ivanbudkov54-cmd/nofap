@@ -63,18 +63,18 @@ final class PremiumStore {
     }
 
     /// Пейвол по требованию экрана: `checkProAccess` поднимает флаг, RootView
-    /// показывает PaywallView. Причина — короткая строка над тарифами.
+    /// показывает PaywallView с описанием той функции, на которую нажали.
     var shouldShowPaywall = false
-    var paywallContextReason = ""
+    var paywallFeature: ProFeature?
 
     /// Экраны друга называют Premium «Pro» — одно и то же.
     var isPro: Bool { isPremium }
 
-    func checkProAccess(for reason: String, onGranted: () -> Void) {
+    func checkProAccess(_ feature: ProFeature, onGranted: () -> Void) {
         if isPremium {
             onGranted()
         } else {
-            paywallContextReason = reason
+            paywallFeature = feature
             shouldShowPaywall = true
         }
     }

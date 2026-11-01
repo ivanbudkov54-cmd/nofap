@@ -3,7 +3,8 @@
 //  NoFap
 //
 //  Аналитика триггеров из двух источников: опроса после SOS и тегов
-//  экспресс-чекина. Считается на телефоне, никуда не отправляется.
+//  экспресс-чекина, плюс срывы — когда они случаются. Считается на
+//  телефоне, никуда не отправляется.
 //
 //  Время суток берётся только из SOS: там записан момент тяги. Чекин —
 //  итог дня, записанный когда угодно, и его время о тяге ничего не говорит.
@@ -61,10 +62,16 @@ struct TriggerInsights {
     let totalMarks: Int
     let sosMoments: Int
 
+    /// Срывы с точным временем: когда они случаются. Отдельно от тяги —
+    /// срыв говорит о слабом месте больше, чем просто желание.
+    let relapseCount: Int
+    let relapseDayParts: [Count<DayPart>]
+    let relapseWeekdays: [Count<Int>]
+
     /// Меньше — картина случайная, выводы делать рано.
     static let minimumMarks = 3
 
-    var hasEnoughData: Bool { totalMarks >= Self.minimumMarks }
+    var hasEnoughData: Bool { totalMarks + relapseCount >= Self.minimumMarks }
 
     var topTrigger: Trigger? { triggers.first?.key }
 
@@ -80,7 +87,18 @@ struct TriggerInsights {
         return weekdays.filter { $0.count == best.count }.count == 1 ? best.key : nil
     }
 
-    init(sos: [TriggerEntry], checkIns: [CheckInEntry], calendar: Calendar = DayKey.isoCalendar) {
+    var relapsePeakDayPart: DayPart? { Self.uniquePeak(relapseDayParts) }
+    var relapsePeakWeekday: Int? { Self.uniquePeak(relapseWeekdays) }
+
+    /// Пик, только если он один: при ничьей «чаще всего вечером» врёт.
+    private static func uniquePeak<Key>(_ items: [Count<Key>]) -> Key? {
+        guard let best = items.max(by: { $0.count < $1.count }), best.count > 0,
+              items.filter({ $0.count == best.count }).count == 1 else { return nil }
+        return best.key
+    }
+
+    init(sos: [TriggerEntry], checkIns: [CheckInEntry], relapses: [Date] = [],
+         calendar: Calendar = DayKey.isoCalendar) {
         var byTrigger: [Trigger: Int] = [:]
         var byDayPart: [DayPart: Int] = [:]
         var byWeekday = Array(repeating: 0, count: 7)
@@ -104,6 +122,16 @@ struct TriggerInsights {
             byWeekday[weekdayIndex(entry.date)] += 1
             marks += found.count
         }
+
+        var relapseByPart: [DayPart: Int] = [:]
+        var relapseByWeekday = Array(repeating: 0, count: 7)
+        for date in relapses {
+            relapseByPart[DayPart(hour: calendar.component(.hour, from: date)), default: 0] += 1
+            relapseByWeekday[weekdayIndex(date)] += 1
+        }
+        relapseCount = relapses.count
+        relapseDayParts = DayPart.allCases.map { Count(key: $0, count: relapseByPart[$0] ?? 0) }
+        relapseWeekdays = (0..<7).map { Count(key: $0, count: relapseByWeekday[$0]) }
 
         triggers = byTrigger
             .map { Count(key: $0.key, count: $0.value) }

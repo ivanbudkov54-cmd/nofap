@@ -110,7 +110,7 @@ private struct RootOverlays: ViewModifier {
             .onPreferenceChange(TourPulseKey.self) { tour.setPulseFrame($0) }
             .task { await tour.startTourIfNeeded() }
             .sheet(isPresented: Bindable(premium).shouldShowPaywall) {
-                PaywallView(contextReason: premium.paywallContextReason)
+                PaywallView(feature: premium.paywallFeature)
             }
             // Новый ранг празднуется там, где его заработали: за статьёй,
             // челленджем или «Держусь», а не при следующем заходе в аватар.

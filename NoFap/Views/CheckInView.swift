@@ -25,8 +25,6 @@ private enum Ink {
 struct CheckInView: View {
 
     @Environment(CheckInManager.self) private var checkIns
-    @Environment(JournalManager.self) private var journal
-    @Environment(CloudSync.self) private var backend
     @Environment(PremiumStore.self) private var subscriptions
     @Environment(\.dismiss) private var dismiss
 
@@ -127,7 +125,7 @@ struct CheckInView: View {
             .overlay {
                 if !subscriptions.isPro {
                     Button {
-                        subscriptions.checkProAccess(for: "Отслеживание уровня энергии и физического тонуса входит в Spartan Pro") {}
+                        subscriptions.checkProAccess(.checkIn) {}
                     } label: {
                         ZStack {
                             RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -277,30 +275,16 @@ struct CheckInView: View {
         let tags = Array(selectedTags)
         let noteText = note
 
-        Task {
-            isSaving = true
-            journal.addEntry(noteText, moodScore: energyValue, urgeScore: libidoValue, on: date)
-            // Отметка пишется всегда: триггеры дня нужны аналитике и без
-            // Premium, уровни — только с ним.
-            checkIns.addEntry(
-                energyLevel: energyValue,
-                libidoLevel: libidoValue,
-                triggers: tags,
-                note: noteText,
-                on: date
-            )
-            await backend.saveJournal(
-                mood: energyValue,
-                urge: libidoValue,
-                prompt: nil,
-                note: noteText,
-                into: journal
-            )
-            isSaving = false
-            if backend.notice == nil {
-                showSaved = true
-            }
-        }
+        // Одна запись на чекин: текст, уровни и триггеры — в одной карточке
+        // дневника. Раньше текст ещё и дублировался отдельной заметкой.
+        checkIns.addEntry(
+            energyLevel: energyValue,
+            libidoLevel: libidoValue,
+            triggers: tags,
+            note: noteText,
+            on: date
+        )
+        showSaved = true
     }
 }
 

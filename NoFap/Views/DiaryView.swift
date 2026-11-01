@@ -60,9 +60,13 @@ struct DiaryView: View {
 
     private var feed: [FeedItem] {
         // Есть договор из опроса — он показан отдельной карточкой сверху.
-        let notes = manifestStore.currentManifest == nil
+        // Старые чекины записывали текст ещё и отдельной заметкой в ту же
+        // секунду — такие двойники прячем, чекин показывает всё сам.
+        let checkInTimes = checkIns.entries.map(\.date)
+        let notes = (manifestStore.currentManifest == nil
             ? journal.entries
-            : journal.entries.filter { !$0.isManifest }
+            : journal.entries.filter { !$0.isManifest })
+            .filter { note in !checkInTimes.contains { abs($0.timeIntervalSince(note.date)) < 2 } }
         return (notes.map(FeedItem.note) + checkIns.entries.map(FeedItem.checkIn))
             .sorted { lhs, rhs in
                 if lhs.isPinned != rhs.isPinned { return lhs.isPinned }
@@ -149,7 +153,7 @@ struct DiaryView: View {
     private func openRequestedCheckIn() {
         guard OpenRequest.shared.checkIn else { return }
         OpenRequest.shared.checkIn = false
-        subscriptions.checkProAccess(for: "Экспресс-чекин целиком доступен в Pro") {
+        subscriptions.checkProAccess(.checkIn) {
             showCheckIn = true
         }
     }
@@ -204,7 +208,7 @@ struct DiaryView: View {
 
     private var checkInEntry: some View {
         Button {
-            subscriptions.checkProAccess(for: "Экспресс-чекин целиком доступен в Pro") {
+            subscriptions.checkProAccess(.checkIn) {
                 showCheckIn = true
             }
         } label: {
@@ -258,6 +262,11 @@ struct DiaryView: View {
             }
             if !item.fiveYearFutureVision.isEmpty {
                 manifestLine("Если я сдамся, через 5 лет я стану", item.fiveYearFutureVision)
+            }
+            // «Дополнительно» из редактора раньше сохранялось, но нигде не
+            // показывалось.
+            if let notes = item.customNotes, !notes.isEmpty {
+                manifestLine("Дополнительно", notes)
             }
             Button { editManifest = true } label: {
                 Label(item.yearVision?.isEmpty == false ? "Редактировать" : "Добавить цель на год",
@@ -683,10 +692,10 @@ private struct ManifestEditView: View {
     private func field(_ title: String, text: Binding<String>) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(Palette.ash)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(Palette.marble)
             TextField(title, text: text, axis: .vertical)
-                .font(.system(size: 15))
+                .font(.system(size: 17))
                 .foregroundStyle(Palette.marbleHigh)
                 .padding(12)
                 .background(Palette.basalt, in: RoundedRectangle(cornerRadius: 12, style: .continuous))

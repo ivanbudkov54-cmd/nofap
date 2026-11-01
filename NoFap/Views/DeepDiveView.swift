@@ -26,7 +26,7 @@ struct DeepDiveView: View {
         } else {
             RemoteArticleList(
                 articles: remote,
-                proReason: "Расширенная база знаний доступна в Spartan Pro"
+                proFeature: .articles
             )
         }
     }
@@ -61,7 +61,7 @@ struct DeepDiveView: View {
             openedArticle = article
             return
         }
-        subscriptions.checkProAccess(for: "Расширенная база знаний доступна в Spartan Pro") {
+        subscriptions.checkProAccess(.articles) {
             openedArticle = article
         }
     }
