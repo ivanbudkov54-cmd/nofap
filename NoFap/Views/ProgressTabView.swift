@@ -331,7 +331,9 @@ private struct MonthSpan: View {
                         .foregroundStyle(Palette.ash)
                 }
 
-                ForEach(0..<leadingBlanks, id: \.self) { _ in Color.clear.frame(height: 30) }
+                // Отрицательные номера: с 0, 1, 2… пустые клетки совпадали
+                // с числами 1, 2… в той же сетке, и SwiftUI выкидывал эти дни.
+                ForEach(-leadingBlanks..<0, id: \.self) { _ in Color.clear.frame(height: 30) }
 
                 ForEach(1...daysInMonth, id: \.self) { day in
                     let date = calendar.date(byAdding: .day, value: day - 1, to: firstOfMonth)!
