@@ -53,14 +53,20 @@ struct PaywallView: View {
                     }
 
                     VStack(spacing: 12) {
-                        // Пока Pro бесплатный (freeLaunch), этот экран не
-                        // показывается. Перед тем как снова продавать Pro,
-                        // кнопку нужно перевести на ExternalPurchaseLink —
-                        // без разрешения Apple ссылка на оплату запрещена.
-                        Button("Купить Spartan Pro") {
-                            Task { await openProgramSite() }
+                        // Кнопка только там, где Apple разрешила внешнюю
+                        // ссылку (Россия), и только через ExternalPurchaseLink.
+                        if subscriptions.canOpenPurchaseLink {
+                            Button("Купить Spartan Pro") {
+                                Task { await openProgramSite() }
+                            }
+                            .buttonStyle(GoldButton())
+                        } else {
+                            Text("Покупка Spartan Pro в вашей стране пока недоступна.")
+                                .font(.system(size: 14))
+                                .foregroundStyle(Palette.ash)
+                                .frame(maxWidth: .infinity)
+                                .multilineTextAlignment(.center)
                         }
-                        .buttonStyle(GoldButton())
 
                         if subscriptions.hasLinkedEmail {
                             Button {
@@ -109,7 +115,7 @@ struct PaywallView: View {
             guard openSiteAfterEmail else { return }
             openSiteAfterEmail = false
             guard subscriptions.hasLinkedEmail else { return }
-            Task { await subscriptions.openExternalWebsite() }
+            Task { await subscriptions.openPurchaseLink() }
         }) {
             EmailLinkSheet(purpose: .signIn)
         }
@@ -117,12 +123,16 @@ struct PaywallView: View {
             if unlocked { dismiss() }
         }
         .presentationDragIndicator(.visible)
-        .task { await subscriptions.checkSubscription() }
+        .task {
+            await subscriptions.refreshPurchaseLink()
+            await subscriptions.checkSubscription()
+        }
     }
 
+    /// Сначала email: по нему сайт откроет Pro именно этому аккаунту.
     private func openProgramSite() async {
         if subscriptions.hasLinkedEmail {
-            await subscriptions.openExternalWebsite()
+            await subscriptions.openPurchaseLink()
             return
         }
         openSiteAfterEmail = true

@@ -47,19 +47,8 @@ struct SubscriptionStatusView: View {
                     Task { await refresh(report: true) }
                 }
                 .disabled(isChecking)
-
-                Button {
-                    Task { await subscriptions.openExternalWebsite() }
-                } label: {
-                    HStack {
-                        Text("Информация о сервисе на сайте")
-                            .foregroundStyle(Palette.marbleHigh)
-                        Spacer()
-                        Image(systemName: "arrow.up.right")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(Palette.ash)
-                    }
-                }
+                // Ссылки на сайт с оплатой здесь нет: по правилам Apple
+                // она одна — кнопка «Купить» на экране Spartan Pro.
             }
 
             Section {

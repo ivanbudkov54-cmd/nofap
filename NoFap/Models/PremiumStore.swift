@@ -100,6 +100,7 @@ final class PremiumStore {
 
     func start() async {
         await detectTestBuild()
+        await refreshPurchaseLink()
         guard !Self.freeLaunch else { return }
         await checkSubscription()
         await refreshEntitlements()
@@ -179,21 +180,32 @@ final class PremiumStore {
         if isPremium { shouldShowPaywall = false }
     }
 
-    static let websiteBase = "https://spartan-pro.ru"
+    // MARK: - Покупка на сайте (StoreKit External Purchase Link)
 
-    /// Системный браузер: https://spartan-pro.ru{path}?user_id=…&email=…
-    func openExternalWebsite(targetPath: String = "") async {
-        guard var components = URLComponents(string: Self.websiteBase + targetPath) else { return }
-        var items = [URLQueryItem]()
-        if let uid = try? await SupabaseSession.shared.userID() {
-            items.append(URLQueryItem(name: "user_id", value: uid))
+    /// true — можно показать кнопку покупки: у приложения есть разрешение
+    /// Apple на внешнюю ссылку, и витрина App Store — российская
+    /// (SKExternalPurchaseLink в Info.plist). В других странах кнопки нет.
+    private(set) var canOpenPurchaseLink = false
+
+    func refreshPurchaseLink() async {
+        canOpenPurchaseLink = AppStore.canMakePayments ? await ExternalPurchaseLink.canOpen : false
+    }
+
+    /// Системное окно Apple «Вы покидаете приложение», затем сайт из
+    /// SKExternalPurchaseLink. StoreKit сам дописывает к адресу
+    /// externalPurchaseToken — сайт сохраняет его для отчёта Apple. Свои
+    /// параметры (user_id, email) передавать нельзя: аккаунт сайт находит
+    /// по email, который человек привязал в приложении.
+    @discardableResult
+    func openPurchaseLink() async -> Bool {
+        await refreshPurchaseLink()
+        guard canOpenPurchaseLink else { return false }
+        do {
+            try await ExternalPurchaseLink.open()
+            return true
+        } catch {
+            return false
         }
-        if let accountEmail, !accountEmail.isEmpty {
-            items.append(URLQueryItem(name: "email", value: accountEmail))
-        }
-        if !items.isEmpty { components.queryItems = items }
-        guard let url = components.url else { return }
-        await UIApplication.shared.open(url)
     }
 
     func purchase(_ product: Product) async -> PurchaseOutcome {
