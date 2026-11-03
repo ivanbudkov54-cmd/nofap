@@ -66,16 +66,28 @@ struct ChallengesView: View {
         }
     }
 
+    /// Словами, чтобы было понятно без пояснений; на узком экране —
+    /// сокращённо, лишь бы не переносилось под заголовок.
     private var stats: some View {
+        ViewThatFits(in: .horizontal) {
+            statsPill(level: String(localized: "Уровень \(challenges.level)"),
+                      done: String(localized: "закрыто \(challenges.totalCompletedChallengesCount)"))
+            statsPill(level: String(localized: "Ур. \(challenges.level)"),
+                      done: String(localized: "закр. \(challenges.totalCompletedChallengesCount)"))
+        }
+    }
+
+    private func statsPill(level: String, done: String) -> some View {
         HStack(spacing: 6) {
-            Text("Ур. \(challenges.level)")
+            Text(level)
                 .foregroundStyle(.goldFill)
             Text(verbatim: "·")
                 .foregroundStyle(Palette.ash)
-            Label("\(challenges.totalCompletedChallengesCount)", systemImage: "checkmark")
-                .labelStyle(.titleAndIcon)
+            Text(done)
                 .foregroundStyle(Palette.marble)
         }
+        .lineLimit(1)
+        .fixedSize()
         .font(.system(size: 13, weight: .semibold))
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
